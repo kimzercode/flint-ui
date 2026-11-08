@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flint UI — auth shell demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<!-- Auth shell: zero JS -->
+<div class="fl-shell-auth">
+
+  <header class="fl-top-bar">
+    <h1 class="fl-top-bar__title">Flint</h1>
+    <button class="fl-btn fl-btn--text">Help</button>
+  </header>
+
+  <main class="fl-shell-auth__content">
+    <form class="fl-auth-card" action="#" method="post">
+      <h2 class="fl-auth-card__title">Sign in</h2>
+      <p class="fl-auth-card__subtitle">Use your Flint account to continue.</p>
+
+      <label class="fl-field">
+        <span class="fl-field__label">Email</span>
+        <input class="fl-field__input" type="email" name="email" autocomplete="email" required>
+      </label>
+
+      <label class="fl-field">
+        <span class="fl-field__label">Password</span>
+        <input class="fl-field__input" type="password" name="password" autocomplete="current-password" required>
+      </label>
+
+      <div style="margin-top:16px; text-align:right;">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+        <a href="#">Create account</a>
+        <button class="fl-btn fl-btn--filled" type="submit">Sign in</button>
+      </div>
+    </form>
+  </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — bottom-nav shell demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<div class="fl-shell">
+
+  <!-- App bar -->
+  <header class="fl-top-bar">
+    <button class="fl-icon-btn" aria-label="Open menu">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <h1 class="fl-top-bar__title">Flint Mail</h1>
+    <button class="fl-icon-btn" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" aria-label="Notifications, 3 unread">
+      <span class="fl-icon" aria-hidden="true"></span>
+      <span class="fl-badge" aria-hidden="true">3</span>
+    </button>
+    <button class="fl-icon-btn" aria-label="Account">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <!-- Scrolling content -->
+  <main class="fl-content">
+    <p class="fl-section-label">Today</p>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Design review moved to 15:00</h2>
+      <p class="fl-card__text">The flat-shell discussion is now after lunch. No shadow is worth any shadow, after all — borders carry the day.</p>
+    </article>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Quota update</h2>
+      <p class="fl-card__text">Storage is at 68% of plan. Nothing needed from you yet.</p>
+    </article>
+
+    <p class="fl-section-label">Yesterday</p>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Welcome to Flint UI</h2>
+      <p class="fl-card__text">Below 905px the tabs stack icon over label. From 905px up they become inline pills in a centered 56px bar — resize the window to see it.</p>
+      <div class="fl-card" style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="fl-btn fl-btn--filled">Compose</button>
+        <button class="fl-btn fl-btn--outline">Snooze</button>
+        <button class="fl-btn fl-btn--text">Archive</button>
+      </div>
+    </article>
+  </main>
+
+  <!-- Flat FAB: white, bordered, never shadowed -->
+  <button class="fl-fab" aria-label="Compose">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <!-- Bottom tab bar -->
+  <nav class="fl-tab-bar" data-fl-nav aria-label="Primary">
+    <button class="fl-tab" aria-current="page">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Home</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Mail</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Calendar</span>
+      <span class="fl-badge" aria-hidden="true">3</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Contacts</span>
+    </button>
+  </nav>
+
+</div>
+
+<script src="../js/flint.js"></script>
+</body>
+</html>

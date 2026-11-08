@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — list component demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<div class="fl-shell">
+
+  <header class="fl-top-bar">
+    <h1 class="fl-top-bar__title">Flint Lists</h1>
+    <button class="fl-icon-btn" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" aria-label="Account">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <main class="fl-content">
+
+    <!-- Single-line rows: 24px icon, trailing action in the meta zone.
+         Rows are plain <li> here — the row itself isn't a link, the
+         nested icon button is the target, so only the button hovers. -->
+    <p class="fl-section-label">Single-line · action on the right</p>
+    <ul class="fl-list">
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Design review notes</span></span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="More options for Design review notes">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item" aria-current="page">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Q3 roadmap.doc</span></span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="More options for Q3 roadmap">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Notifications</span></span>
+        <span class="fl-list-item__meta">
+          <span class="fl-badge" aria-hidden="true">3</span>
+        </span>
+      </li>
+      <li class="fl-list-item" aria-disabled="true">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Archived imports</span></span>
+      </li>
+    </ul>
+
+    <!-- Two-line rows: 40px avatar lands text on the 72dp keyline -->
+    <p class="fl-section-label">Two-line · avatars</p>
+    <ul class="fl-list">
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__avatar" aria-hidden="true">AK</span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Aisha Karim</span>
+          <span class="fl-list-item__sub">aisha@example.com</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="Message Aisha">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__avatar" aria-hidden="true">ML</span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Marcus Lee</span>
+          <span class="fl-list-item__sub">marcus@example.com</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="Message Marcus">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__avatar" aria-hidden="true">PP</span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Priya Patel</span>
+          <span class="fl-list-item__sub">priya@example.com</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="Message Priya">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__avatar" aria-hidden="true">TR</span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Tomás Rivera</span>
+          <span class="fl-list-item__sub">tomas@example.com</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="Message Tomás">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+    </ul>
+
+    <!-- Three-line rows: body wraps to two lines, then clamps.
+         Meta zone holds secondary text (a timestamp) instead of a control. -->
+    <p class="fl-section-label">Three-line · body text</p>
+    <ul class="fl-list">
+      <li class="fl-list-item fl-list-item--three-line">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Sprint 14 retro notes</span>
+          <span class="fl-list-item__sub">We shipped the drawer shell and the flat FAB this sprint. Next up: list rows with a trailing action zone, then the dense variant for data-heavy screens. Feedback welcome in the tracker.</span>
+        </span>
+        <span class="fl-list-item__meta">Sep 30</span>
+      </li>
+      <li class="fl-list-item fl-list-item--three-line">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Theming guide updates</span>
+          <span class="fl-list-item__sub">The guide now covers theming with custom properties, the optional fl-reset class, and how to swap the gray icon placeholders for a real icon set without touching any other markup.</span>
+        </span>
+        <span class="fl-list-item__meta">Oct 2</span>
+      </li>
+    </ul>
+
+    <!-- Interactive rows: the whole row is an <a>, so hover/active/selected
+         all work on the row. No nested controls in the meta zone. -->
+    <p class="fl-section-label">Interactive rows · whole row is the target</p>
+    <ul class="fl-list">
+      <li>
+        <a class="fl-list-item fl-list-item--two-line" href="#" aria-current="page">
+          <span class="fl-list-item__avatar" aria-hidden="true">HK</span>
+          <span class="fl-list-item__text">
+            <span class="fl-list-item__title">hakim@example.com</span>
+            <span class="fl-list-item__sub">Personal</span>
+          </span>
+          <span class="fl-list-item__meta">Current</span>
+        </a>
+      </li>
+      <li>
+        <a class="fl-list-item fl-list-item--two-line" href="#">
+          <span class="fl-list-item__avatar" aria-hidden="true">FL</span>
+          <span class="fl-list-item__text">
+            <span class="fl-list-item__title">flint-team@example.com</span>
+            <span class="fl-list-item__sub">Work</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="fl-list-item fl-list-item--two-line" href="#">
+          <span class="fl-list-item__avatar" aria-hidden="true">GD</span>
+          <span class="fl-list-item__text">
+            <span class="fl-list-item__title">guest@example.com</span>
+            <span class="fl-list-item__sub">Guest session</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Dense: 40px single-line rows for data-heavy screens -->
+    <p class="fl-section-label">Dense · 40px rows</p>
+    <ul class="fl-list fl-list--dense">
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Quarterly report</span></span>
+        <span class="fl-list-item__meta">12:04</span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Standup notes</span></span>
+        <span class="fl-list-item__meta">11:30</span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Deploy checklist</span></span>
+        <span class="fl-list-item__meta">09:15</span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">1:1 agenda</span></span>
+        <span class="fl-list-item__meta">Yesterday</span>
+      </li>
+    </ul>
+
+    <!-- Dividers are opt-in; 2020 Google lists separate rows by spacing -->
+    <p class="fl-section-label">Dividers · opt-in</p>
+    <ul class="fl-list fl-list--dividers">
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Language &amp; region</span></span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Time zone</span></span>
+      </li>
+      <li class="fl-list-item">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text"><span class="fl-list-item__title">Accessibility</span></span>
+      </li>
+    </ul>
+
+  </main>
+
+  <nav class="fl-tab-bar" data-fl-nav aria-label="Primary">
+    <button class="fl-tab" aria-current="page">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Mail</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Contacts</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Settings</span>
+    </button>
+  </nav>
+
+</div>
+
+<button class="fl-fab" aria-label="Compose">
+  <span class="fl-icon" aria-hidden="true"></span>
+</button>
+
+<script src="../js/flint.js"></script>
+</body>
+</html>

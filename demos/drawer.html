@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — drawer shell demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<div class="fl-shell-drawer">
+
+  <header class="fl-top-bar">
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-open
+            aria-label="Open navigation menu" aria-controls="fl-drawer" aria-expanded="false">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <h1 class="fl-top-bar__title">Flint Docs</h1>
+    <button class="fl-icon-btn" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" aria-label="Account">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <!-- Mobile: off-canvas behind the scrim · ≥905px: permanent left drawer -->
+  <aside class="fl-drawer" id="fl-drawer">
+    <div class="fl-drawer__header">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Flint Docs
+      <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close aria-label="Close navigation menu">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <nav class="fl-nav" data-fl-nav aria-label="Primary">
+      <a class="fl-nav-item" aria-current="page" href="#">
+        <span class="fl-icon" aria-hidden="true"></span>
+        Inbox
+        <span class="fl-badge" aria-hidden="true">3</span>
+      </a>
+      <a class="fl-nav-item" href="#"><span class="fl-icon" aria-hidden="true"></span>Starred</a>
+      <a class="fl-nav-item" href="#"><span class="fl-icon" aria-hidden="true"></span>Sent</a>
+      <a class="fl-nav-item" href="#"><span class="fl-icon" aria-hidden="true"></span>Trash</a>
+    </nav>
+
+    <hr class="fl-divider" aria-hidden="true">
+
+    <nav class="fl-nav" data-fl-nav aria-label="Labels">
+      <a class="fl-nav-item" href="#"><span class="fl-icon" aria-hidden="true"></span>Design</a>
+      <a class="fl-nav-item" href="#"><span class="fl-icon" aria-hidden="true"></span>Engineering</a>
+    </nav>
+
+    <div class="fl-drawer__footer">
+      <span class="fl-icon" aria-hidden="true"></span>
+      <span style="font-size:var(--fl-fs-body); color:var(--fl-text-secondary);">hakim@example.com</span>
+    </div>
+  </aside>
+
+  <!-- Click to dismiss; flint.js also closes on Escape -->
+  <div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+  <main class="fl-content">
+    <p class="fl-section-label">Getting started</p>
+    <article class="fl-card">
+      <h2 class="fl-card__title">One markup, two layouts</h2>
+      <p class="fl-card__text">Below 905px this drawer hides off-canvas and the hamburger opens it over a scrim. From 905px up it becomes a permanent 280px column. Same HTML.</p>
+    </article>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Flat everywhere</h2>
+      <p class="fl-card__text">The drawer separates from content with a 1px border; the scrim handles modal depth. No box-shadow is used anywhere in the library.</p>
+      <div class="fl-card" style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="fl-btn fl-btn--filled">Write</button>
+        <button class="fl-btn fl-btn--outline">Share</button>
+        <button class="fl-btn fl-btn--text">Dismiss</button>
+      </div>
+    </article>
+  </main>
+
+</div>
+
+<script src="../js/flint.js"></script>
+</body>
+</html>

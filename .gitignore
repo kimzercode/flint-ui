@@ -1,0 +1,12 @@
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Agent harness session storage
+.sessions/
+
+# Local screenshots
+/Screenshot*.png
