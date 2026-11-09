@@ -208,9 +208,13 @@ Key tokens: `--fl-surface`, `--fl-text`, `--fl-text-secondary`, `--fl-icon`,
 
 ## Roadmap
 
+See [ROADMAP.md](ROADMAP.md) for the full path from component library to
+mini design system: docs site (0.2), forms (0.3), overlays (0.4), data
+display (0.5), theming (0.6), quality (0.7), API freeze (1.0).
+
 Done in 0.1.0: bottom-nav, drawer, rail, and auth shells plus the list
 component (single/two/three-line, dense, dividers) — all sharing one token
-system. Next candidates: checkbox/switch, menu/popover, and snackbars.
+system.
 
 ## License
 
