@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Get started — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="css/flint.css?v=0.1.0">
+  <link rel="stylesheet" href="css/docs.css?v=0.2.1">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="get-started.html"
+       class="is-active" aria-current="page">Get started</a>
+    <a href="index.html"
+       >Components</a>
+    <a href="roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/PLACEHOLDER/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="get-started.html"
+         class="is-active" aria-current="page">Get started</a></li>
+    <li><a href="index.html"
+         >Components</a></li>
+    <li><a href="roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      
+      <li>
+        <a href="components/buttons.html"
+           >Buttons<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/cards.html"
+           >Cards<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/dialog.html"
+           >Dialog<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-sheet.html"
+           >Bottom sheet<small>0.2</small></a>
+      </li>
+      
+    </ul>
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    <div class="docs-hero">
+  <h1>Get started</h1>
+  <p>Flint UI is two files — <code>flint.css</code> (~800 lines) and
+     <code>flint.js</code> (~50 lines). No build step, no dependencies, no
+     webfonts. Copy them in and use the classes.</p>
+</div>
+
+<section class="docs-section">
+  <h2 id="gs-quickstart">Quick start</h2>
+  <p>Grab the two files from the repo and link them — the script is deferred
+     and tiny, so order doesn't matter:</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Then pick a shell and paste its markup — every component page's
+     <strong>Implementation</strong> tab has a copy-paste-ready starting point,
+     and <code>demos/*.html</code> in the repo are full working pages.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="gs-shells">Pick a shell</h2>
+  <p>All three app shells share the same parts — top bar, content column, nav —
+     and switch layout at <strong>905px</strong> with pure CSS:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Shell</th><th>Phones</th><th>≥905px</th><th>Pick when</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="components/bottom-nav.html">Bottom-nav</a></td>
+        <td>Bottom tab bar</td>
+        <td>Centered pill bar</td>
+        <td>3–5 destinations, mobile-primary</td>
+      </tr>
+      <tr>
+        <td><a href="components/rail.html">Rail</a></td>
+        <td>Bottom tab bar</td>
+        <td>80px icon rail</td>
+        <td>3–5 icon-shaped destinations, desktop-first feel</td>
+      </tr>
+      <tr>
+        <td><a href="components/drawer.html">Drawer</a></td>
+        <td>Off-canvas drawer + scrim</td>
+        <td>Permanent 280px nav column</td>
+        <td>Many destinations, app-like product</td>
+      </tr>
+      <tr>
+        <td><a href="components/auth.html">Auth</a></td>
+        <td colspan="2">Centered card (no breakpoint flip)</td>
+        <td>Sign-in and pre-app screens (zero JS)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="docs-section">
+  <h2 id="gs-selection">Selection: <code>aria-current="page"</code></h2>
+  <p>One attribute drives every selected state — nav rows, tabs, list rows all
+     key off <code>aria-current="page"</code>. With <code>flint.js</code>
+     loaded, clicking inside any <code>data-fl-nav</code> container moves it
+     automatically (anchors still navigate). Without JS, set it yourself —
+     which is what you want with server routing anyway:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;nav class=&quot;fl-tab-bar&quot; data-fl-nav aria-label=&quot;Primary&quot;&gt;
+  &lt;button class=&quot;fl-tab&quot; aria-current=&quot;page&quot;&gt;…&lt;/button&gt;  &lt;!-- selected --&gt;
+  &lt;button class=&quot;fl-tab&quot;&gt;…&lt;/button&gt;
+&lt;/nav&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="gs-nojs">Works without JS</h2>
+  <p>Everything renders correctly with JavaScript disabled. <code>flint.js</code>
+     only adds two conveniences:</p>
+  <ul>
+    <li><strong>Selected-state reflection</strong> on click (with server routing
+        you set <code>aria-current</code> yourself).</li>
+    <li><strong>Drawer toggling</strong> — the open/close buttons and scrim work
+        through it. Without JS, control the drawer by toggling
+        <code>fl-drawer-open</code> on <code>&lt;body&gt;</code> yourself, or
+        call <code>flint.drawer(true/false)</code>.</li>
+  </ul>
+  <p>Icons are empty placeholder squares (a <code>fl-icon</code> span renders a
+     gray block) — swap in any real icon set without touching other markup;
+     sizes are fixed by the surrounding component classes.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="gs-tokens">Tokens</h2>
+  <p>The whole look is ~30 CSS custom properties on <code>:root</code> in
+     <code>flint.css</code>. The essentials:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Default</th><th>Role</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td><code>#1a73e8</code></td><td>Selection, links, focus, filled buttons</td></tr>
+      <tr><td><code>--fl-tint</code></td><td><code>#e8f0fe</code></td><td>Selected-state fills (pills, rows)</td></tr>
+      <tr><td><code>--fl-border</code></td><td><code>#dadce0</code></td><td>Every border — replaces every shadow</td></tr>
+      <tr><td><code>--fl-font</code></td><td><code>system-ui</code></td><td>OS default — no webfont; override to brand</td></tr>
+      <tr><td><code>--fl-radius</code> / <code>--fl-radius-card</code></td><td><code>4px</code> / <code>8px</code></td><td>Corner radii</td></tr>
+      <tr><td><code>--fl-topbar-h</code></td><td><code>64px</code> (56px &lt;600px)</td><td>Top bar height</td></tr>
+      <tr><td><code>--fl-content-max</code></td><td><code>960px</code></td><td>Desktop reading column</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td><code>150ms</code></td><td>Motion</td></tr>
+    </tbody>
+  </table>
+  <p>Override inline or in your own stylesheet — no rebuild:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-accent: #188038;    /* green Google */
+  --fl-tint: #e6f4ea;
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Each component page's <strong>Theming</strong> section lists the tokens it
+     actually consumes.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="gs-next">Next steps</h2>
+  <ul>
+    <li>Browse the <a href="index.html">components</a> — every page has a live
+        example and copyable markup.</li>
+    <li>Open a <code>demos/*.html</code> file directly for a full-viewport
+        reference.</li>
+    <li>Check the <a href="roadmap.html">roadmap</a> for what's coming — forms
+        and overlays land next.</li>
+  </ul>
+</section>
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="get-started.html">Get started</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="https://github.com/PLACEHOLDER/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="js/flint.js?v=0.1.0" defer></script>
+<script src="js/docs-ui.js?v=0.2.0" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+---
+layout: layouts/base.njk
+permalink: components/auth.html
+assetRoot: ../
+title: Auth shell
+section: components
+current: auth
+depth: 1
+lead: Centered sign-in / sign-up card with label-wrapped fields — zero JavaScript, one breakpoint.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The auth shell is a one-purpose frame: top bar, centered card, nothing
+     else. It is the lightest shell in the library — no nav, no drawer, no JS
+     at all. The card and its fields are part of the shell, not separate
+     components.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>Sign-in, sign-up, password reset, MFA challenge — any single form screen
+        reached before the app shell.</li>
+    <li>You want the form to work without JS — it's a plain <code>&lt;form&gt;</code>
+        posting anywhere you like.</li>
+    <li>Consistency with the app shells matters — same top bar, same tokens,
+        same flat borders.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>The screen has navigation or multiple destinations — use a real shell.</li>
+    <li>You need form controls beyond text inputs (selects, toggles) — the field
+        styles cover inputs only; the planned 0.2 components extend this.</li>
+    <li>The flow is multi-step with progress indication — wrap your own step
+        indicator inside the card.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Auth shell anatomy diagram">
+      <!-- viewport -->
+      <rect x="1" y="1" width="598" height="338" rx="8" fill="#f8f9fa" stroke="#dadce0"/>
+      <!-- 1. top bar -->
+      <rect x="1" y="1" width="598" height="48" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="24" y="20" width="52" height="8" rx="4" fill="#dadce0"/>
+      <rect x="520" y="16" width="54" height="18" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 2. card -->
+      <rect x="170" y="72" width="260" height="238" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 3. title + subtitle -->
+      <rect x="194" y="96" width="80" height="12" rx="6" fill="#444746"/>
+      <rect x="194" y="118" width="160" height="8" rx="4" fill="#9aa0a6"/>
+      <!-- 4. fields -->
+      <rect x="194" y="146" width="212" height="40" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="202" y="153" width="34" height="7" rx="3.5" fill="#9aa0a6"/>
+      <rect x="194" y="198" width="212" height="40" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="202" y="205" width="56" height="7" rx="3.5" fill="#9aa0a6"/>
+      <!-- helper link -->
+      <rect x="360" y="252" width="46" height="7" rx="3.5" fill="#1a73e8"/>
+      <!-- 5. actions row -->
+      <rect x="194" y="276" width="90" height="7" rx="3.5" fill="#1a73e8"/>
+      <rect x="322" y="270" width="84" height="26" rx="4" fill="#1a73e8"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="50" cy="25" r="11" fill="#1a73e8"/><text x="50" y="29" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="170" cy="82" r="11" fill="#1a73e8"/><text x="170" y="86" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="194" cy="100" r="11" fill="#1a73e8"/><text x="194" y="104" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="300" cy="146" r="11" fill="#1a73e8"/><text x="300" y="150" fill="#ffffff" text-anchor="middle">4</text></g>
+        <g><circle cx="364" cy="283" r="11" fill="#1a73e8"/><text x="364" y="287" fill="#ffffff" text-anchor="middle">5</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Top app bar</strong> — product wordmark left; often just a Help button right.</li>
+      <li><strong>Card</strong> — max 400px, centered, 1px border, generous padding; the only surface on a plain background.</li>
+      <li><strong>Title + subtitle</strong> — "Sign in" plus one line of context.</li>
+      <li><strong>Fields</strong> — <code>fl-field</code>: label above, bordered input; the label wraps the input so clicking it focuses.</li>
+      <li><strong>Action row</strong> — secondary link ("Create account") left, filled button right.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Zero JS:</strong> no <code>flint.js</code> needed — the card is a real form; submit posts wherever the <code>action</code> says.</li>
+    <li><strong>One breakpoint:</strong> the card is fluid and centers at every width; under 600px the top bar drops to 56px and the card's side margins shrink. No layout flip.</li>
+    <li><strong>Field states:</strong> hover darkens the border, focus takes the accent border, invalid (native <code>:invalid</code>) is styled too — all in CSS.</li>
+    <li><strong>Card width:</strong> capped at ~400px — long forms should split across screens, not widen the card.</li>
+    <li>Pair it with the drawer/rail/bottom-nav shell after authentication — the top bar is identical, so the transition doesn't jump.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Each field is a <code>&lt;label class="fl-field"&gt;</code> wrapping its input — the label association is structural, no <code>for</code>/<code>id</code> needed.</li>
+    <li>Use the right <code>autocomplete</code> tokens (<code>email</code>, <code>current-password</code>, <code>new-password</code>) — password managers and the HTML spec both expect them.</li>
+    <li>The card is a <code>&lt;form&gt;</code> with an <code>&lt;h2&gt;</code> — landmark and heading structure come free.</li>
+    <li>Errors: use native validation first (<code>required</code>, <code>type</code>); server errors should be announced with <code>role="alert"</code> text inside the card.</li>
+    <li>Focus order is natural (DOM order); <code>:focus-visible</code> gets the accent ring.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page — a working sign-in form.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/auth.html — rendered live</span>
+      <a href="../demos/auth.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/auth.html" title="Auth shell live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Only the stylesheet is needed — the auth shell uses no JavaScript.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+{% endset %}
+  {% set shell %}
+<body class="fl-reset">
+<div class="fl-shell-auth">
+
+  <header class="fl-top-bar">
+    <h1 class="fl-top-bar__title">Flint</h1>
+    <button class="fl-btn fl-btn--text">Help</button>
+  </header>
+
+  <main class="fl-shell-auth__content">
+    <form class="fl-auth-card" action="#" method="post">
+      <h2 class="fl-auth-card__title">Sign in</h2>
+      <p class="fl-auth-card__subtitle">Use your Flint account to continue.</p>
+
+      <label class="fl-field">
+        <span class="fl-field__label">Email</span>
+        <input class="fl-field__input" type="email" name="email"
+               autocomplete="email" required>
+      </label>
+
+      <label class="fl-field">
+        <span class="fl-field__label">Password</span>
+        <input class="fl-field__input" type="password" name="password"
+               autocomplete="current-password" required>
+      </label>
+
+      <div style="margin-top:16px; text-align:right;">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <div style="margin-top:24px; display:flex; justify-content:space-between;
+                  align-items:center; gap:8px; flex-wrap:wrap;">
+        <a href="#">Create account</a>
+        <button class="fl-btn fl-btn--filled" type="submit">Sign in</button>
+      </div>
+    </form>
+  </main>
+
+</div>
+</body>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(shell) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/auth.html">demos/auth.html</a> for the full-viewport
+     version. Its source is a copy-paste-ready starting point.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>Focus border on inputs, filled button, links</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Card border, input borders</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Input corner radius</td></tr>
+      <tr><td><code>--fl-radius-card</code></td><td>Card corner radius</td></tr>
+      <tr><td><code>--fl-topbar-h</code></td><td>Top bar height (56px under 600px)</td></tr>
+      <tr><td><code>--fl-font</code></td><td>Everything text</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-accent: #188038;
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

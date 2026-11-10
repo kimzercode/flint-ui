@@ -21,7 +21,7 @@ Guiding principles:
 
 | Version | Theme | Contents |
 |---|---|---|
-| **0.2.0** | Docs foundation | `docs/` static site built with Flint (shell from the m2-mock prototype), page template with copy-button snippets, first component pages (buttons, cards, lists, text field, shells), GitHub Pages deploy. Prereq: repo pushed to GitHub. |
+| **0.2.0** | Docs foundation | ✅ `docs/` static site built with Flint (shell from the m2-mock prototype), page template with copy-button snippets, first component pages (5 components: buttons, cards, lists, dialog, bottom-sheet), SVG illustrations. Prereq: repo pushed to GitHub. |
 | **0.3.0** | Forms | Checkbox, radio, switch, select/menu, text-field variants (filled, error/helper, textarea). Biggest adoption unlock. |
 | **0.4.0** | Feedback & overlays | Dialog (scrim already exists), snackbar, progress (linear/circular), tooltip, chips split from badges. |
 | **0.5.0** | Data display | Data table, standalone tabs, pagination, avatar. |

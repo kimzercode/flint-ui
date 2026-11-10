@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Components — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="css/flint.css?v=0.1.0">
+  <link rel="stylesheet" href="css/docs.css?v=0.2.1">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="get-started.html"
+       >Get started</a>
+    <a href="index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/PLACEHOLDER/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="get-started.html"
+         >Get started</a></li>
+    <li><a href="index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      
+      <li>
+        <a href="components/buttons.html"
+           >Buttons<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/cards.html"
+           >Cards<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/dialog.html"
+           >Dialog<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-sheet.html"
+           >Bottom sheet<small>0.2</small></a>
+      </li>
+      
+    </ul>
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    <section class="docs-hero">
+  <h1>Components</h1>
+  <p>Flint UI is a set of interactive building blocks for flat, Google-flavored
+     app shells — pure CSS, ~50 lines of vanilla JS, framework-agnostic.</p>
+  <p>Browse the components below. Every page pairs live examples rendered with
+     real Flint markup with copy-pasteable code.</p>
+</section>
+
+<ul class="docs-grid">
+  
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/auth.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">Auth shell</span>
+        <span class="docs-card__desc">Centered 400px column with an outlined-field card for sign-in screens.</span>
+      </span>
+    </a>
+  </li>
+  
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/bottom-nav.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">Bottom-nav shell</span>
+        <span class="docs-card__desc">App frame with a top bar and 3–5 destinations pinned to the bottom.</span>
+      </span>
+    </a>
+  </li>
+  
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/drawer.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">Drawer shell</span>
+        <span class="docs-card__desc">App frame with a permanent 280px nav column on desktop, off-canvas on mobile.</span>
+      </span>
+    </a>
+  </li>
+  
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/lists.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">Lists</span>
+        <span class="docs-card__desc">Single/two/three-line content rows in the Gmail-2020 style.</span>
+      </span>
+    </a>
+  </li>
+  
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/rail.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">Rail shell</span>
+        <span class="docs-card__desc">App frame that is a bottom nav on mobile and an 80px icon rail on desktop.</span>
+      </span>
+    </a>
+  </li>
+  
+
+  
+  <li class="docs-card docs-card--planned">
+    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__body">
+      <span class="docs-card__name">Buttons</span>
+      <span class="docs-card__desc">Filled, outlined and text buttons with flat state layers.</span>
+    </span>
+  </li>
+  
+  <li class="docs-card docs-card--planned">
+    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__body">
+      <span class="docs-card__name">Cards</span>
+      <span class="docs-card__desc">Outlined content containers, no shadows.</span>
+    </span>
+  </li>
+  
+  <li class="docs-card docs-card--planned">
+    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__body">
+      <span class="docs-card__name">Dialog</span>
+      <span class="docs-card__desc">Modal dialog over the existing scrim, with focus handling.</span>
+    </span>
+  </li>
+  
+  <li class="docs-card docs-card--planned">
+    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__body">
+      <span class="docs-card__name">Bottom sheet</span>
+      <span class="docs-card__desc">Sheet docked above the tab bar, reusing the scrim.</span>
+    </span>
+  </li>
+  
+</ul>
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="get-started.html">Get started</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="https://github.com/PLACEHOLDER/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="js/flint.js?v=0.1.0" defer></script>
+<script src="js/docs-ui.js?v=0.2.0" defer></script>
+
+</body>
+</html>

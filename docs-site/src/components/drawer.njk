@@ -1,0 +1,238 @@
+---
+layout: layouts/base.njk
+permalink: components/drawer.html
+assetRoot: ../
+title: Drawer shell
+section: components
+current: drawer
+depth: 1
+lead: App frame with a permanent 280px navigation column on desktop and an off-canvas drawer over a scrim on mobile.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The drawer shell is for app-like products with persistent navigation —
+     the Gmail-2020 pattern: a permanent inset nav column on wide screens,
+     the same markup collapsing to an off-canvas drawer on phones.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>Your product has more destinations than a bottom bar can hold, and they
+        deserve permanent visibility on desktop.</li>
+    <li>You want one markup that is a nav column on desktop and a drawer on
+        mobile, with no separate mobile template.</li>
+    <li>The content is a feed/workspace (mail, docs, admin) rather than a flow.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>The page is a marketing or landing page — no shell is needed.</li>
+    <li>You only have 3–5 top-level destinations — the bottom-nav shell is
+        simpler and more mobile-native.</li>
+    <li>Navigation must stay visible while scrolling on phones; drawers are
+        opened on demand there.</li>
+  </ul>
+  {{ callout({
+    variant: "planned",
+    title: "Planned in 0.2 — bottom sheet",
+    text: "The planned bottom sheet component reuses this shell's scrim.",
+    href: "bottom-sheet.html",
+    linkText: "Bottom sheet stub"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Drawer shell anatomy diagram">
+      <!-- shell frame -->
+      <rect x="1" y="1" width="598" height="338" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 1. top bar -->
+      <rect x="1" y="1" width="598" height="48" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="24" y="20" width="72" height="8" rx="4" fill="#dadce0"/>
+      <rect x="540" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <rect x="508" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <!-- 2. drawer column -->
+      <rect x="1" y="49" width="200" height="289" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 3. nav rows: selected pill + rows -->
+      <rect x="12" y="72" width="176" height="32" rx="16" fill="#e8f0fe"/>
+      <rect x="28" y="83" width="12" height="10" rx="2" fill="#1a73e8"/>
+      <rect x="52" y="83" width="60" height="8" rx="4" fill="#1a73e8"/>
+      <rect x="28" y="122" width="12" height="10" rx="2" fill="#5f6368"/>
+      <rect x="52" y="123" width="52" height="8" rx="4" fill="#444746"/>
+      <rect x="28" y="158" width="12" height="10" rx="2" fill="#5f6368"/>
+      <rect x="52" y="159" width="44" height="8" rx="4" fill="#444746"/>
+      <rect x="28" y="194" width="12" height="10" rx="2" fill="#5f6368"/>
+      <rect x="52" y="195" width="50" height="8" rx="4" fill="#444746"/>
+      <!-- divider -->
+      <rect x="16" y="222" width="168" height="1" fill="#dadce0"/>
+      <!-- footer/account row -->
+      <rect x="28" y="290" width="24" height="24" rx="12" fill="#dadce0"/>
+      <rect x="62" y="297" width="80" height="8" rx="4" fill="#444746"/>
+      <!-- 4. content -->
+      <rect x="230" y="80" width="330" height="12" rx="6" fill="#dadce0"/>
+      <rect x="230" y="110" width="290" height="8" rx="4" fill="#e8eaed"/>
+      <rect x="230" y="128" width="330" height="8" rx="4" fill="#e8eaed"/>
+      <rect x="230" y="146" width="260" height="8" rx="4" fill="#e8eaed"/>
+      <rect x="230" y="180" width="330" height="100" rx="8" fill="#e8f0fe"/>
+      <!-- 5. scrim indicator (mobile open state) -->
+      <rect x="420" y="240" width="150" height="80" rx="8" fill="#3c4043" opacity="0.25"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="300" cy="25" r="11" fill="#1a73e8"/><text x="300" y="29" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="120" cy="60" r="11" fill="#1a73e8"/><text x="120" y="64" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="210" cy="88" r="11" fill="#1a73e8"/><text x="210" y="92" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="400" cy="90" r="11" fill="#1a73e8"/><text x="400" y="94" fill="#ffffff" text-anchor="middle">4</text></g>
+        <g><circle cx="560" cy="310" r="11" fill="#1a73e8"/><text x="560" y="314" fill="#ffffff" text-anchor="middle">5</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Top app bar</strong> — stays fixed; the column scrolls, not the bar.</li>
+      <li><strong>Drawer column</strong> — 280px permanent on wide screens; part of the grid, not a floating panel.</li>
+      <li><strong>Nav rows</strong> — real links/buttons; the current destination gets the inset tinted pill via <code>aria-current="page"</code>.</li>
+      <li><strong>Content</strong> — the only scrolling area; capped by <code>--fl-content-max</code>.</li>
+      <li><strong>Scrim (mobile only)</strong> — under the drawer when it slides in; tap or Escape closes.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>≥905px:</strong> the drawer is a permanent 280px grid column. The top bar spans both columns; only the content scrolls.</li>
+    <li><strong>&lt;905px:</strong> the drawer is fixed off-canvas and slides in over a scrim. <code>flint.js</code> toggles a <code>fl-drawer-open</code> class on <code>&lt;body&gt;</code> and syncs <code>aria-expanded</code> on the open button.</li>
+    <li><strong>Closing:</strong> scrim click, the close button, or <kbd>Escape</kbd>.</li>
+    <li><strong>Manual control:</strong> <code>flint.drawer(true)</code> / <code>flint.drawer(false)</code>.</li>
+    <li><strong>Selection:</strong> rows key off <code>aria-current="page"</code>; <code>flint.js</code> reflects it on click inside any <code>[data-fl-nav]</code> container. With server routing you set it yourself and skip JS entirely.</li>
+    <li><strong>Links over buttons:</strong> rows can be <code>&lt;a href&gt;</code> — navigation still happens; the selected state is reflected.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Open/close buttons need <code>aria-label</code>, <code>aria-controls</code>, and an initial <code>aria-expanded="false"</code> — flint.js keeps them in sync.</li>
+    <li>The nav has <code>aria-label="Primary"</code>; the drawer has <code>aria-label</code> so screen readers announce it as a landmark.</li>
+    <li>The scrim is <code>aria-hidden="true"</code> — it is decoration, not a control.</li>
+    <li>Rows are real <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code> elements — keyboard support is built in; <code>:focus-visible</code> gets the accent ring.</li>
+    <li>Icon placeholders and badges are <code>aria-hidden</code>; put meaning in the row text or the button label.</li>
+    <li>Include <code>viewport-fit=cover</code> in your meta viewport for safe-area support.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code> —
+     resize the browser or use the fullscreen link to see both drawer states.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/drawer.html — rendered live</span>
+      <a href="../demos/drawer.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/drawer.html" title="Drawer shell live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below is the whole drawer shell.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {% set shell %}
+<body class="fl-reset">
+<div class="fl-shell-drawer">
+
+  <header class="fl-top-bar">
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-open
+            aria-label="Open navigation menu" aria-controls="my-drawer"
+            aria-expanded="false">
+      <span class="fl-icon"></span>
+    </button>
+    <h1 class="fl-top-bar__title">App name</h1>
+  </header>
+
+  <aside class="fl-drawer" id="my-drawer">
+    <div class="fl-drawer__header">
+      App name
+      <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+              aria-label="Close navigation menu">
+        <span class="fl-icon"></span>
+      </button>
+    </div>
+    <nav class="fl-nav" data-fl-nav aria-label="Primary">
+      <a class="fl-nav-item" aria-current="page" href="#"><span class="fl-icon"></span>Inbox<span class="fl-badge">3</span></a>
+      <a class="fl-nav-item" href="#"><span class="fl-icon"></span>Sent</a>
+    </nav>
+    <hr class="fl-divider">
+    <div class="fl-drawer__footer">…account row…</div>
+  </aside>
+
+  <div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+  <main class="fl-content">…</main>
+</div>
+</body>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(shell) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged. For the real
+     thing — full viewport height, both breakpoints — open
+     <a href="../demos/drawer.html">demos/drawer.html</a>. Its source is a
+     copy-paste-ready starting point.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-tint</code></td><td>Selected nav row pill fill</td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Selected row icon/text tint, focus ring</td></tr>
+      <tr><td><code>--fl-hover</code></td><td>Row hover fill</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Drawer column divider (replaces shadows)</td></tr>
+      <tr><td><code>--fl-topbar-h</code></td><td>Top bar height</td></tr>
+      <tr><td><code>--fl-content-max</code></td><td>Max content column width on desktop</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Drawer slide-in motion</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-accent: #188038;    /* green Google */
+  --fl-tint: #e6f4ea;
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

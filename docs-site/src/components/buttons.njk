@@ -1,0 +1,46 @@
+---
+layout: layouts/base.njk
+permalink: components/buttons.html
+assetRoot: ../
+title: Buttons
+section: components
+current: buttons
+depth: 1
+lead: Filled, outlined and text buttons with flat state layers — planned, not yet in the library.
+toc:
+  design:
+    - id: status
+      title: Status
+  impl:
+    - id: status
+      title: Status
+---
+{% from "macros.njk" import callout with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-status">Status</h2>
+  {{ callout({
+    variant: "planned",
+    title: "Planned in 0.2 — not yet in the library",
+    text: "Filled, outlined and text buttons with flat state layers. This page exists so the sidebar has an honest destination; there is nothing to use yet.",
+    href: "../roadmap.html",
+    linkText: "See the roadmap"
+  }) }}
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-status">Status</h2>
+  {{ callout({
+    variant: "planned",
+    title: "No code yet",
+    text: "Snippets, live examples and token tables appear here when the component lands.",
+    href: "../roadmap.html",
+    linkText: "See the roadmap"
+  }) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

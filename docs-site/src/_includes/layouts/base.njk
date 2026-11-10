@@ -1,0 +1,74 @@
+---
+# Shared docs shell: top app bar + sidebar + footer.
+# Page frontmatter drives it:
+#   assetRoot — relative path from the page to docs/ root ("" or "../")
+#   section   — "components" | "get-started" | "roadmap" (tooltip underline)
+#   current   — component slug for sidebar highlighting (components pages)
+---
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>{% if title %}{{ title }} — {% endif %}Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="{{ assetRoot }}css/flint.css?v=0.1.0">
+  <link rel="stylesheet" href="{{ assetRoot }}css/docs.css?v=0.2.1">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="{{ assetRoot }}index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="{{ assetRoot }}get-started.html"
+       {% if section == "get-started" %}class="is-active" aria-current="page"{% endif %}>Get started</a>
+    <a href="{{ assetRoot }}index.html"
+       {% if section == "components" %}class="is-active" aria-current="page"{% endif %}>Components</a>
+    <a href="{{ assetRoot }}roadmap.html"
+       {% if section == "roadmap" %}class="is-active" aria-current="page"{% endif %}>Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/PLACEHOLDER/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+{# Scrim: closed by flint.js via data-fl-drawer-close; hidden >=905px by the
+   library's own media query. #}
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  {% include "partials/sidebar.njk" %}
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    {{ content | safe }}
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="{{ assetRoot }}get-started.html">Get started</a>
+        <a href="{{ assetRoot }}roadmap.html">Roadmap</a>
+        <a href="https://github.com/PLACEHOLDER/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="{{ assetRoot }}js/flint.js?v=0.1.0" defer></script>
+<script src="{{ assetRoot }}js/docs-ui.js?v=0.2.0" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "flint-ui-docs",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Flint UI docs site (Eleventy). Build tooling is scoped here and never ships with the library.",
+  "type": "module",
+  "scripts": {
+    "vendor": "node scripts/vendor.mjs",
+    "build": "npm run vendor && eleventy",
+    "dev": "npm run vendor && eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2"
+  }
+}

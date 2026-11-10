@@ -1,0 +1,799 @@
+/* ==========================================================================
+   Flint UI — flat Google-flavored app shells
+   v0.1.0 · no dependencies · no shadows · 1px borders instead
+   Customize by overriding the tokens below (inline or in your own CSS).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Surface & text */
+  --fl-surface: #ffffff;
+  --fl-text: #1f1f1f;
+  --fl-text-secondary: #444746;
+  --fl-icon: #5f6368;
+  --fl-icon-ph: #dadce0;       /* wireframe placeholder fill (icons) */
+
+  /* Accent (Google blue 600 family) */
+  --fl-accent: #1a73e8;
+  --fl-accent-hover: #1b66c9;
+  --fl-accent-pressed: #1557b0;
+  --fl-tint: #e8f0fe;          /* selected-state tint */
+
+  /* Flat "elevation" */
+  --fl-hover: #f8f9fa;         /* hover fill */
+  --fl-border: #dadce0;        /* replaces every shadow */
+  --fl-divider: #e8eaed;
+
+  /* Disabled */
+  --fl-disabled: #9aa0a6;
+
+  /* Type */
+  --fl-font: system-ui, sans-serif;   /* OS default — no webfont; override to brand */
+  --fl-fs-headline: 24px;
+  --fl-fs-title: 16px;
+  --fl-fs-body: 14px;
+  --fl-fs-caption: 12px;
+
+  /* Shape (flat Google: small on controls, larger on cards) */
+  --fl-radius: 4px;
+  --fl-radius-lg: 8px;
+  --fl-radius-card: 8px;
+
+  /* Spacing (4px grid) */
+  --fl-space-1: 4px;
+  --fl-space-2: 8px;
+  --fl-space-3: 16px;
+  --fl-space-4: 24px;
+
+  /* Metrics */
+  --fl-topbar-h: 64px;         /* 56px under 600px */
+  --fl-tabbar-h: 56px;         /* M2 bottom-nav height, every breakpoint */
+  --fl-content-max: 960px;     /* desktop reading column */
+
+  /* Layers */
+  --fl-z-fab: 10;
+  --fl-z-topbar: 20;
+  --fl-z-focus: 30;
+
+  /* Motion */
+  --fl-ease: cubic-bezier(0.2, 0, 0, 1);
+  --fl-dur: 150ms;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset — minimal and global, so shells behave the same on any page
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%; /* no font inflation on rotate */
+}
+
+/* Media can never blow out a shell */
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* Typography applies to the whole shell tree */
+.fl-reset,
+.fl-shell,
+.fl-shell-auth {
+  font-family: var(--fl-font);
+  font-size: var(--fl-fs-body);
+  line-height: 1.5;
+  color: var(--fl-text);
+  background: var(--fl-surface);
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a { color: var(--fl-accent); text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: 2px;
+  border-radius: var(--fl-radius);
+}
+
+/* Icon placeholder — flat gray wireframe block wherever an icon would sit.
+   No icon font to load, so first paint stays fast. To use real icons later,
+   restyle this one class (or swap the markup) — nothing else changes. */
+.fl-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--fl-radius);
+  background: var(--fl-icon-ph);
+}
+
+/* Active items preview what a real icon would do: the placeholder takes the
+   active color (currentColor = whatever the item's selection color is).
+   Content-list rows keep neutral icons on their tint, like Gmail mail rows. */
+.fl-tab[aria-current="page"] .fl-icon,
+.fl-tab.is-active .fl-icon,
+.fl-nav-item[aria-current="page"] .fl-icon,
+.fl-nav-item.is-active .fl-icon {
+  background: currentColor;
+}
+
+/* --------------------------------------------------------------------------
+   3. Base shell — app bar / scrolling content / bottom tab bar
+   -------------------------------------------------------------------------- */
+.fl-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh; /* scroll lives in the content area, bar stays put */
+}
+
+/* App bar --------------------------------------------------------------- */
+.fl-top-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  height: var(--fl-topbar-h);
+  padding: 0 var(--fl-space-3);
+  background: var(--fl-surface);
+  border-bottom: 1px solid var(--fl-border);
+  z-index: var(--fl-z-topbar);
+}
+
+.fl-top-bar__title {
+  margin: 0;
+  font-size: var(--fl-fs-title);
+  font-weight: 500;
+  color: var(--fl-text);
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon buttons: generous target, rounded-square flat hover */
+.fl-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: var(--fl-radius-lg);
+  color: var(--fl-icon);
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-icon-btn:hover { background: var(--fl-hover); }
+.fl-icon-btn:active { background: var(--fl-divider); }
+
+/* Content ---------------------------------------------------------------- */
+.fl-content {
+  overflow-y: auto;
+  padding: var(--fl-space-3);
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 905px) {
+  .fl-content {
+    max-width: var(--fl-content-max);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--fl-space-4);
+  }
+}
+
+/* Bottom tab bar ---------------------------------------------------------- */
+.fl-tab-bar {
+  display: flex;
+  align-items: center;
+  background: var(--fl-surface);
+  border-top: 1px solid var(--fl-border);
+  /* replaces the classic bottom-nav drop shadow */
+  height: calc(var(--fl-tabbar-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.fl-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;   /* mobile: icon stacked over label */
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 4px;
+  color: var(--fl-icon);
+  text-decoration: none;
+  font-size: var(--fl-fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.01785714em;
+  transition: color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-tab__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.fl-tab__label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Selected state driven purely by aria-current: works with or without JS.
+   Mobile keeps the M2 bottom-nav selection: accent color only, no pill —
+   the tint pill is the desktop/side-nav pattern (see the ≥905px block). */
+.fl-tab[aria-current="page"],
+.fl-tab.is-active {
+  color: var(--fl-accent);
+}
+
+.fl-tab:hover { color: var(--fl-text-secondary); }
+.fl-tab[aria-current="page"]:hover,
+.fl-tab.is-active:hover { color: var(--fl-accent); }
+
+/* Desktop: labels inline beside icons in the same 56px bar. Selection takes
+   the tint pill around the whole destination — the Gmail-2020 side-nav
+   pattern; the rail shell (§11) opts back out to the color-only state. */
+@media (min-width: 905px) {
+  .fl-tab-bar { justify-content: center; gap: var(--fl-space-2); }
+  .fl-tab {
+    flex: 0 0 auto;
+    flex-direction: row;
+    gap: var(--fl-space-2);
+    height: 40px;
+    padding: 0 var(--fl-space-3);
+    border-radius: 20px;
+  }
+  .fl-tab:hover { background: var(--fl-hover); }
+  .fl-tab[aria-current="page"],
+  .fl-tab.is-active { background: var(--fl-tint); }
+  .fl-tab .fl-badge { position: static; }
+}
+
+/* --------------------------------------------------------------------------
+   4. FAB — flat: white circle with a border, never a shadow
+   -------------------------------------------------------------------------- */
+.fl-fab {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--fl-tabbar-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: var(--fl-z-fab);
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  color: var(--fl-accent);
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-fab:hover { background: var(--fl-hover); }
+.fl-fab:active { background: var(--fl-divider); }
+.fl-fab .fl-icon { width: 24px; height: 24px; background: currentColor; }
+
+@media (min-width: 905px) {
+  .fl-fab { right: calc((100% - var(--fl-content-max)) / 2 + var(--fl-space-4)); }
+}
+
+/* --------------------------------------------------------------------------
+   5. Badges — for top-bar icons and tabs
+   -------------------------------------------------------------------------- */
+.fl-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--fl-accent);
+  color: var(--fl-surface);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.fl-tab .fl-badge { top: 2px; right: calc(50% - 14px); } /* rides the 24px icon */
+
+/* --------------------------------------------------------------------------
+   6. Small building blocks the demos need (cards, labels, buttons)
+   -------------------------------------------------------------------------- */
+.fl-card {
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius-card);
+  padding: var(--fl-space-3);
+}
+
+.fl-card + .fl-card { margin-top: var(--fl-space-3); }
+
+.fl-card__title {
+  margin: 0;
+  font-size: var(--fl-fs-title);
+  font-weight: 500;
+  color: var(--fl-text);
+}
+
+.fl-card__text {
+  margin: var(--fl-space-1) 0 0;
+  font-size: var(--fl-fs-body);
+  line-height: 1.45;
+  color: var(--fl-text-secondary);
+}
+
+.fl-section-label {
+  margin: var(--fl-space-4) 0 var(--fl-space-2);
+  font-size: var(--fl-fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--fl-text-secondary);
+}
+
+.fl-section-label:first-child { margin-top: 0; }
+
+.fl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 var(--fl-space-3);
+  border-radius: var(--fl-radius);
+  font-size: var(--fl-fs-body);
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-btn--filled { background: var(--fl-accent); color: var(--fl-surface); }
+.fl-btn--filled:hover { background: var(--fl-accent-hover); }
+.fl-btn--filled:active { background: var(--fl-accent-pressed); }
+
+.fl-btn--outline {
+  border: 1px solid var(--fl-border);
+  color: var(--fl-accent);
+}
+.fl-btn--outline:hover { background: var(--fl-hover); }
+
+.fl-btn--text { color: var(--fl-accent); }
+.fl-btn--text:hover { background: var(--fl-hover); }
+
+/* --------------------------------------------------------------------------
+   7. Auth shell — top strip + centered 400px column, zero JS
+   -------------------------------------------------------------------------- */
+.fl-shell-auth {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--fl-surface);
+}
+
+.fl-shell-auth__content {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--fl-space-4) var(--fl-space-3);
+}
+
+.fl-auth-card {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--fl-border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.fl-auth-card__title {
+  margin: 0;
+  font-size: var(--fl-fs-headline);
+  font-weight: 500;
+  line-height: 1.33;
+  color: var(--fl-text);
+}
+
+.fl-auth-card__subtitle {
+  margin: var(--fl-space-2) 0 0;
+  font-size: var(--fl-fs-body);
+  line-height: 1.45;
+  color: var(--fl-text-secondary);
+}
+
+/* Text field: Material 2019 outlined style, flat */
+.fl-field {
+  display: block;
+  margin-top: var(--fl-space-4);
+}
+
+.fl-field__label {
+  display: block;
+  font-size: var(--fl-fs-caption);
+  font-weight: 500;
+  color: var(--fl-text-secondary);
+  margin-bottom: var(--fl-space-1);
+}
+
+.fl-field__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--fl-space-3);
+  font: inherit;
+  color: var(--fl-text);
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius);
+  transition: border-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-field__input:hover { border-color: var(--fl-text); }
+.fl-field__input:focus {
+  outline: none;
+  border-color: var(--fl-accent);
+  box-shadow: inset 0 0 0 1px var(--fl-accent); /* 2px-looking focus ring, still flat */
+}
+
+/* Full-width mobile for auth card */
+@media (max-width: 599px) {
+  .fl-auth-card { padding: 24px 20px; border-radius: var(--fl-radius-card); }
+}
+
+/* --------------------------------------------------------------------------
+   8. Narrow top bar on small phones
+   -------------------------------------------------------------------------- */
+@media (max-width: 599px) {
+  :root {
+    --fl-topbar-h: 56px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. Navigation list — drawer rows (Gmail-2020 inset pill selection)
+   -------------------------------------------------------------------------- */
+.fl-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--fl-space-2);
+}
+
+.fl-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-4);
+  min-height: 40px;
+  padding: 0 20px 0 16px;
+  border-radius: 0 20px 20px 0;
+  color: var(--fl-text);
+  font-size: var(--fl-fs-body);
+  text-decoration: none;
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-nav-item .fl-icon { width: 20px; height: 20px; }
+
+.fl-nav-item:hover { background: var(--fl-hover); }
+
+.fl-nav-item[aria-current="page"],
+.fl-nav-item.is-active {
+  background: var(--fl-tint);
+  color: var(--fl-accent);
+  font-weight: 500;
+}
+
+/* Badge sits inline at the row's right edge here, not floating */
+.fl-nav-item .fl-badge { position: static; margin-left: auto; }
+
+/* hr divider between drawer sections */
+.fl-divider {
+  border: none;
+  border-top: 1px solid var(--fl-divider);
+  margin: var(--fl-space-2) var(--fl-space-3);
+  width: auto;
+}
+
+/* Responsive-visibility utilities */
+@media (min-width: 905px) {
+  .fl-only-mobile { display: none !important; }
+}
+
+/* --------------------------------------------------------------------------
+   10. Drawer shell — permanent drawer ≥905px, off-canvas + scrim below
+   -------------------------------------------------------------------------- */
+.fl-shell-drawer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+}
+
+/* Mobile: drawer is fixed and hidden off-canvas */
+.fl-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(280px, 84vw);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--fl-surface);
+  border-right: 1px solid var(--fl-border);
+  transform: translateX(-102%); /* allow the 1px border to fully exit */
+  transition: transform 200ms var(--fl-ease);
+}
+
+/* `fl-drawer-open` is toggled on <body> by flint.js (no elements needed) */
+body.fl-drawer-open .fl-drawer { transform: none; }
+body.fl-drawer-open { overflow: hidden; }
+
+.fl-drawer__header {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-3);
+  min-height: var(--fl-topbar-h);
+  padding: var(--fl-space-3) var(--fl-space-4);
+  font-size: 22px;
+  color: var(--fl-icon);
+}
+
+.fl-drawer__spacer { flex: 1 1 auto; }
+
+.fl-drawer__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-3);
+  margin-top: auto;
+  padding: var(--fl-space-3) var(--fl-space-4);
+}
+
+.fl-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgb(32 33 36 / 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--fl-dur) var(--fl-ease);
+}
+
+body.fl-drawer-open .fl-scrim { opacity: 1; pointer-events: auto; }
+
+@media (min-width: 905px) {
+  .fl-shell-drawer {
+    grid-template-columns: 280px 1fr;
+  }
+  .fl-shell-drawer .fl-top-bar { grid-column: 1 / -1; }
+  .fl-shell-drawer .fl-content { grid-row: 2; }
+
+  .fl-drawer {
+    position: static;
+    grid-row: 2;
+    width: auto;
+    transform: none;
+    transition: none;
+  }
+  .fl-scrim { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   11. Rail shell — bottom tab bar on mobile becomes an icon rail on desktop.
+       Reuses .fl-tab-bar / .fl-tab markup; only the desktop layout differs.
+   -------------------------------------------------------------------------- */
+.fl-shell-rail {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto; /* mobile: bar at the bottom */
+  height: 100dvh;
+}
+
+@media (min-width: 905px) {
+  .fl-shell-rail {
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .fl-shell-rail .fl-top-bar { grid-column: 1 / -1; }
+
+  .fl-shell-rail .fl-tab-bar {
+    grid-row: 2;
+    grid-column: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-top: none;
+    border-right: 1px solid var(--fl-border);
+    padding: var(--fl-space-3) 0 0;
+  }
+
+  /* Rail keeps the stacked icon-over-label tab and opts out of the desktop
+     tint pill — selection here is the mobile M2 style: accent color only */
+  .fl-shell-rail .fl-tab-bar { height: auto; } /* rail fills its grid row */
+  .fl-shell-rail .fl-tab {
+    flex: 0 0 auto;
+    max-width: none;
+    flex-direction: column;
+    gap: 2px;
+    height: auto;
+    padding: 8px 4px 10px;
+    border-radius: 0;
+  }
+  .fl-shell-rail .fl-tab:hover { background: none; }
+  .fl-shell-rail .fl-tab[aria-current="page"],
+  .fl-shell-rail .fl-tab.is-active { background: none; }
+  .fl-shell-rail .fl-tab .fl-badge { position: absolute; }
+}
+
+/* --------------------------------------------------------------------------
+   12. List — content rows (Gmail-2020): single/two/three-line rows with a
+       leading 24px icon or 40px avatar and a trailing meta zone. Spec heights
+       48/72/88px, dense 40/60/76px. Rows separate by spacing, not rules —
+       dividers between sections only (opt in with .fl-list--dividers).
+   -------------------------------------------------------------------------- */
+.fl-list {
+  list-style: none;
+  padding: 0;
+}
+
+.fl-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-3); /* 16px: avatar rows land on the 72dp text keyline */
+  min-height: 48px;
+  padding: var(--fl-space-2) var(--fl-space-3);
+  color: var(--fl-text);
+  font-size: var(--fl-fs-body);
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-list-item--two-line { min-height: 72px; }
+.fl-list-item--three-line { min-height: 88px; }
+
+/* Whole-row targets (no nested controls in the meta zone of these rows) */
+a.fl-list-item,
+button.fl-list-item {
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.fl-list-item:hover,
+button.fl-list-item:hover { background: var(--fl-hover); }
+a.fl-list-item:active,
+button.fl-list-item:active { background: var(--fl-divider); }
+
+/* Selected = tint fill only (Gmail mail rows): content rows keep neutral text,
+   unlike .fl-nav-item where selection also takes the accent */
+.fl-list-item[aria-current="page"],
+.fl-list-item.is-active { background: var(--fl-tint); }
+
+.fl-list-item[aria-disabled="true"] {
+  color: var(--fl-disabled);
+  pointer-events: none;
+}
+
+/* Leading zone: 24dp icon or 40dp avatar (spec sizes) */
+.fl-list-item__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--fl-icon);
+}
+
+.fl-list-item .fl-icon { width: 24px; height: 24px; }
+
+/* Initials as text, or put the class on an <img> (object-fit crops it) */
+.fl-list-item__avatar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--fl-icon-ph);
+  color: var(--fl-text-secondary);
+  font-size: var(--fl-fs-body);
+  font-weight: 500;
+  object-fit: cover;
+}
+
+/* Text block: min-width: 0 is what lets long titles/subs ellipsize */
+.fl-list-item__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fl-list-item__title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fl-list-item__sub {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--fl-text-secondary);
+  font-size: var(--fl-fs-caption);
+}
+
+/* Three-line rows: body text wraps to two lines, then clamps */
+.fl-list-item--three-line .fl-list-item__sub {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Trailing zone: actions, badges, or secondary text (timestamps, values) */
+.fl-list-item__meta {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  margin-left: auto;
+  color: var(--fl-text-secondary);
+  font-size: var(--fl-fs-caption);
+}
+
+/* Badges sit inline here, not floating over the row */
+.fl-list-item__meta .fl-badge { position: static; }
+
+/* 40px icon buttons keep their full touch target without growing 48px rows:
+   the negative margins cancel the row's 8px vertical padding in the layout */
+.fl-list-item__meta .fl-icon-btn { margin: calc(var(--fl-space-2) * -1) 0; }
+
+/* Dense: Gmail-style compact rows (icons preferred over avatars at 40px) */
+.fl-list--dense .fl-list-item { min-height: 40px; }
+.fl-list--dense .fl-list-item--two-line { min-height: 60px; }
+.fl-list--dense .fl-list-item--three-line { min-height: 76px; }
+
+/* Opt-in 1px rules between rows */
+.fl-list--dividers .fl-list-item + .fl-list-item {
+  border-top: 1px solid var(--fl-divider);
+}

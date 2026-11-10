@@ -8,5 +8,9 @@ Thumbs.db
 # Agent harness session storage
 .sessions/
 
+# Docs build tooling (docs-site is source + package.json; built output docs/ is committed)
+docs-site/src/vendor/
+docs-site/node_modules/
+
 # Local screenshots
 /Screenshot*.png

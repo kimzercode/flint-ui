@@ -1,0 +1,19 @@
+{# Docs macros. Import with context: {% from "macros.njk" import callout, snippet with context %} #}
+
+{% macro callout(o) %}
+<div class="docs-callout docs-callout--{{ o.variant or "info" }}">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">{{ o.title }}</h3>
+    {% if o.text %}<p class="docs-callout__text">{{ o.text }}</p>{% endif %}
+    {% if o.href %}<a class="docs-callout__link" href="{{ o.href }}">{{ o.linkText or "Learn more" }}</a>{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{% macro snippet(code) %}
+<div class="docs-snippet">
+  <pre><code>{{ code | trim | escape }}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+{% endmacro %}

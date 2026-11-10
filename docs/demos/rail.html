@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — rail shell demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<div class="fl-shell-rail">
+
+  <header class="fl-top-bar">
+    <h1 class="fl-top-bar__title">Flint Photos</h1>
+    <button class="fl-icon-btn" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" aria-label="Account">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <main class="fl-content">
+    <p class="fl-section-label">Recent</p>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Rail, not drawer</h2>
+      <p class="fl-card__text">On laptops this shell shows a permanent 80px icon rail with tinted pills on the selected destination; the same markup renders as a standard bottom nav on phones.</p>
+    </article>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Interesting</h2>
+      <p class="fl-card__text">The rail reuses .fl-tab-bar and .fl-tab classes — the shell only adds a desktop grid override for it.</p>
+      <div class="fl-card" style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="fl-btn fl-btn--filled">Upload</button>
+        <button class="fl-btn fl-btn--outline">Sort</button>
+      </div>
+    </article>
+  </main>
+
+  <!-- Mobile: bottom tab bar · ≥905px: icon rail (same element) -->
+  <nav class="fl-tab-bar" data-fl-nav aria-label="Primary">
+    <button class="fl-tab" aria-current="page">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Home</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Library</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Search</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Create</span>
+    </button>
+  </nav>
+
+</div>
+
+<script src="../js/flint.js"></script>
+</body>
+</html>

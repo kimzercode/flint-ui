@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Rail shell — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.1.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.2.1">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/PLACEHOLDER/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           aria-current="page">Rail shell</a>
+      </li>
+      
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog<small>0.2</small></a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet<small>0.2</small></a>
+      </li>
+      
+    </ul>
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Rail shell</h1>
+    <p class="docs-art-lead">Bottom tab bar on phones that becomes a permanent 80px icon rail on desktop — same markup as the bottom-nav shell.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The rail shell is the middle ground between the bottom-nav shell and the
+     drawer: on phones it is a standard bottom tab bar, and from 905px up the
+     same element becomes a permanent 80px icon rail on the left edge.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>You have 3–5 destinations that deserve <strong>permanent visibility on
+        desktop</strong>, but a 280px drawer column is too much.</li>
+    <li>Your destinations are icon-shaped (Photos, Files, Music) — the rail is
+        icon-only on desktop.</li>
+    <li>You want one nav element for both layouts — it literally reuses the
+        bottom-nav markup.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>Destinations need visible text labels on desktop — the rail is icon-only
+        there; use the drawer shell instead.</li>
+    <li>You have more than five destinations — nothing fits an 80px rail.</li>
+    <li>Desktop users need secondary nav sections or an account footer — that is
+        drawer territory.</li>
+  </ul>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">Compared to the other shells</h3>
+    <p class="docs-callout__text">Bottom-nav: same bar on both breakpoints. Rail: bar → icon rail. Drawer: hidden column → permanent 280px nav.</p>
+    <a class="docs-callout__link" href="drawer.html">Drawer shell</a>
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Rail shell anatomy diagram">
+      <!-- shell frame (desktop state shown) -->
+      <rect x="1" y="1" width="598" height="338" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 1. top bar spans both columns -->
+      <rect x="1" y="1" width="598" height="48" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="24" y="20" width="80" height="8" rx="4" fill="#dadce0"/>
+      <rect x="530" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <rect x="560" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <!-- 2. rail column 80px -->
+      <rect x="1" y="49" width="80" height="289" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 3. rail items: selected accent icon+label, then others -->
+      <rect x="30" y="80" width="22" height="14" rx="2" fill="#1a73e8"/>
+      <rect x="24" y="102" width="34" height="7" rx="3.5" fill="#1a73e8"/>
+      <rect x="30" y="150" width="22" height="14" rx="2" fill="#5f6368"/>
+      <rect x="24" y="172" width="34" height="7" rx="3.5" fill="#5f6368"/>
+      <rect x="30" y="220" width="22" height="14" rx="2" fill="#5f6368"/>
+      <rect x="28" y="242" width="38" height="7" rx="3.5" fill="#5f6368"/>
+      <!-- 4. content -->
+      <rect x="110" y="80" width="120" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="110" y="104" width="240" height="64" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="126" y="120" width="150" height="10" rx="5" fill="#444746"/>
+      <rect x="126" y="140" width="200" height="8" rx="4" fill="#e8eaed"/>
+      <rect x="110" y="184" width="240" height="64" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="126" y="200" width="120" height="10" rx="5" fill="#444746"/>
+      <rect x="126" y="220" width="180" height="8" rx="4" fill="#e8eaed"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="96" cy="25" r="11" fill="#1a73e8"/><text x="96" y="29" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="41" cy="60" r="11" fill="#1a73e8"/><text x="41" y="64" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="41" cy="87" r="11" fill="#1a73e8"/><text x="41" y="91" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="225" cy="110" r="11" fill="#1a73e8"/><text x="225" y="114" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Top app bar</strong> — spans the full width, above both columns.</li>
+      <li><strong>Rail column (desktop)</strong> — fixed 80px, separated by a 1px right border, never a shadow.</li>
+      <li><strong>Rail items</strong> — stacked icon-over-label; the selected one is accent-colored only (no pill — the M2 2020 rail style).</li>
+      <li><strong>Content</strong> — the only scrolling area; capped by <code>--fl-content-max</code>.</li>
+    </ol>
+    <p>On phones the rail column disappears and items 2–3 render as a normal
+       bottom tab bar — same element, same classes.</p>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>&lt;905px:</strong> identical to the bottom-nav shell — fixed bottom bar, stacked icon-over-label tabs.</li>
+    <li><strong>≥905px:</strong> the bar moves into a left grid column: 80px wide, vertical, top-aligned, 1px right border, no top border.</li>
+    <li><strong>No pills on desktop:</strong> unlike the bottom-nav's desktop bar, rail tabs opt out of the tinted pill — selection is accent color only, matching the M2 navigation-rail spec.</li>
+    <li><strong>Selection:</strong> <code>aria-current="page"</code>, reflected by <code>flint.js</code> inside <code>[data-fl-nav]</code>; works identically at both breakpoints.</li>
+    <li><strong>Badges:</strong> absolute over the icon on desktop (there is no room beside it), inline everywhere else.</li>
+    <li>The rail is always visible on desktop — there is no collapsed/expanded state and no JS required for the layout switch.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The nav element carries <code>aria-label="Primary"</code>; it stays a single landmark at both breakpoints, so screen readers never see two navs.</li>
+    <li>Exactly one item carries <code>aria-current="page"</code>.</li>
+    <li>Rail items are buttons or links with visible text labels — the 80px rail keeps the label, so nothing relies on <code>title</code> or tooltips.</li>
+    <li>Icons are <code>aria-hidden</code>; the label carries the meaning.</li>
+    <li>Include <code>viewport-fit=cover</code> in the meta viewport for safe-area support on phones.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page — resize to see the bottom bar
+     become a rail.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/rail.html — rendered live</span>
+      <a href="../demos/rail.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/rail.html" title="Rail shell live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in. The nav markup is exactly the bottom-nav
+     shell's — only the wrapper class differs.</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+<div class="docs-snippet">
+  <pre><code>&lt;body class=&quot;fl-reset&quot;&gt;
+&lt;div class=&quot;fl-shell-rail&quot;&gt;
+
+  &lt;header class=&quot;fl-top-bar&quot;&gt;
+    &lt;h1 class=&quot;fl-top-bar__title&quot;&gt;Flint Photos&lt;/h1&gt;
+    &lt;button class=&quot;fl-icon-btn&quot; aria-label=&quot;Search&quot;&gt;
+      &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/header&gt;
+
+  &lt;main class=&quot;fl-content&quot;&gt;
+    &lt;p class=&quot;fl-section-label&quot;&gt;Recent&lt;/p&gt;
+    &lt;article class=&quot;fl-card&quot;&gt;
+      &lt;h2 class=&quot;fl-card__title&quot;&gt;Rail, not drawer&lt;/h2&gt;
+      &lt;p class=&quot;fl-card__text&quot;&gt;…&lt;/p&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+
+  &lt;!-- Mobile: bottom tab bar · ≥905px: icon rail (same element) --&gt;
+  &lt;nav class=&quot;fl-tab-bar&quot; data-fl-nav aria-label=&quot;Primary&quot;&gt;
+    &lt;button class=&quot;fl-tab&quot; aria-current=&quot;page&quot;&gt;
+      &lt;span class=&quot;fl-tab__icon&quot;&gt;&lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;fl-tab__label&quot;&gt;Home&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;button class=&quot;fl-tab&quot;&gt;
+      &lt;span class=&quot;fl-tab__icon&quot;&gt;&lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;fl-tab__label&quot;&gt;Library&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;button class=&quot;fl-tab&quot;&gt;
+      &lt;span class=&quot;fl-tab__icon&quot;&gt;&lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+      &lt;span class=&quot;fl-tab__label&quot;&gt;Search&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/nav&gt;
+
+&lt;/div&gt;
+&lt;script src=&quot;js/flint.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged. For the real
+     thing — full viewport height, both breakpoints — open
+     <a href="../demos/rail.html">demos/rail.html</a>. Its source is a
+     copy-paste-ready starting point.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>Selected rail item tint (icon + label)</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Rail's 1px right border</td></tr>
+      <tr><td><code>--fl-topbar-h</code></td><td>Top bar height</td></tr>
+      <tr><td><code>--fl-tabbar-h</code></td><td>Bottom bar height on phones</td></tr>
+      <tr><td><code>--fl-content-max</code></td><td>Max content column width on desktop</td></tr>
+    </tbody>
+  </table>
+  <p>The rail width (80px) is hard-coded in the desktop grid override — it is
+     part of the component's proportions, not a token. If you need a different
+     width, override <code>.fl-shell-rail</code>'s grid and the tab padding.</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-accent: #188038;
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/PLACEHOLDER/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.1.0" defer></script>
+<script src="../js/docs-ui.js?v=0.2.0" defer></script>
+
+</body>
+</html>

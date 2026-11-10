@@ -1,0 +1,103 @@
+---
+layout: layouts/base.njk
+permalink: roadmap.html
+title: Roadmap
+section: roadmap
+depth: 0
+---
+{# Rendered from ROADMAP.md (2026-11-10). Edit the source file; keep this in sync. #}
+<div class="docs-hero">
+  <h1>Roadmap</h1>
+  <p>Flint UI's goal: a mini design system in the spirit of Material Design 2 —
+     a small, opinionated set of flat, Google-flavored app shells and
+     components, backed by a docs site that makes each piece copy-pasteable.</p>
+</div>
+
+<section class="docs-section">
+  <h2 id="rm-principles">Guiding principles</h2>
+  <ul>
+    <li><strong>Docs ship with every component.</strong> A component without a
+        docs page is not done. A docs page without a component is a lie.</li>
+    <li><strong>The docs site is built with Flint.</strong> Docs needs
+        (breadcrumbs, callouts, code blocks, sidebar) become real component
+        requirements, not guesses.</li>
+    <li><strong>Zero dependencies, forever.</strong> No build step for users;
+        copy two files and go. Docs tooling must not leak into the library.</li>
+    <li><strong>Flat, 1px borders, no shadows</strong> — the Material 2019–2020
+        look — is the design constraint that keeps the library small and
+        coherent.</li>
+    <li><strong>Distribution is copy-paste</strong> (the shadcn model): the
+        docs' core feature is a copy button on every snippet.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="rm-versions">Versions</h2>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Version</th><th>Theme</th><th>Contents</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>0.2.0</strong></td>
+        <td>Docs foundation</td>
+        <td>✅ <code>docs/</code> static site built with Flint (shell from the
+            m2-mock prototype), page template with copy-button snippets, first
+            component pages (5 components: buttons, cards, lists, dialog,
+            bottom-sheet), SVG illustrations. Prereq: repo pushed to GitHub.</td>
+      </tr>
+      <tr>
+        <td><strong>0.3.0</strong></td>
+        <td>Forms</td>
+        <td>Checkbox, radio, switch, select/menu, text-field variants (filled,
+            error/helper, textarea). Biggest adoption unlock.</td>
+      </tr>
+      <tr>
+        <td><strong>0.4.0</strong></td>
+        <td>Feedback &amp; overlays</td>
+        <td>Dialog (scrim already exists), snackbar, progress (linear/circular),
+            tooltip, chips split from badges.</td>
+      </tr>
+      <tr>
+        <td><strong>0.5.0</strong></td>
+        <td>Data display</td>
+        <td>Data table, standalone tabs, pagination, avatar.</td>
+      </tr>
+      <tr>
+        <td><strong>0.6.0</strong></td>
+        <td>Theming</td>
+        <td>Dark theme (token-driven, cheap), theming guide, brand-override
+            example.</td>
+      </tr>
+      <tr>
+        <td><strong>0.7.0</strong></td>
+        <td>Quality</td>
+        <td>Accessibility audit, reduced-motion support, browser matrix, icon
+            guidance (real SVG set vs. placeholders).</td>
+      </tr>
+      <tr>
+        <td><strong>1.0.0</strong></td>
+        <td>API freeze</td>
+        <td>Class-naming promise, full docs coverage. The "mini design system"
+            milestone.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Deliberately deferred (v1+ or never): JS framework wrappers, SCSS/build
+     tooling, theming engines, RTL support.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="rm-sequencing">Sequencing rule</h2>
+  <p><strong>Build the docs shell thin, then never add a component without its
+     page.</strong> Docs without components is an empty shell; components
+     without docs are a pile of CSS.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="rm-now">Where this docs site stands</h2>
+  <p>The five shipping components (bottom-nav, rail, drawer, auth, lists) have
+     full pages. Buttons, cards, dialog and bottom-sheet exist as honest
+     stubs marked <em>Planned · 0.2</em> until they land in the library — the
+     sidebar only ever links somewhere real.</p>
+</section>

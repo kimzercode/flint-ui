@@ -8,11 +8,14 @@ surface separation comes from 1px borders (`#dadce0`) and tinted states (`#e8f0f
 css/flint.css      tokens + reset + shells + small building blocks
 js/flint.js        the entire JS surface: nav selected-state toggling
 demos/             working demos of each shell
+docs/              documentation site (built; viewable over file://)
+docs-site/         docs source (Eleventy, dev-only)
 CHANGELOG.md       release notes per version
 LICENSE            MIT
 ```
 
-Open `index.html` to reach the demos.
+Open `index.html` to reach the demos — and `docs/index.html` for the docs
+site: every component page pairs a live example with copy-pasteable markup.
 
 ## Quick start
 

@@ -1,0 +1,236 @@
+---
+layout: layouts/base.njk
+permalink: components/rail.html
+assetRoot: ../
+title: Rail shell
+section: components
+current: rail
+depth: 1
+lead: Bottom tab bar on phones that becomes a permanent 80px icon rail on desktop — same markup as the bottom-nav shell.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The rail shell is the middle ground between the bottom-nav shell and the
+     drawer: on phones it is a standard bottom tab bar, and from 905px up the
+     same element becomes a permanent 80px icon rail on the left edge.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>You have 3–5 destinations that deserve <strong>permanent visibility on
+        desktop</strong>, but a 280px drawer column is too much.</li>
+    <li>Your destinations are icon-shaped (Photos, Files, Music) — the rail is
+        icon-only on desktop.</li>
+    <li>You want one nav element for both layouts — it literally reuses the
+        bottom-nav markup.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>Destinations need visible text labels on desktop — the rail is icon-only
+        there; use the drawer shell instead.</li>
+    <li>You have more than five destinations — nothing fits an 80px rail.</li>
+    <li>Desktop users need secondary nav sections or an account footer — that is
+        drawer territory.</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "Compared to the other shells",
+    text: "Bottom-nav: same bar on both breakpoints. Rail: bar → icon rail. Drawer: hidden column → permanent 280px nav.",
+    href: "drawer.html",
+    linkText: "Drawer shell"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Rail shell anatomy diagram">
+      <!-- shell frame (desktop state shown) -->
+      <rect x="1" y="1" width="598" height="338" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 1. top bar spans both columns -->
+      <rect x="1" y="1" width="598" height="48" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="24" y="20" width="80" height="8" rx="4" fill="#dadce0"/>
+      <rect x="530" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <rect x="560" y="18" width="14" height="12" rx="2" fill="#dadce0"/>
+      <!-- 2. rail column 80px -->
+      <rect x="1" y="49" width="80" height="289" fill="#ffffff" stroke="#dadce0"/>
+      <!-- 3. rail items: selected accent icon+label, then others -->
+      <rect x="30" y="80" width="22" height="14" rx="2" fill="#1a73e8"/>
+      <rect x="24" y="102" width="34" height="7" rx="3.5" fill="#1a73e8"/>
+      <rect x="30" y="150" width="22" height="14" rx="2" fill="#5f6368"/>
+      <rect x="24" y="172" width="34" height="7" rx="3.5" fill="#5f6368"/>
+      <rect x="30" y="220" width="22" height="14" rx="2" fill="#5f6368"/>
+      <rect x="28" y="242" width="38" height="7" rx="3.5" fill="#5f6368"/>
+      <!-- 4. content -->
+      <rect x="110" y="80" width="120" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="110" y="104" width="240" height="64" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="126" y="120" width="150" height="10" rx="5" fill="#444746"/>
+      <rect x="126" y="140" width="200" height="8" rx="4" fill="#e8eaed"/>
+      <rect x="110" y="184" width="240" height="64" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="126" y="200" width="120" height="10" rx="5" fill="#444746"/>
+      <rect x="126" y="220" width="180" height="8" rx="4" fill="#e8eaed"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="96" cy="25" r="11" fill="#1a73e8"/><text x="96" y="29" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="41" cy="60" r="11" fill="#1a73e8"/><text x="41" y="64" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="41" cy="87" r="11" fill="#1a73e8"/><text x="41" y="91" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="225" cy="110" r="11" fill="#1a73e8"/><text x="225" y="114" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Top app bar</strong> — spans the full width, above both columns.</li>
+      <li><strong>Rail column (desktop)</strong> — fixed 80px, separated by a 1px right border, never a shadow.</li>
+      <li><strong>Rail items</strong> — stacked icon-over-label; the selected one is accent-colored only (no pill — the M2 2020 rail style).</li>
+      <li><strong>Content</strong> — the only scrolling area; capped by <code>--fl-content-max</code>.</li>
+    </ol>
+    <p>On phones the rail column disappears and items 2–3 render as a normal
+       bottom tab bar — same element, same classes.</p>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>&lt;905px:</strong> identical to the bottom-nav shell — fixed bottom bar, stacked icon-over-label tabs.</li>
+    <li><strong>≥905px:</strong> the bar moves into a left grid column: 80px wide, vertical, top-aligned, 1px right border, no top border.</li>
+    <li><strong>No pills on desktop:</strong> unlike the bottom-nav's desktop bar, rail tabs opt out of the tinted pill — selection is accent color only, matching the M2 navigation-rail spec.</li>
+    <li><strong>Selection:</strong> <code>aria-current="page"</code>, reflected by <code>flint.js</code> inside <code>[data-fl-nav]</code>; works identically at both breakpoints.</li>
+    <li><strong>Badges:</strong> absolute over the icon on desktop (there is no room beside it), inline everywhere else.</li>
+    <li>The rail is always visible on desktop — there is no collapsed/expanded state and no JS required for the layout switch.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The nav element carries <code>aria-label="Primary"</code>; it stays a single landmark at both breakpoints, so screen readers never see two navs.</li>
+    <li>Exactly one item carries <code>aria-current="page"</code>.</li>
+    <li>Rail items are buttons or links with visible text labels — the 80px rail keeps the label, so nothing relies on <code>title</code> or tooltips.</li>
+    <li>Icons are <code>aria-hidden</code>; the label carries the meaning.</li>
+    <li>Include <code>viewport-fit=cover</code> in the meta viewport for safe-area support on phones.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page — resize to see the bottom bar
+     become a rail.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/rail.html — rendered live</span>
+      <a href="../demos/rail.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/rail.html" title="Rail shell live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in. The nav markup is exactly the bottom-nav
+     shell's — only the wrapper class differs.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {% set shell %}
+<body class="fl-reset">
+<div class="fl-shell-rail">
+
+  <header class="fl-top-bar">
+    <h1 class="fl-top-bar__title">Flint Photos</h1>
+    <button class="fl-icon-btn" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <main class="fl-content">
+    <p class="fl-section-label">Recent</p>
+    <article class="fl-card">
+      <h2 class="fl-card__title">Rail, not drawer</h2>
+      <p class="fl-card__text">…</p>
+    </article>
+  </main>
+
+  <!-- Mobile: bottom tab bar · ≥905px: icon rail (same element) -->
+  <nav class="fl-tab-bar" data-fl-nav aria-label="Primary">
+    <button class="fl-tab" aria-current="page">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Home</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Library</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Search</span>
+    </button>
+  </nav>
+
+</div>
+<script src="js/flint.js"></script>
+</body>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(shell) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged. For the real
+     thing — full viewport height, both breakpoints — open
+     <a href="../demos/rail.html">demos/rail.html</a>. Its source is a
+     copy-paste-ready starting point.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>Selected rail item tint (icon + label)</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Rail's 1px right border</td></tr>
+      <tr><td><code>--fl-topbar-h</code></td><td>Top bar height</td></tr>
+      <tr><td><code>--fl-tabbar-h</code></td><td>Bottom bar height on phones</td></tr>
+      <tr><td><code>--fl-content-max</code></td><td>Max content column width on desktop</td></tr>
+    </tbody>
+  </table>
+  <p>The rail width (80px) is hard-coded in the desktop grid override — it is
+     part of the component's proportions, not a token. If you need a different
+     width, override <code>.fl-shell-rail</code>'s grid and the tab padding.</p>
+  {% set themeExample %}
+:root {
+  --fl-accent: #188038;
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

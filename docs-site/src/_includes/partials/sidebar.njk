@@ -1,0 +1,55 @@
+{# Component navigation sidebar: filter + real pages + planned group.
+   Highlighting keys off `current` (component slug) from page frontmatter —
+   the same aria-current pattern the library itself uses. #}
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  {# On phones the top-bar section nav is hidden, so the drawer hosts the
+     Get started / Components / Roadmap links. #}
+  <ul class="docs-side-sections">
+    <li><a href="{{ assetRoot }}get-started.html"
+         {% if section == "get-started" %}class="is-active" aria-current="page"{% endif %}>Get started</a></li>
+    <li><a href="{{ assetRoot }}index.html"
+         {% if section == "components" %}class="is-active" aria-current="page"{% endif %}>Components</a></li>
+    <li><a href="{{ assetRoot }}roadmap.html"
+         {% if section == "roadmap" %}class="is-active" aria-current="page"{% endif %}>Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      {% for c in components.real %}
+      <li>
+        <a href="{{ assetRoot }}components/{{ c.slug }}.html"
+           {% if current == c.slug %}aria-current="page"{% endif %}>{{ c.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      {% for c in components.planned %}
+      <li>
+        <a href="{{ assetRoot }}components/{{ c.slug }}.html"
+           {% if current == c.slug %}aria-current="page"{% endif %}>{{ c.name }}<small>{{ c.plannedIn }}</small></a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  </div>
+</aside>

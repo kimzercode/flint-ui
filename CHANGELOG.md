@@ -4,6 +4,27 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [Unreleased]
+
+### Added
+
+- **Documentation site** (`docs/`, source in `docs-site/`): a static
+  Material-2-style docs site built with Eleventy and styled entirely with
+  Flint itself — same tokens, flat 1px borders, no shadows.
+  - One page per shipping component (bottom-nav, rail, drawer, auth, lists)
+    with the Design / Implementation two-tab pattern: usage, anatomy,
+    behavior and accessibility guidance; live demo embedded from
+    `demos/`, copy-button snippets, and per-component token tables.
+  - Get started guide (shells comparison, `aria-current` selection, no-JS
+    notes, token reference) and the roadmap rendered from `ROADMAP.md`.
+  - Honest stub pages for planned components (buttons, cards, dialog,
+    bottom-sheet) marked *Planned · 0.2* — nothing to use yet.
+  - Fully static output viewable over `file://` (no server needed); mobile
+    sidebar reuses the library's own drawer mechanics; sidebar name filter,
+    TOC scrollspy and copy buttons are progressive enhancements that degrade
+    gracefully without JS.
+- Root `index.html` now links to the docs site.
+
 ## [0.1.0] — 2026-11-06
 
 First versioned release.

@@ -1,0 +1,46 @@
+---
+layout: layouts/base.njk
+title: Components
+section: components
+depth: 0
+---
+<section class="docs-hero">
+  <h1>Components</h1>
+  <p>Flint UI is a set of interactive building blocks for flat, Google-flavored
+     app shells — pure CSS, ~50 lines of vanilla JS, framework-agnostic.</p>
+  <p>Browse the components below. Every page pairs live examples rendered with
+     real Flint markup with copy-pasteable code.</p>
+</section>
+
+<ul class="docs-grid">
+  {% for c in components.real %}
+  <li class="docs-card">
+    <a class="docs-card__link" href="components/{{ c.slug }}.html">
+      <span class="docs-card__art" aria-hidden="true">
+        <span class="docs-mock">
+          <span class="docs-mock__bar"><span></span><i></i></span>
+          <span class="docs-mock__body">
+            <span class="ln"></span>
+            <span class="ln ln--dark" style="width:60%"></span>
+            <span class="ln" style="width:40%"></span>
+          </span>
+        </span>
+      </span>
+      <span class="docs-card__body">
+        <span class="docs-card__name">{{ c.name }}</span>
+        <span class="docs-card__desc">{{ c.summary }}</span>
+      </span>
+    </a>
+  </li>
+  {% endfor %}
+
+  {% for c in components.planned %}
+  <li class="docs-card docs-card--planned">
+    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__body">
+      <span class="docs-card__name">{{ c.name }}</span>
+      <span class="docs-card__desc">{{ c.summary }}</span>
+    </span>
+  </li>
+  {% endfor %}
+</ul>
