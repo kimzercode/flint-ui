@@ -130,14 +130,20 @@ permanent 80px icon rail with the tinted pill on the selected destination.
 
 ```html
 <div class="fl-shell-auth">
-  <header class="fl-top-bar">…</header>
   <main class="fl-shell-auth__content">
-    <form class="fl-auth-card">…</form>
+    <form class="fl-auth-card">
+      <h1 class="fl-auth-card__title">Sign in</h1>
+      …
+    </form>
   </main>
 </div>
 ```
 
 Centered 400px column (`.fl-auth-card`), outlined text fields (`.fl-field`).
+No top bar — auth is a pre-app screen with nothing to navigate to; the card
+is the whole page and its title is the page's `h1`. No logo slot by default:
+add your wordmark or an `<img>` above the title inside the card if you want
+one (no library CSS needed).
 
 ## Lists
 

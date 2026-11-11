@@ -25,6 +25,15 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
     gracefully without JS.
 - Root `index.html` now links to the docs site.
 
+### Changed
+
+- **Auth shell: no app chrome.** The auth demo no longer shows a top app bar —
+  auth is a pre-app screen with nothing to navigate to, so the shell is a
+  plain page with the centered card (whose title is the page's `h1`). The
+  CSS was already header-agnostic (`fl-shell-auth` centers whatever you put
+  in it); the demo, docs and README now reflect that. No logo slot by
+  default — add your wordmark above the card title if you want one.
+
 ## [0.1.0] — 2026-11-06
 
 First versioned release.
