@@ -39,31 +39,33 @@ const real = [
 
 const planned = [
   {
+    // Exists in the library since 0.1.0 (fl-btn) — full docs page is Phase 1.
     name: "Buttons",
     slug: "buttons",
     status: "planned",
-    plannedIn: "0.2",
+    plannedIn: "",
     summary: "Filled, outlined and text buttons with flat state layers.",
   },
   {
+    // Exists in the library since 0.1.0 (fl-card) — full docs page is Phase 1.
     name: "Cards",
     slug: "cards",
     status: "planned",
-    plannedIn: "0.2",
+    plannedIn: "",
     summary: "Outlined content containers, no shadows.",
   },
   {
     name: "Dialog",
     slug: "dialog",
     status: "planned",
-    plannedIn: "0.2",
+    plannedIn: "0.4",
     summary: "Modal dialog over the existing scrim, with focus handling.",
   },
   {
     name: "Bottom sheet",
     slug: "bottom-sheet",
     status: "planned",
-    plannedIn: "0.2",
+    plannedIn: "0.4",
     summary: "Sheet docked above the tab bar, reusing the scrim.",
   },
 ];

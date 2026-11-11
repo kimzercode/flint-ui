@@ -46,7 +46,7 @@
       {% for c in components.planned %}
       <li>
         <a href="{{ assetRoot }}components/{{ c.slug }}.html"
-           {% if current == c.slug %}aria-current="page"{% endif %}>{{ c.name }}<small>{{ c.plannedIn }}</small></a>
+           {% if current == c.slug %}aria-current="page"{% endif %}>{{ c.name }}{% if c.plannedIn %}<small>{{ c.plannedIn }}</small>{% endif %}</a>
       </li>
       {% endfor %}
     </ul>

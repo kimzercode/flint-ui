@@ -36,7 +36,7 @@ depth: 0
 
   {% for c in components.planned %}
   <li class="docs-card docs-card--planned">
-    <span class="docs-card__art" aria-hidden="true">Planned</span>
+    <span class="docs-card__art" aria-hidden="true">{% if c.plannedIn %}Planned · {{ c.plannedIn }}{% else %}Docs pending{% endif %}</span>
     <span class="docs-card__body">
       <span class="docs-card__name">{{ c.name }}</span>
       <span class="docs-card__desc">{{ c.summary }}</span>
