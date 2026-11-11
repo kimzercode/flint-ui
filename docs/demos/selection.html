@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — selection controls demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Checkboxes</p>
+  <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+    <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+      <input type="checkbox" class="fl-check">
+      <span style="font-size:14px;">Email me product updates</span>
+    </label>
+    <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+      <input type="checkbox" class="fl-check" checked>
+      <span style="font-size:14px;">Remember this device</span>
+    </label>
+    <label style="display:flex; gap:12px; align-items:center; cursor:not-allowed;">
+      <input type="checkbox" class="fl-check" disabled>
+      <span style="font-size:14px;">Requires an upgrade</span>
+    </label>
+    <label style="display:flex; gap:12px; align-items:center; cursor:not-allowed;">
+      <input type="checkbox" class="fl-check" checked disabled>
+      <span style="font-size:14px;">Locked on by policy</span>
+    </label>
+  </div>
+
+  <p class="fl-section-label">Radios — fieldset/legend keeps them one answer</p>
+  <fieldset style="border:0; padding:0; margin:0;">
+    <legend style="font-size:12px; font-weight:500; color:#444746; padding:0;">Plan</legend>
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+      <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+        <input type="radio" name="plan" class="fl-radio" checked>
+        <span style="font-size:14px;">Free</span>
+      </label>
+      <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+        <input type="radio" name="plan" class="fl-radio">
+        <span style="font-size:14px;">Team</span>
+      </label>
+      <label style="display:flex; gap:12px; align-items:center; cursor:not-allowed;">
+        <input type="radio" name="plan" class="fl-radio" disabled>
+        <span style="font-size:14px;">Enterprise (contact sales)</span>
+      </label>
+    </div>
+  </fieldset>
+
+  <p class="fl-section-label">Switches</p>
+  <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+    <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+      <input type="checkbox" class="fl-switch" role="switch">
+      <span style="font-size:14px;">Compact density</span>
+    </label>
+    <label style="display:flex; gap:12px; align-items:center; cursor:pointer;">
+      <input type="checkbox" class="fl-switch" role="switch" checked>
+      <span style="font-size:14px;">Dark sidebar</span>
+    </label>
+    <label style="display:flex; gap:12px; align-items:center; cursor:not-allowed;">
+      <input type="checkbox" class="fl-switch" role="switch" disabled>
+      <span style="font-size:14px;">Managed by your admin</span>
+    </label>
+  </div>
+
+</main>
+
+</body>
+</html>

@@ -48,6 +48,12 @@ const real = [
     summary: "App frame that is a bottom nav on mobile and an 80px icon rail on desktop.",
   },
   {
+    name: "Selection controls",
+    slug: "selection-controls",
+    status: "ready",
+    summary: "Checkboxes, radios and switches — native inputs drawn flat, zero JS.",
+  },
+  {
     name: "Text fields",
     slug: "text-fields",
     status: "ready",

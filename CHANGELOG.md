@@ -19,6 +19,16 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
   - `textarea.fl-field__input` — auto-height, vertical-only resize.
   - `fl-field__input:disabled` — flat dimmed treatment, hover darkening off.
   - New docs page (Text fields) + `demos/fields.html` live demo.
+- **Selection controls** — checkbox, radio and switch as native inputs with
+  `appearance:none`, drawn flat (18px boxes/rings, 36×20 switch pill):
+  - `fl-check` — 2px-corner box; checked = accent fill + surface check.
+  - `fl-radio` — accent ring + gradient dot on check (follows `--fl-accent`).
+  - `fl-switch` — checkbox with `role="switch"`; M2 state pair (off: gray
+    track/surface thumb, on: tint track/accent thumb), thumb slides via
+    background-position.
+  - Disabled treatments for all three; keyboard and form semantics stay
+    native. Zero JS.
+  - New docs page (Selection controls) + `demos/selection.html`.
 - **Documentation site** (`docs/`, source in `docs-site/`): a static
   Material-2-style docs site built with Eleventy and styled entirely with
   Flint itself — same tokens, flat 1px borders, no shadows.

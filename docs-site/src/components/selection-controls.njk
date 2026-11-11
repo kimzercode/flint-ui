@@ -1,0 +1,242 @@
+---
+layout: layouts/base.njk
+permalink: components/selection-controls.html
+assetRoot: ../
+title: Selection controls
+section: components
+current: selection-controls
+depth: 1
+lead: Checkboxes, radios and switches — native inputs drawn flat with appearance:none, zero JavaScript.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The selection controls are native <code>&lt;input&gt;</code> elements with
+     <code>appearance:none</code> — the CSS draws the 18px boxes, rings and
+     the switch pill, the platform keeps the state machine, keyboard
+     behavior and form semantics. Nothing about a form's payload changes
+     when you adopt them.</p>
+  <h3>Pick the right one</h3>
+  <ul>
+    <li><strong>Checkbox</strong> — independent yes/no options, or a select-many
+        list. Checking one never implies anything about the others.</li>
+    <li><strong>Radio</strong> — exactly one choice from 2–5 visible options.
+        Group them with a real <code>fieldset</code>/<code>legend</code> so
+        screen readers announce what the group is about.</li>
+    <li><strong>Switch</strong> — one setting that takes effect immediately
+        (no Save button). Style-wise it is a checkbox with
+        <code>role="switch"</code>; semantically it is still a boolean input.</li>
+  </ul>
+  <h3>Don't use them when</h3>
+  <ul>
+    <li>More than ~5 radio options — that is a select (next in this release
+        family); visible radios don't scale.</li>
+    <li>The choice triggers navigation or a destructive action on toggle —
+        switches commit instantly; don't point one at <em>Delete</em>.</li>
+    <li>You need a tri-state (checked/unchecked/indeterminate) parent
+        checkbox — indeterminate is not styled in 0.3; nest checkboxes flat
+        instead.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 260" role="img" aria-label="Selection controls anatomy diagram">
+      <!-- rows: checkbox, radio, switch -->
+      <rect x="1" y="1" width="598" height="258" fill="#ffffff" stroke="#dadce0"/>
+      <!-- checkbox row -->
+      <rect x="40" y="36" width="18" height="18" rx="2" fill="#1a73e8"/>
+      <path d="M44 45 l4 4 7-8" stroke="#ffffff" stroke-width="2" fill="none"/>
+      <rect x="74" y="40" width="120" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- radio row -->
+      <circle cx="49" cy="97" r="11" fill="#ffffff" stroke="#1a73e8" stroke-width="2"/>
+      <circle cx="49" cy="97" r="5" fill="#1a73e8"/>
+      <rect x="74" y="92" width="120" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- switch row (on) -->
+      <rect x="40" y="144" width="36" height="20" rx="10" fill="#e8f0fe"/>
+      <circle cx="66" cy="154" r="8" fill="#1a73e8"/>
+      <rect x="92" y="149" width="120" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- callout lines -->
+      <line x1="60" y1="36" x2="60" y2="54" stroke="#1a73e8" stroke-dasharray="3 3"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="28" cy="45" r="11" fill="#1a73e8"/><text x="28" y="49" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="28" cy="97" r="11" fill="#1a73e8"/><text x="28" y="101" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="28" cy="154" r="11" fill="#1a73e8"/><text x="28" y="158" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Checkbox</strong> — 18px, 2px corner, 2px border in
+          secondary text color; checked = <code>--fl-accent</code> fill with a
+          surface-colored check.</li>
+      <li><strong>Radio</strong> — 18px circle; checked = accent 2px ring plus
+          an accent dot drawn as a radial-gradient (stays themable — no
+          hardcoded image color).</li>
+      <li><strong>Switch</strong> — 36×20 pill; off = <code>--fl-disabled</code>
+          track with surface thumb, on = <code>--fl-tint</code> track with
+          accent thumb — the M2 state pair without the thumb shadow.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Classes are the whole API:</strong> <code>fl-check</code>,
+        <code>fl-radio</code>, <code>fl-switch</code> go straight on the
+        input. There is no required wrapper — pair with a
+        <code>&lt;label&gt;</code> (wrapping or <code>for</code>/<code>id</code>)
+        so the text toggles the control.</li>
+    <li><strong>Switches are checkboxes underneath:</strong> keep
+        <code>type="checkbox"</code> and add <code>role="switch"</code> for
+        the announcement; the name <code>fl-switch</code> only changes the
+        drawing.</li>
+    <li><strong>Radios share a <code>name</code></strong> — that is what makes
+        them exclusive; wrap the group in <code>fieldset</code>/<code>legend</code>
+        (the demos do) rather than a bare <code>div</code>.</li>
+    <li><strong>Rows:</strong> flex with a 12px gap, control first, 14px text
+        label second — same pattern in the demo; the controls are
+        <code>flex: 0 0 auto</code> so they never squish.</li>
+    <li><strong>Disabled</strong> is the native attribute: boxes/rings gray
+        out to <code>--fl-divider</code>, checked glyphs keep their shape in
+        <code>--fl-disabled</code>; the switch dims to M2-style 45% emphasis.
+        Disabled controls are skipped by tab order.</li>
+    <li><strong>Keyboard:</strong> Space toggles checkbox/switch, arrows move
+        radio selection — all platform behavior, untested by us because the
+        platform guarantees it.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Every control needs a real text label — icon-only toggles have no
+        name; the wrapping-label pattern in the demos is the default.</li>
+    <li>Radio groups want a <code>legend</code>; without it, a screen reader
+        announces "Team, radio button, 2 of 3" with no idea of what for.</li>
+    <li><code>role="switch"</code> on the switch input gives assistive tech
+        the right announcement while keeping native toggling.</li>
+    <li>State is drawn with fill/ring changes that also follow the global
+        <code>:focus-visible</code> ring — never remove that outline.</li>
+    <li>Don't disable a checkbox to "explain" something — disabled inputs
+        are unfocusable and unannounced; if the user must know why, use
+        helper text or a non-interactive note.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/selection.html — rendered live</span>
+      <a href="../demos/selection.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/selection.html" title="Selection controls live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below covers the three
+     controls and their states.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {% set markup %}
+<!-- Checkbox (label wraps the input — click the text to toggle) -->
+<label style="display:flex; gap:12px; align-items:center;">
+  <input type="checkbox" class="fl-check">
+  <span>Email me product updates</span>
+</label>
+
+<!-- Radio group: fieldset/legend + shared name -->
+<fieldset style="border:0; padding:0; margin:0;">
+  <legend>Plan</legend>
+  <label style="display:flex; gap:12px; align-items:center;">
+    <input type="radio" name="plan" class="fl-radio" checked>
+    <span>Free</span>
+  </label>
+  <label style="display:flex; gap:12px; align-items:center;">
+    <input type="radio" name="plan" class="fl-radio">
+    <span>Team</span>
+  </label>
+</fieldset>
+
+<!-- Switch: checkbox + role="switch" -->
+<label style="display:flex; gap:12px; align-items:center;">
+  <input type="checkbox" class="fl-switch" role="switch">
+  <span>Compact density</span>
+</label>
+
+<!-- Disabled states are the native attribute -->
+<input type="checkbox" class="fl-check" disabled>
+<input type="checkbox" class="fl-check" checked disabled>
+<input type="radio" name="x" class="fl-radio" disabled>
+<input type="checkbox" class="fl-switch" role="switch" disabled>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(markup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/selection.html">demos/selection.html</a>. The auth
+     demo (<a href="../demos/auth.html">demos/auth.html</a>) shows fields and
+     buttons composing into a real form.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>Checked fill, radio ring/dot, switch-on thumb</td></tr>
+      <tr><td><code>--fl-tint</code></td><td>Switch-on track</td></tr>
+      <tr><td><code>--fl-text-secondary</code></td><td>Unchecked border</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled glyphs and the switch-off track</td></tr>
+      <tr><td><code>--fl-divider</code></td><td>Disabled borders</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Switch slide and fill transitions</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-accent: #188038;   /* check, radio dot and switch thumb follow */
+  --fl-tint: #e6f4ea;     /* switch-on track follows */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

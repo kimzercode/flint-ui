@@ -421,6 +421,103 @@ a { color: var(--fl-accent); text-decoration: none; }
 .fl-btn--text:disabled { color: var(--fl-disabled); }
 
 /* --------------------------------------------------------------------------
+   6b. Selection controls — checkbox, radio, switch. Native inputs with
+       appearance:none, drawn flat: no shadows, accent fill + surface glyphs.
+       Zero JS; :focus-visible comes from the global ring.
+   -------------------------------------------------------------------------- */
+
+/* Checkbox: 18px box, 2px corner, 2px border; checked = accent fill and a
+   surface-colored check (data URI, no icon font). */
+.fl-check {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  margin: 0;
+  border: 2px solid var(--fl-text-secondary);
+  border-radius: 2px;
+  background: var(--fl-surface) no-repeat center / 14px;
+  cursor: pointer;
+  transition: border-color var(--fl-dur) var(--fl-ease),
+              background-color var(--fl-dur) var(--fl-ease);
+}
+.fl-check:hover { border-color: var(--fl-text); }
+.fl-check:checked {
+  border-color: var(--fl-accent);
+  background-color: var(--fl-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E");
+}
+
+/* Radio: 18px circle, 2px ring; checked = accent ring + accent dot. The dot
+   is a radial-gradient so it follows --fl-accent when the theme changes. */
+.fl-radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  margin: 0;
+  border: 2px solid var(--fl-text-secondary);
+  border-radius: 50%;
+  background: var(--fl-surface);
+  cursor: pointer;
+  transition: border-color var(--fl-dur) var(--fl-ease);
+}
+.fl-radio:hover { border-color: var(--fl-text); }
+.fl-radio:checked {
+  border-color: var(--fl-accent);
+  background: radial-gradient(circle, var(--fl-accent) 0 5px, transparent 5.5px) no-repeat center / 18px;
+}
+
+/* Switch: 36x20 pill. Off = gray track, surface thumb; on = tint track,
+   accent thumb — the M2 state pair, drawn without the thumb shadow.
+   The thumb is a 16px gradient tile moved via background-position so the
+   slide animates at the shared duration/ease. */
+.fl-switch {
+  appearance: none;
+  width: 36px;
+  height: 20px;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  margin: 0;
+  border-radius: 10px;
+  background-color: var(--fl-disabled);
+  background-image: radial-gradient(circle, var(--fl-surface) 0 7px, transparent 7px);
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: 2px center;
+  cursor: pointer;
+  transition: background-position var(--fl-dur) var(--fl-ease),
+              background-color var(--fl-dur) var(--fl-ease);
+}
+.fl-switch:checked {
+  background-color: var(--fl-tint);
+  background-image: radial-gradient(circle, var(--fl-accent) 0 8px, transparent 8px);
+  background-position: calc(100% - 2px) center;
+}
+
+/* Disabled: borders/fills gray out; the checked glyphs keep their shape.
+   The switch gets the M2-style reduced emphasis (opacity) since its off
+   thumb is already surface-colored. */
+.fl-check:disabled,
+.fl-radio:disabled {
+  border-color: var(--fl-divider);
+  cursor: not-allowed;
+}
+.fl-check:disabled:hover,
+.fl-radio:disabled:hover { border-color: var(--fl-divider); }
+.fl-check:disabled:checked {
+  border-color: var(--fl-disabled);
+  background-color: var(--fl-disabled);
+}
+.fl-radio:disabled:checked {
+  border-color: var(--fl-disabled);
+  background-image: radial-gradient(circle, var(--fl-disabled) 0 5px, transparent 5.5px);
+}
+.fl-switch:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* --------------------------------------------------------------------------
    7. Auth shell — plain page + centered 400px card, zero JS. No app chrome:
        auth is a pre-app screen (no top bar, no nav).
    -------------------------------------------------------------------------- */
