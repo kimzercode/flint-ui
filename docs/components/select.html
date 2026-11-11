@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Select — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.3.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.3.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/select.html"
+           aria-current="page">Select</a>
+      </li>
+      
+      <li>
+        <a href="../components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog<small>0.4</small></a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet<small>0.4</small></a>
+      </li>
+      
+    </ul>
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Select</h1>
+    <p class="docs-art-lead">The styled native &lt;select&gt; — field-family box with a drawn chevron; the popup stays platform-styled, by design.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The select is the native <code>&lt;select&gt;</code> wearing the
+     field-family clothes: same 44px box, same label/helper/error markup,
+     with a chevron drawn in CSS instead of the platform arrow. It exists
+     because a visible radio group stops scaling past a handful of options —
+     the select is the honest fallback, not a styled imitation.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>One choice from <strong>more than ~5 options</strong> — regions,
+        countries, sort orders, plan tiers.</li>
+    <li>The option list is <strong>long or data-driven</strong>; a native
+        select scrolls and type-aheads for free.</li>
+    <li>It sits in a form next to text fields — the shared
+        <code>fl-field</code> markup keeps the rhythm identical.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>2–5 options — that is a
+        <a href="selection-controls.html">radio group</a>; visible options
+        beat a hidden dropdown.</li>
+    <li>You need a <strong>custom menu</strong> (icons, search, multi-line
+        options) — that is the listbox pattern, planned for 0.4/0.5 with the
+        overlay infrastructure. Don't hand-roll it; that's how libraries
+        grow 300 lines of fragile focus-management JS.</li>
+    <li>Multiple selection — <code>multiple</code> selects are not styled;
+        use a checkbox group.</li>
+  </ul>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">The popup is browser-controlled — on purpose</h3>
+    <p class="docs-callout__text">appearance:none only reshapes the closed control. The open dropdown (its panel, rows and highlight) is drawn by the browser/OS. That keeps type-ahead, scroll, long lists and mobile pickers correct with zero JS. Flint will not restyle the popup until the custom listbox lands with proper focus management.</p>
+    <a class="docs-callout__link" href="selection-controls.html">Selection controls</a>
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 220" role="img" aria-label="Select anatomy diagram">
+      <rect x="1" y="1" width="598" height="218" fill="#ffffff" stroke="#dadce0"/>
+      <!-- label -->
+      <rect x="40" y="30" width="110" height="10" rx="5" fill="#444746"/>
+      <!-- select box -->
+      <rect x="40" y="56" width="360" height="44" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <!-- selected text -->
+      <rect x="56" y="72" width="120" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- chevron -->
+      <path d="M364 72 l6 6 6-6" stroke="#5f6368" stroke-width="2" fill="none"/>
+      <!-- helper -->
+      <rect x="40" y="112" width="180" height="8" rx="4" fill="#9aa0a6"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="28" cy="78" r="11" fill="#1a73e8"/><text x="28" y="82" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="420" cy="78" r="11" fill="#1a73e8"/><text x="420" y="82" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="28" cy="116" r="11" fill="#1a73e8"/><text x="28" y="120" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>The field box</strong> — exactly
+          <code>fl-field__input</code>: 44px, 1px border, 4px radius, the
+          same hover/focus/error/disabled states as text fields.</li>
+      <li><strong>Chevron</strong> — drawn via a background-image at the
+          right edge, replacing the platform arrow that
+          <code>appearance:none</code> removes.</li>
+      <li><strong>Helper text</strong> — same
+          <code>fl-field__help</code> slot; error and filled variants
+          compose like any field.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Same markup as fields:</strong> wrap the select in
+        <code>&lt;label class="fl-field"&gt;</code> with
+        <code>fl-field__label</code> and optional <code>fl-field__help</code>.
+        The class <code>fl-field__input</code> is the only select-specific
+        class needed — <code>select.fl-field__input</code> switches on the
+        chevron automatically.</li>
+    <li><strong>All field states compose:</strong> <code>fl-field--filled</code>
+        (tint fill + bottom indicator), <code>fl-field--error</code> /
+        <code>aria-invalid="true"</code> (red border + red helper), and the
+        native <code>disabled</code> attribute (dimmed box, chevron kept).</li>
+    <li><strong>The popup is native:</strong> opening it draws a
+        browser/OS-styled list. Closed-control styling is what the CSS
+        guarantees; open-menu styling is platform behavior and differs
+        between browsers — this is documented, not hidden.</li>
+    <li><strong>Selected value renders as text</strong> — style it with the
+        default body size/weight; don't restyle per-state, the platform
+        repaints it on change.</li>
+    <li><strong>Option styling is not supported</strong> —
+        <code>&lt;option&gt;</code> elements are mostly unstyleable by
+        design; keep their content plain text.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The wrapping label names the control natively; no
+        <code>aria-label</code> needed when
+        <code>fl-field__label</code> is present.</li>
+    <li>The native select is one of the best-supported controls for
+        assistive tech — announced name, role, value, and expanded state
+        come from the platform.</li>
+    <li>Keep the first option meaningful on optional fields ("Select a
+        country" reads fine; "—" does not) and mark genuinely required
+        selects with <code>required</code> so the platform validates.</li>
+    <li>Validation errors: set <code>aria-invalid="true"</code> (which the
+        CSS keys off) and put the reason in <code>fl-field__help</code>.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/select.html — rendered live</span>
+      <a href="../demos/select.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/select.html" title="Select live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the select needs no class of its own —
+     it reuses the field markup.</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Outlined (default) --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Workspace type&lt;/span&gt;
+  &lt;select class=&quot;fl-field__input&quot;&gt;
+    &lt;option&gt;Starter&lt;/option&gt;
+    &lt;option selected&gt;Team&lt;/option&gt;
+    &lt;option&gt;Business&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/label&gt;
+
+&lt;!-- With helper text --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Region&lt;/span&gt;
+  &lt;select class=&quot;fl-field__input&quot;&gt;
+    &lt;option selected&gt;Europe (Frankfurt)&lt;/option&gt;
+    &lt;option&gt;North America (Iowa)&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;span class=&quot;fl-field__help&quot;&gt;Choose the region closest to your users&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Error / filled / disabled compose like any field --&gt;
+&lt;label class=&quot;fl-field fl-field--error&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Billing country&lt;/span&gt;
+  &lt;select class=&quot;fl-field__input&quot; aria-invalid=&quot;true&quot;&gt;
+    &lt;option selected&gt;Select a country&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/label&gt;
+
+&lt;label class=&quot;fl-field fl-field--filled&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Sort by&lt;/span&gt;
+  &lt;select class=&quot;fl-field__input&quot;&gt;
+    &lt;option selected&gt;Most recent&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/label&gt;
+
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Plan&lt;/span&gt;
+  &lt;select class=&quot;fl-field__input&quot; disabled&gt;
+    &lt;option&gt;Free — managed by your administrator&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/label&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/select.html">demos/select.html</a>. Text fields and
+     selection controls live in
+     <a href="../demos/fields.html">demos/fields.html</a> and
+     <a href="../demos/selection.html">demos/selection.html</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-border</code></td><td>Closed-control border; filled fill is <code>--fl-divider</code></td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Focus border/ring and the filled indicator</td></tr>
+      <tr><td><code>--fl-error</code></td><td>Error border, ring and helper text</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled text color</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+    </tbody>
+  </table>
+  <p>Note: the chevron glyph is a fixed-color image (it does not follow a
+     token). If you retheme <code>--fl-icon</code>, swap the chevron by
+     overriding <code>.fl-field select.fl-field__input</code>'s
+     background-image with your own SVG.</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-divider: #f1f3f4;   /* filled select fill follows */
+}
+/* custom chevron */
+.fl-field select.fl-field__input {
+  background-image: url(&quot;data:image/svg+xml,...your chevron...&quot;);
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.3.0" defer></script>
+<script src="../js/docs-ui.js?v=0.3.0" defer></script>
+
+</body>
+</html>

@@ -48,6 +48,12 @@ const real = [
     summary: "App frame that is a bottom nav on mobile and an 80px icon rail on desktop.",
   },
   {
+    name: "Select",
+    slug: "select",
+    status: "ready",
+    summary: "The styled native <select> in the field family — chevron drawn in CSS.",
+  },
+  {
     name: "Selection controls",
     slug: "selection-controls",
     status: "ready",

@@ -29,6 +29,12 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
   - Disabled treatments for all three; keyboard and form semantics stay
     native. Zero JS.
   - New docs page (Selection controls) + `demos/selection.html`.
+- **Select** — the styled native `<select>` in the field family: same 44px
+  box and hover/focus/error/disabled states as `fl-field__input`, chevron
+  drawn in CSS (platform arrow removed via `appearance:none`). The open
+  dropdown stays browser-styled by design; a custom listbox menu is planned
+  for 0.4/0.5 with the overlay infrastructure. New docs page + dedicated
+  `demos/select.html`.
 - **Documentation site** (`docs/`, source in `docs-site/`): a static
   Material-2-style docs site built with Eleventy and styled entirely with
   Flint itself — same tokens, flat 1px borders, no shadows.

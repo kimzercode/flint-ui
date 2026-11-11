@@ -613,7 +613,7 @@ textarea.fl-field__input {
    The accent "underline" is an inset box-shadow so it stays 1px-flat at rest
    and reads 2px on focus — no pseudo-element, no real border growth. */
 .fl-field--filled .fl-field__input {
-  background: var(--fl-divider);
+  background-color: var(--fl-divider);
   border-color: transparent;
   border-bottom-color: var(--fl-text-secondary);
 }
@@ -628,7 +628,7 @@ textarea.fl-field__input {
 /* Disabled: dimmed text on a flat fill; hover darkening is switched off */
 .fl-field__input:disabled {
   color: var(--fl-disabled);
-  background: var(--fl-hover);
+  background-color: var(--fl-hover);
   cursor: not-allowed;
 }
 .fl-field__input:disabled:hover { border-color: var(--fl-border); }
@@ -659,6 +659,19 @@ textarea.fl-field__input {
 .fl-field--error.fl-field--filled .fl-field__input:focus,
 .fl-field--filled .fl-field__input[aria-invalid="true"]:focus {
   box-shadow: inset 0 -2px 0 0 var(--fl-error);
+}
+
+/* Select: the native control in the field family — same 44px box, chevron
+   drawn in CSS instead of the platform arrow. The dropdown popup itself
+   stays browser-styled; the CSS only shapes the closed control. */
+.fl-field select.fl-field__input {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%235f6368' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px 20px;
+  cursor: pointer;
 }
 
 /* Full-width mobile for auth card */

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — select demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Outlined (default)</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Workspace type</span>
+    <select class="fl-field__input">
+      <option>Starter</option>
+      <option selected>Team</option>
+      <option>Business</option>
+    </select>
+  </label>
+
+  <p class="fl-section-label">With helper text</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Region</span>
+    <select class="fl-field__input">
+      <option selected>Europe (Frankfurt)</option>
+      <option>North America (Iowa)</option>
+      <option>Asia (Singapore)</option>
+    </select>
+    <span class="fl-field__help">Choose the region closest to your users</span>
+  </label>
+
+  <p class="fl-section-label">Error</p>
+  <label class="fl-field fl-field--error">
+    <span class="fl-field__label">Billing country</span>
+    <select class="fl-field__input" aria-invalid="true">
+      <option selected>Select a country</option>
+      <option>Germany</option>
+      <option>United States</option>
+    </select>
+    <span class="fl-field__help">Pick the country on the payment card</span>
+  </label>
+
+  <p class="fl-section-label">Filled variant</p>
+  <label class="fl-field fl-field--filled">
+    <span class="fl-field__label">Sort by</span>
+    <select class="fl-field__input">
+      <option selected>Most recent</option>
+      <option>Alphabetical</option>
+      <option>Unread first</option>
+    </select>
+  </label>
+
+  <p class="fl-section-label">Disabled</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Plan</span>
+    <select class="fl-field__input" disabled>
+      <option>Free — managed by your administrator</option>
+    </select>
+  </label>
+
+</main>
+
+</body>
+</html>
