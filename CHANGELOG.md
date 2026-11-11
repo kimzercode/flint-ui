@@ -4,7 +4,10 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
-## [Unreleased]
+## [0.3.0] — 2026-11-11
+
+The forms release: real forms are buildable with zero JavaScript, and
+semantic state tokens exist before a second theme does.
 
 ### Added
 
@@ -35,6 +38,26 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
   dropdown stays browser-styled by design; a custom listbox menu is planned
   for 0.4/0.5 with the overlay infrastructure. New docs page + dedicated
   `demos/select.html`.
+- **Buttons and Cards: full docs pages** with dedicated live demos
+  (`demos/buttons.html`, `demos/cards.html`) — promoted from stubs.
+
+### Changed
+
+- **Buttons: disabled and pressed states.** `fl-btn:disabled` now has a flat
+  gray treatment per variant (`--fl-divider` fill on filled, `--fl-divider`
+  border + `--fl-disabled` label on outline, `--fl-disabled` label on text);
+  outline/text gained `:active` fills in `--fl-divider`, matching the icon
+  button's pressed depth. Rules are ordered after the variant hovers so the
+  cascade is correct. The Buttons docs page no longer documents these as
+  gaps.
+
+## [0.2.0] — 2026-11-11
+
+The docs release: the site is built with Flint itself and published on
+GitHub Pages.
+
+### Added
+
 - **Documentation site** (`docs/`, source in `docs-site/`): a static
   Material-2-style docs site built with Eleventy and styled entirely with
   Flint itself — same tokens, flat 1px borders, no shadows.
@@ -44,12 +67,14 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
     `demos/`, copy-button snippets, and per-component token tables.
   - Get started guide (shells comparison, `aria-current` selection, no-JS
     notes, token reference) and the roadmap rendered from `ROADMAP.md`.
-  - Honest stub pages for planned components (buttons, cards, dialog,
-    bottom-sheet) marked *Planned · 0.2* — nothing to use yet.
+  - Honest stub pages for planned components marked *Planned · 0.4* —
+    nothing to use yet.
   - Fully static output viewable over `file://` (no server needed); mobile
     sidebar reuses the library's own drawer mechanics; sidebar name filter,
     TOC scrollspy and copy buttons are progressive enhancements that degrade
     gracefully without JS.
+  - Published at `https://kimzercode.github.io/flint-ui/` (GitHub Pages,
+    serving `docs/` from main).
 - Root `index.html` now links to the docs site.
 
 ### Changed
@@ -60,13 +85,6 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
   CSS was already header-agnostic (`fl-shell-auth` centers whatever you put
   in it); the demo, docs and README now reflect that. No logo slot by
   default — add your wordmark above the card title if you want one.
-- **Buttons: disabled and pressed states.** `fl-btn:disabled` now has a flat
-  gray treatment per variant (`--fl-divider` fill on filled, `--fl-divider`
-  border + `--fl-disabled` label on outline, `--fl-disabled` label on text);
-  outline/text gained `:active` fills in `--fl-divider`, matching the icon
-  button's pressed depth. Rules are ordered after the variant hovers so the
-  cascade is correct. The Buttons docs page no longer documents these as
-  gaps.
 
 ## [0.1.0] — 2026-11-06
 

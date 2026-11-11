@@ -218,12 +218,20 @@ Key tokens: `--fl-surface`, `--fl-text`, `--fl-text-secondary`, `--fl-icon`,
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for the full path from component library to
-mini design system: docs site (0.2), forms (0.3), overlays (0.4), data
-display (0.5), theming (0.6), quality (0.7), API freeze (1.0).
+mini design system: forms (0.3, ✅), overlays (0.4), data display (0.5),
+theming (0.6), quality (0.7), API freeze (1.0). The docs site lives at
+[flint-ui docs](https://kimzercode.github.io/flint-ui/) and is built with
+Flint itself.
 
 Done in 0.1.0: bottom-nav, drawer, rail, and auth shells plus the list
 component (single/two/three-line, dense, dividers) — all sharing one token
 system.
+
+Done in 0.2.0: the docs site, published on GitHub Pages.
+
+Done in 0.3.0: text-field variants (filled, error/helper, textarea,
+disabled), checkbox/radio/switch, a styled native select, and button
+disabled/active states — real forms, zero JavaScript.
 
 ## License
 

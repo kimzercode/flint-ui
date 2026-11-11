@@ -22,7 +22,7 @@ Guiding principles:
 | Version | Theme | Contents |
 |---|---|---|
 | **0.2.0** | Docs foundation | `docs/` static site built with Flint (shell from the m2-mock prototype), page template with copy-button snippets, docs pages for the five shipping components (bottom-nav, drawer, rail, auth, lists), SVG anatomy illustrations. Buttons and cards already exist as 0.1 building blocks — their full pages follow as docs-only work; dialog and bottom sheet are planned for 0.4. Prereq: repo pushed to GitHub. |
-| **0.3.0** | Forms | Checkbox, radio, switch, select/menu, text-field variants (filled, error/helper, textarea). Biggest adoption unlock. |
+| **0.3.0** | Forms | ✅ Checkbox, radio, switch, styled native select, text-field variants (filled, error/helper, textarea), button disabled/active states — first library growth since 0.1, driven by docs needs. Zero JS forms; semantic `--fl-error` token precedes theming. |
 | **0.4.0** | Feedback & overlays | Dialog (scrim already exists), bottom sheet (same scrim, docks above the tab bar), snackbar, progress (linear/circular), tooltip, chips split from badges. |
 | **0.5.0** | Data display | Data table, standalone tabs, pagination, avatar. |
 | **0.6.0** | Theming | Dark theme (token-driven, cheap), theming guide, brand-override example. |
