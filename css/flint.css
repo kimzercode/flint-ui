@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.3.0 · no dependencies · no shadows · 1px borders instead
+   v0.4.0-dev · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -25,6 +25,7 @@
   --fl-hover: #f8f9fa;         /* hover fill */
   --fl-border: #dadce0;        /* replaces every shadow */
   --fl-divider: #e8eaed;
+  --fl-scrim: rgb(32 33 36 / 0.45);   /* overlay backdrops — shared with the drawer */
 
   /* Disabled */
   --fl-disabled: #9aa0a6;
@@ -793,7 +794,7 @@ body.fl-drawer-open { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 30;
-  background: rgb(32 33 36 / 0.45);
+  background: var(--fl-scrim);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--fl-dur) var(--fl-ease);
@@ -998,4 +999,167 @@ button.fl-list-item:active { background: var(--fl-divider); }
 /* Opt-in 1px rules between rows */
 .fl-list--dividers .fl-list-item + .fl-list-item {
   border-top: 1px solid var(--fl-divider);
+}
+
+/* --------------------------------------------------------------------------
+   13. Overlays — dialog & bottom sheet on the native <dialog> element
+   showModal() provides the focus trap, the inert background, Escape-to-close
+   and top-layer stacking; this CSS draws the shared scrim (::backdrop), the
+   surface card and the open/close transitions (CSS-only, both directions).
+   flint.js only wires data-fl-open / data-fl-close and focus return.
+   -------------------------------------------------------------------------- */
+
+/* Scroll lock while any overlay is open. Deliberately without
+   scrollbar-gutter: stable — reserving the gutter shrinks the fixed-position
+   containing block even where no scrollbar was visible, leaving overlays
+   off-center. Overlay scrollbars (the default everywhere today) make the
+   shift moot; classic-scrollbar engines get the usual 15px shift on lock. */
+html:has(dialog.fl-dialog[open]),
+html:has(dialog.fl-sheet[open]) {
+  overflow: hidden;
+}
+
+/* The shared scrim — one rule for every overlay type. It fades in and out
+   with the surface; allow-discrete keeps the backdrop alive during the exit
+   transition so the fade actually runs. */
+dialog.fl-dialog::backdrop,
+dialog.fl-sheet::backdrop {
+  background-color: transparent;
+  transition:
+    background-color var(--fl-dur) var(--fl-ease),
+    display var(--fl-dur) allow-discrete,
+    overlay var(--fl-dur) allow-discrete;
+}
+
+dialog.fl-dialog[open]::backdrop,
+dialog.fl-sheet[open]::backdrop {
+  background-color: var(--fl-scrim);
+}
+
+@starting-style {
+  dialog.fl-dialog[open]::backdrop,
+  dialog.fl-sheet[open]::backdrop {
+    background-color: transparent;
+  }
+}
+
+/* The element itself is transparent and borderless: the card look and all
+   padding live on the inner surface, so a click landing on the element is a
+   scrim click (flint.js closes it). */
+dialog.fl-dialog,
+dialog.fl-sheet {
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--fl-text);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--fl-dur) var(--fl-ease),
+    transform var(--fl-dur) var(--fl-ease),
+    display var(--fl-dur) allow-discrete,
+    overlay var(--fl-dur) allow-discrete;
+}
+
+dialog.fl-dialog[open],
+dialog.fl-sheet[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  dialog.fl-dialog[open],
+  dialog.fl-sheet[open] {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Dialog: centered card; 92vw reads as near-full-bleed on phones and settles
+   at the reading width on larger screens. Long content scrolls inside the
+   surface, not the page. Fixed-centering is explicit — UA centering for
+   :modal varies across engines. */
+dialog.fl-dialog {
+  width: min(92vw, 560px);
+  height: fit-content;
+  max-width: none;
+  max-height: none;
+}
+
+dialog.fl-dialog[open] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+}
+
+.fl-dialog__surface {
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius-card);
+  padding: var(--fl-space-4);
+  max-height: min(88vh, 640px);
+  overflow: auto;
+}
+
+.fl-dialog__title {
+  font-size: var(--fl-fs-headline);
+  font-weight: 400;
+  margin: 0 0 var(--fl-space-2);
+}
+
+.fl-dialog__body {
+  color: var(--fl-text-secondary);
+  margin: 0 0 var(--fl-space-4);
+}
+
+.fl-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--fl-space-2);
+}
+
+.fl-dialog__actions form { margin: 0; }
+
+/* Bottom sheet: same lifecycle, different presentation — docked to the
+   bottom edge, full width, exits by sliding down. Full component styling
+   (drag handle, desktop width) lands with the Bottom sheet page. */
+dialog.fl-sheet {
+  transform: translateY(16px);
+}
+
+dialog.fl-sheet[open] {
+  position: fixed;
+  inset: 0;
+  margin: auto auto 0;   /* bottom-docked, horizontally centered */
+  height: fit-content;
+  max-height: none;
+  width: 100%;
+  max-width: none;
+  transform: none;
+}
+
+@starting-style {
+  dialog.fl-sheet[open] {
+    transform: translateY(16px);   /* slides up instead of scaling */
+  }
+}
+
+.fl-sheet__surface {
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  border-bottom: none;
+  border-radius: var(--fl-radius-lg) var(--fl-radius-lg) 0 0;
+  padding: var(--fl-space-3) var(--fl-space-4) var(--fl-space-4);
+  max-height: min(86vh, 720px);
+  overflow: auto;
+}
+
+/* Reduced motion: transitions off entirely (closes go instant — fine). */
+@media (prefers-reduced-motion: reduce) {
+  dialog.fl-dialog,
+  dialog.fl-sheet,
+  dialog.fl-dialog::backdrop,
+  dialog.fl-sheet::backdrop {
+    transition: none;
+  }
 }

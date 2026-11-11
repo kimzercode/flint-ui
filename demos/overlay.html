@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — overlay infrastructure demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Dialog</p>
+  <button class="fl-btn fl-btn--filled" data-fl-open="dlg-delete" id="inv-delete">Delete conversation</button>
+
+  <p class="fl-section-label">Bottom sheet (infra preview)</p>
+  <button class="fl-btn" data-fl-open="sheet-sort" id="inv-sheet">Sort</button>
+
+  <p class="fl-section-label">Scroll-lock probe</p>
+  <p class="fl-dialog__body" style="margin:0">The page scrolls normally while no overlay is open, and locks while one is. Filler follows so the page has real height to scroll.</p>
+  <p class="fl-dialog__body" style="margin:0">Inbox zero is a lifestyle, not a destination. Every message answered, every label applied, every thread archived before lunch.</p>
+  <p class="fl-dialog__body" style="margin:0">The snoozed row reappears at 6pm sharp, riding the top of the list with a quiet badge nobody asked for.</p>
+  <p class="fl-dialog__body" style="margin:0">Search operators still work: from:, has:attachment, older_than:1y — typed from muscle memory, not documentation.</p>
+  <p class="fl-dialog__body" style="margin:0">The draft to the landlord sits at 340 words and no subject line. Day four.</p>
+  <p class="fl-dialog__body" style="margin:0">Somewhere below the fold, a newsletter from 2019 keeps the unread count honest.</p>
+  <p class="fl-dialog__body" style="margin:0">Labels are colors now. The orange one means “reply this week”, which has meant “next month” twice.</p>
+
+</main>
+
+<!-- Dialog: confirm destructive action. <form method="dialog"> closes the
+     dialog natively on submit and records which button was pressed in
+     dialog.returnValue — confirm/cancel decisions need zero extra JS. -->
+<dialog class="fl-dialog" id="dlg-delete" aria-labelledby="dlg-delete-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-delete-t">Delete conversation?</h2>
+    <p class="fl-dialog__body">This conversation will move to the trash. You can restore it for 30 days.</p>
+    <div class="fl-dialog__actions">
+      <form method="dialog"><button class="fl-btn" value="cancel">Cancel</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--filled" value="delete">Delete</button></form>
+    </div>
+  </div>
+</dialog>
+
+<!-- Bottom sheet: same lifecycle, different presentation. Its own close
+     button uses data-fl-close, and it can stack a dialog on top. -->
+<dialog class="fl-sheet" id="sheet-sort" aria-labelledby="sheet-sort-t">
+  <div class="fl-sheet__surface">
+    <h2 class="fl-dialog__title" id="sheet-sort-t">Sort by</h2>
+    <p class="fl-dialog__body">Sheet content stays scrollable at small heights. Open a dialog over this sheet to test the stack.</p>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" data-fl-open="dlg-nested" id="inv-nested">Dialog over sheet</button>
+      <button class="fl-btn" data-fl-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="fl-dialog" id="dlg-nested" aria-labelledby="dlg-nested-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-nested-t">Stacked dialog</h2>
+    <p class="fl-dialog__body">The sheet stays open underneath. Escape closes only the top layer.</p>
+    <div class="fl-dialog__actions">
+      <form method="dialog"><button class="fl-btn" value="ok">OK</button></form>
+    </div>
+  </div>
+</dialog>
+
+</body>
+</html>
