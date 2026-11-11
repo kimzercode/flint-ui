@@ -47,6 +47,12 @@ const real = [
     status: "ready",
     summary: "App frame that is a bottom nav on mobile and an 80px icon rail on desktop.",
   },
+  {
+    name: "Text fields",
+    slug: "text-fields",
+    status: "ready",
+    summary: "Outlined and filled inputs with helper text, error states and a textarea.",
+  },
 ];
 
 const planned = [

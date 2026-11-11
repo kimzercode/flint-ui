@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.1.0 · no dependencies · no shadows · 1px borders instead
+   v0.3.0 · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -28,6 +28,9 @@
 
   /* Disabled */
   --fl-disabled: #9aa0a6;
+
+  /* Semantic state */
+  --fl-error: #d93025;         /* invalid fields, error/destructive text */
 
   /* Type */
   --fl-font: system-ui, sans-serif;   /* OS default — no webfont; override to brand */
@@ -398,6 +401,25 @@ a { color: var(--fl-accent); text-decoration: none; }
 .fl-btn--text { color: var(--fl-accent); }
 .fl-btn--text:hover { background: var(--fl-hover); }
 
+/* :active for the lighter variants — --fl-divider is the darker flat fill
+   the icon button already uses, so all variants share one pressed depth. */
+.fl-btn--outline:active,
+.fl-btn--text:active { background: var(--fl-divider); }
+
+/* Disabled: must follow the variant rules above so it wins the cascade.
+   Flat treatment: gray fill for filled, gray border/label for the rest —
+   browser default dimming is not enough on flat buttons. */
+.fl-btn:disabled { cursor: not-allowed; }
+.fl-btn--filled:disabled {
+  background: var(--fl-divider);
+  color: var(--fl-disabled);
+}
+.fl-btn--outline:disabled {
+  border-color: var(--fl-divider);
+  color: var(--fl-disabled);
+}
+.fl-btn--text:disabled { color: var(--fl-disabled); }
+
 /* --------------------------------------------------------------------------
    7. Auth shell — plain page + centered 400px card, zero JS. No app chrome:
        auth is a pre-app screen (no top bar, no nav).
@@ -471,6 +493,75 @@ a { color: var(--fl-accent); text-decoration: none; }
   outline: none;
   border-color: var(--fl-accent);
   box-shadow: inset 0 0 0 1px var(--fl-accent); /* 2px-looking focus ring, still flat */
+}
+
+/* Helper text: goes inside the label, under the input */
+.fl-field__help {
+  display: block;
+  margin-top: var(--fl-space-1);
+  font-size: var(--fl-fs-caption);
+  color: var(--fl-text-secondary);
+}
+
+/* Textarea: auto-height box, vertical resize only */
+textarea.fl-field__input {
+  height: auto;
+  min-height: 88px;
+  padding: var(--fl-space-2) var(--fl-space-3);
+  line-height: 1.45;
+  resize: vertical;
+}
+
+/* Filled variant (fl-field--filled): tinted fill, flat bottom indicator.
+   The accent "underline" is an inset box-shadow so it stays 1px-flat at rest
+   and reads 2px on focus — no pseudo-element, no real border growth. */
+.fl-field--filled .fl-field__input {
+  background: var(--fl-divider);
+  border-color: transparent;
+  border-bottom-color: var(--fl-text-secondary);
+}
+.fl-field--filled .fl-field__input:hover {
+  border-bottom-color: var(--fl-text);
+}
+.fl-field--filled .fl-field__input:focus {
+  border-bottom-color: var(--fl-accent);
+  box-shadow: inset 0 -2px 0 0 var(--fl-accent);
+}
+
+/* Disabled: dimmed text on a flat fill; hover darkening is switched off */
+.fl-field__input:disabled {
+  color: var(--fl-disabled);
+  background: var(--fl-hover);
+  cursor: not-allowed;
+}
+.fl-field__input:disabled:hover { border-color: var(--fl-border); }
+
+/* Error state — add fl-field--error on the label, or just set
+   aria-invalid="true" on the input; either alone is enough. */
+.fl-field--error .fl-field__input,
+.fl-field__input[aria-invalid="true"] {
+  border-color: var(--fl-error);
+}
+.fl-field--error .fl-field__input:hover,
+.fl-field__input[aria-invalid="true"]:hover {
+  border-color: var(--fl-error);
+}
+.fl-field--error .fl-field__input:focus,
+.fl-field__input[aria-invalid="true"]:focus {
+  border-color: var(--fl-error);
+  box-shadow: inset 0 0 0 1px var(--fl-error);
+}
+.fl-field--error .fl-field__help { color: var(--fl-error); }
+
+/* Filled + error keeps the bottom-indicator shape, recolored */
+.fl-field--error.fl-field--filled .fl-field__input,
+.fl-field--filled .fl-field__input[aria-invalid="true"] {
+  border-color: transparent;
+  border-bottom-color: var(--fl-error);
+}
+.fl-field--error.fl-field--filled .fl-field__input:focus,
+.fl-field--filled .fl-field__input[aria-invalid="true"]:focus {
+  box-shadow: inset 0 -2px 0 0 var(--fl-error);
 }
 
 /* Full-width mobile for auth card */

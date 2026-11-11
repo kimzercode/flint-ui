@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — text fields demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Outlined (default)</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Email</span>
+    <input class="fl-field__input" type="email" placeholder="you@example.com">
+  </label>
+
+  <p class="fl-section-label">With helper text</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Password</span>
+    <input class="fl-field__input" type="password">
+    <span class="fl-field__help">At least 8 characters</span>
+  </label>
+
+  <p class="fl-section-label">Error — class or aria-invalid, either works</p>
+  <label class="fl-field fl-field--error">
+    <span class="fl-field__label">Email</span>
+    <input class="fl-field__input" type="email" value="not-an-email" aria-invalid="true">
+    <span class="fl-field__help">Enter a valid email address</span>
+  </label>
+
+  <p class="fl-section-label">Filled variant</p>
+  <label class="fl-field fl-field--filled">
+    <span class="fl-field__label">Search</span>
+    <input class="fl-field__input" type="text">
+  </label>
+  <label class="fl-field fl-field--filled fl-field--error">
+    <span class="fl-field__label">Card number</span>
+    <input class="fl-field__input" type="text" value="1234" aria-invalid="true">
+    <span class="fl-field__help">Enter the full 16-digit number</span>
+  </label>
+
+  <p class="fl-section-label">Textarea</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Notes</span>
+    <textarea class="fl-field__input" rows="3" placeholder="Resize from the bottom corner"></textarea>
+  </label>
+
+  <p class="fl-section-label">Disabled</p>
+  <label class="fl-field">
+    <span class="fl-field__label">Workspace URL</span>
+    <input class="fl-field__input" type="text" value="acme.flint.app" disabled>
+    <span class="fl-field__help">Managed by your administrator</span>
+  </label>
+
+</main>
+
+</body>
+</html>

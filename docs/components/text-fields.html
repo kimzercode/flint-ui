@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Text fields — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.3.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.3.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           aria-current="page">Text fields</a>
+      </li>
+      
+    </ul>
+
+    <h3 class="docs-sidebar__group">Planned</h3>
+    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog<small>0.4</small></a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet<small>0.4</small></a>
+      </li>
+      
+    </ul>
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Text fields</h1>
+    <p class="docs-art-lead">Outlined and filled text fields in the Gmail-2020 style — 44px inputs, flat error states, helper text, zero JavaScript.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>Text fields collect free-form input. The default is the outlined style
+     (1px border, no fill); <code>fl-field--filled</code> switches to the M2
+     filled style (tinted fill, flat bottom indicator) for dense forms and
+     search boxes. Both are plain HTML inputs — the CSS only styles them, so
+     autofill, validation and mobile keyboards all behave natively.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>You need <strong>single-line input</strong> (email, name, search) —
+        wrap the input in <code>&lt;label class="fl-field"&gt;</code> with a
+        <code>fl-field__label</code> span.</li>
+    <li>You need <strong>multi-line input</strong> — a real
+        <code>&lt;textarea class="fl-field__input"&gt;</code>; it auto-heights
+        and resizes vertically only.</li>
+    <li>The form needs <strong>inline guidance or validation</strong> —
+        <code>fl-field__help</code> renders under the input and doubles as the
+        error slot.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>One value out of a known list — that is a select (styled native select
+        lands in this same release family) or checkboxes/radios; a text field
+        invites typos you then have to validate away.</li>
+    <li>You need a custom dropdown menu — the custom listbox is planned for
+        0.4 with the overlay infrastructure; until then the native control is
+        the honest choice.</li>
+    <li>The value is display-only — plain text, not a disabled field; disabled
+        fields are for genuinely unavailable input.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 280" role="img" aria-label="Text field anatomy diagram">
+      <!-- outlined field, error variant shown -->
+      <rect x="1" y="1" width="598" height="278" fill="#ffffff" stroke="#dadce0"/>
+      <!-- floating label -->
+      <rect x="40" y="30" width="60" height="10" rx="5" fill="#444746"/>
+      <!-- input box with error border -->
+      <rect x="40" y="56" width="360" height="44" rx="4" fill="#ffffff" stroke="#d93025"/>
+      <!-- typed text -->
+      <rect x="56" y="72" width="140" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- helper / error text -->
+      <rect x="40" y="112" width="200" height="8" rx="4" fill="#d93025"/>
+      <!-- keylines -->
+      <line x1="40" y1="56" x2="400" y2="56" stroke="#d93025" stroke-dasharray="3 3"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="28" cy="35" r="11" fill="#1a73e8"/><text x="28" y="39" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="420" cy="78" r="11" fill="#1a73e8"/><text x="420" y="82" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="28" cy="116" r="11" fill="#1a73e8"/><text x="28" y="120" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="28" cy="205" r="11" fill="#1a73e8"/><text x="28" y="209" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+      <!-- filled variant strip -->
+      <rect x="40" y="150" width="360" height="44" rx="4" fill="#e8eaed"/>
+      <rect x="40" y="192" width="360" height="2" fill="#1a73e8"/>
+      <rect x="56" y="166" width="120" height="10" rx="5" fill="#1f1f1f"/>
+    </svg>
+    <ol>
+      <li><strong>Label</strong> — 12px/500 above the input; it is a real
+          <code>&lt;label&gt;</code> wrapping the control, so clicking it
+          focuses the field.</li>
+      <li><strong>Input</strong> — 44px tall, 1px <code>--fl-border</code>,
+          4px radius; hover darkens the border, focus takes the accent border
+          plus a flat 2px-looking inset ring.</li>
+      <li><strong>Helper text</strong> — 12px under the input; on error it
+          recolors to <code>--fl-error</code> and the border follows.</li>
+      <li><strong>Filled variant</strong> — tinted <code>--fl-divider</code>
+          fill, flat accent bottom indicator (2px on focus via inset
+          box-shadow).</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Structure is the API:</strong> <code>fl-field</code> is a
+        <code>&lt;label&gt;</code> wrapping <code>fl-field__label</code>, the
+        input, and optional <code>fl-field__help</code> — in that order. The
+        association is native, no <code>for</code>/<code>id</code> wiring
+        needed.</li>
+    <li><strong>Two ways to mark an error:</strong> add
+        <code>fl-field--error</code> on the label, or set
+        <code>aria-invalid="true"</code> on the input — either alone works and
+        they stack. The second exists so JS validation code never has to know
+        the class name.</li>
+    <li><strong>Helper doubles as the error slot</strong> — reuse the same
+        element and swap its text; the color follows the error state
+        automatically.</li>
+    <li><strong>Filled variant</strong> (<code>fl-field--filled</code>) keeps
+        the same label/help markup; only the box changes. Error state
+        recolors its bottom indicator instead of the full border.</li>
+    <li><strong>Textarea</strong> is <code>&lt;textarea
+        class="fl-field__input"&gt;</code> — height auto, <code>rows</code>
+        sets the initial size, resize is vertical-only so the layout can't
+        blow out.</li>
+    <li><strong>Disabled</strong> is the native attribute — dimmed text on a
+        flat fill, hover darkening switched off. Dim the helper text by
+        writing it in secondary color (the default) — the CSS does not style
+        the label, so prefer <em>removing</em> optional guidance on disabled
+        fields.</li>
+    <li><strong>Custom dropdown is not here yet</strong> — a styled native
+        <code>&lt;select&gt;</code> ships in this release; the custom listbox
+        menu is planned for 0.4 with the overlay work.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The label wraps the input — real <code>&lt;label&gt;</code>
+        association for free, including click-to-focus and screen-reader
+        naming.</li>
+    <li>Mark errors with <code>aria-invalid="true"</code> (which the CSS keys
+        off) and keep the visible error text in <code>fl-field__help</code> —
+        never color alone; the text is the announcement.</li>
+    <li>Never remove the focus style — it is the only focus indicator the
+        flat input has (accent border + inset ring).</li>
+    <li><code>placeholder</code> is a hint, not a label — always ship a
+        <code>fl-field__label</code>; placeholders disappear on input and are
+        skipped by some screen readers.</li>
+    <li>Disabled inputs are skipped by tab order — that is correct; if the
+        field must stay discoverable, prefer <code>readonly</code> +
+        explanation over <code>disabled</code>.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/fields.html — rendered live</span>
+      <a href="../demos/fields.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/fields.html" title="Text fields live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below covers every state.</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Outlined field (default) --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Email&lt;/span&gt;
+  &lt;input class=&quot;fl-field__input&quot; type=&quot;email&quot; placeholder=&quot;you@example.com&quot;&gt;
+&lt;/label&gt;
+
+&lt;!-- With helper text --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Password&lt;/span&gt;
+  &lt;input class=&quot;fl-field__input&quot; type=&quot;password&quot;&gt;
+  &lt;span class=&quot;fl-field__help&quot;&gt;At least 8 characters&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Error: class on the label OR aria-invalid on the input --&gt;
+&lt;label class=&quot;fl-field fl-field--error&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Email&lt;/span&gt;
+  &lt;input class=&quot;fl-field__input&quot; type=&quot;email&quot; value=&quot;not-an-email&quot; aria-invalid=&quot;true&quot;&gt;
+  &lt;span class=&quot;fl-field__help&quot;&gt;Enter a valid email address&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Filled variant --&gt;
+&lt;label class=&quot;fl-field fl-field--filled&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Search&lt;/span&gt;
+  &lt;input class=&quot;fl-field__input&quot; type=&quot;text&quot;&gt;
+&lt;/label&gt;
+
+&lt;!-- Textarea --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Notes&lt;/span&gt;
+  &lt;textarea class=&quot;fl-field__input&quot; rows=&quot;3&quot;&gt;&lt;/textarea&gt;
+&lt;/label&gt;
+
+&lt;!-- Disabled --&gt;
+&lt;label class=&quot;fl-field&quot;&gt;
+  &lt;span class=&quot;fl-field__label&quot;&gt;Workspace URL&lt;/span&gt;
+  &lt;input class=&quot;fl-field__input&quot; type=&quot;text&quot; value=&quot;acme.flint.app&quot; disabled&gt;
+&lt;/label&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/fields.html">demos/fields.html</a>. Fields also appear
+     in context in <a href="../demos/auth.html">demos/auth.html</a> (the
+     sign-in card).</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-error</code></td><td>Error border, ring and helper text</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Outlined border; filled fill is <code>--fl-divider</code></td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Focus border/ring and the filled indicator</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled text color</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Input corner radius (4px)</td></tr>
+      <tr><td><code>--fl-fs-caption</code></td><td>Label and helper size (12px)</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-error: #b3261e;      /* deeper error red */
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.3.0" defer></script>
+<script src="../js/docs-ui.js?v=0.3.0" defer></script>
+
+</body>
+</html>

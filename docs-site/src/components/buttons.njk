@@ -96,11 +96,11 @@ toc:
 <section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
-    <li><strong>State layers are fills, not shadows or ripples:</strong> filled darkens on hover and further on press; outline and text take the <code>--fl-hover</code> gray on hover. Transitions run at <code>--fl-dur</code>/<code>--fl-ease</code>.</li>
+    <li><strong>State layers are fills, not shadows or ripples:</strong> filled darkens on hover and further on press; outline and text take the <code>--fl-hover</code> gray on hover and <code>--fl-divider</code> on press. Transitions run at <code>--fl-dur</code>/<code>--fl-ease</code>.</li>
     <li><strong>Variants combine with icons:</strong> put a <code>fl-icon</code> placeholder (or a real SVG) inside with 8px margin — the flex layout centers it. Icon sizes are not auto-adjusted inside <code>fl-btn</code>.</li>
     <li><strong>Adjacent pairs:</strong> the convention is text button left, filled right (Cancel / Confirm), right-aligned with an 8px gap — mirrors the auth-card action row.</li>
     <li><strong>Buttons are <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code></strong> — both get the styles; anchors should still only be used where the action really is a navigation-adjacent verb ("Create account").</li>
-    <li><strong>Disabled state is not styled in 0.1</strong> — the browser dims nothing here. Interim: <code>[disabled]</code> blocks clicks but keeps full color; add <code>style="opacity:.38"</code> or your own rule. Logged as a docs-driven requirement.</li>
+    <li><strong>Disabled is styled since 0.3:</strong> the native attribute gives a flat gray treatment — <code>--fl-divider</code> fill on filled, <code>--fl-divider</code> border/label on outline, <code>--fl-disabled</code> label on text. Don't rely on color alone to convey it; consider also dropping the button or explaining why in adjacent text.</li>
     <li><strong>Related controls:</strong> <code>fl-icon-btn</code> (40px rounded-square, for chrome) and <code>fl-fab</code> (56px fixed circle docked above the tab bar) — see the bottom-nav shell page.</li>
   </ul>
 </section>
@@ -111,7 +111,7 @@ toc:
     <li>Buttons are real <code>&lt;button&gt;</code> elements — Enter/Space activation, form submission, and focus are platform behavior; nothing is reimplemented.</li>
     <li>Labels are visible text; don't ship icon-only text buttons — if there is no room for text, <code>fl-icon-btn</code> + <code>aria-label</code> is the pattern.</li>
     <li><code>:focus-visible</code> gets the 2px accent ring globally (on the accent-filled button the ring still reads via its offset).</li>
-    <li>State is conveyed by color only in hover/press — which is fine, because those states are pointer-specific; the *enabled/disabled* distinction must not be color-only, so don't rely on the (unstyled) disabled state alone — disable the attribute <em>and</em> add an opacity or text change.</li>
+    <li>State is conveyed by color only in hover/press — which is fine, because those states are pointer-specific; the *enabled/disabled* distinction must not be color-only, so when a button disables, also update adjacent copy or remove the action rather than relying on the gray fill.</li>
     <li>Buttons that toggle (e.g. "Follow"/"Following") should carry <code>aria-pressed</code>.</li>
   </ul>
 </section>
@@ -155,6 +155,9 @@ toc:
   <button class="fl-btn fl-btn--filled">Confirm</button>
 </div>
 
+<!-- Disabled: native attribute; gray fill (filled) / gray border+label (outline) -->
+<button class="fl-btn fl-btn--filled" disabled>Unavailable</button>
+
 <!-- Icon-only chrome: not a text button — see fl-icon-btn -->
 <button class="fl-icon-btn" aria-label="More options">
   <span class="fl-icon" aria-hidden="true"></span>
@@ -184,6 +187,8 @@ toc:
       <tr><td><code>--fl-accent-hover</code></td><td>Filled hover fill</td></tr>
       <tr><td><code>--fl-accent-pressed</code></td><td>Filled active fill</td></tr>
       <tr><td><code>--fl-hover</code></td><td>Outline/text hover fill</td></tr>
+      <tr><td><code>--fl-divider</code></td><td>Outline/text press fill; disabled filled fill and outline border</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled label color</td></tr>
       <tr><td><code>--fl-border</code></td><td>Outline variant border</td></tr>
       <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
       <tr><td><code>--fl-fs-body</code></td><td>Label size (14px)</td></tr>

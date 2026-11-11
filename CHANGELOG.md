@@ -8,6 +8,17 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 
 ### Added
 
+- **Text field variants** (first library component growth since 0.1):
+  - `fl-field__help` — helper text slot under the input, inside the label.
+  - `fl-field--error` and an `aria-invalid="true"` hook — either alone styles
+    the error border/ring and recolors the helper text; driven by the new
+    semantic token `--fl-error` (#d93025).
+  - `fl-field--filled` — M2 filled variant: tinted fill, flat accent bottom
+    indicator (2px on focus via inset box-shadow); composes with the error
+    state.
+  - `textarea.fl-field__input` — auto-height, vertical-only resize.
+  - `fl-field__input:disabled` — flat dimmed treatment, hover darkening off.
+  - New docs page (Text fields) + `demos/fields.html` live demo.
 - **Documentation site** (`docs/`, source in `docs-site/`): a static
   Material-2-style docs site built with Eleventy and styled entirely with
   Flint itself — same tokens, flat 1px borders, no shadows.
@@ -33,6 +44,13 @@ based on [Keep a Changelog](https://keepachangelog.com); versioning follows
   CSS was already header-agnostic (`fl-shell-auth` centers whatever you put
   in it); the demo, docs and README now reflect that. No logo slot by
   default — add your wordmark above the card title if you want one.
+- **Buttons: disabled and pressed states.** `fl-btn:disabled` now has a flat
+  gray treatment per variant (`--fl-divider` fill on filled, `--fl-divider`
+  border + `--fl-disabled` label on outline, `--fl-disabled` label on text);
+  outline/text gained `:active` fills in `--fl-divider`, matching the icon
+  button's pressed depth. Rules are ordered after the variant hovers so the
+  cascade is correct. The Buttons docs page no longer documents these as
+  gaps.
 
 ## [0.1.0] — 2026-11-06
 

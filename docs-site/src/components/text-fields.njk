@@ -1,0 +1,261 @@
+---
+layout: layouts/base.njk
+permalink: components/text-fields.html
+assetRoot: ../
+title: Text fields
+section: components
+current: text-fields
+depth: 1
+lead: Outlined and filled text fields in the Gmail-2020 style — 44px inputs, flat error states, helper text, zero JavaScript.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>Text fields collect free-form input. The default is the outlined style
+     (1px border, no fill); <code>fl-field--filled</code> switches to the M2
+     filled style (tinted fill, flat bottom indicator) for dense forms and
+     search boxes. Both are plain HTML inputs — the CSS only styles them, so
+     autofill, validation and mobile keyboards all behave natively.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>You need <strong>single-line input</strong> (email, name, search) —
+        wrap the input in <code>&lt;label class="fl-field"&gt;</code> with a
+        <code>fl-field__label</code> span.</li>
+    <li>You need <strong>multi-line input</strong> — a real
+        <code>&lt;textarea class="fl-field__input"&gt;</code>; it auto-heights
+        and resizes vertically only.</li>
+    <li>The form needs <strong>inline guidance or validation</strong> —
+        <code>fl-field__help</code> renders under the input and doubles as the
+        error slot.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>One value out of a known list — that is a select (styled native select
+        lands in this same release family) or checkboxes/radios; a text field
+        invites typos you then have to validate away.</li>
+    <li>You need a custom dropdown menu — the custom listbox is planned for
+        0.4 with the overlay infrastructure; until then the native control is
+        the honest choice.</li>
+    <li>The value is display-only — plain text, not a disabled field; disabled
+        fields are for genuinely unavailable input.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 280" role="img" aria-label="Text field anatomy diagram">
+      <!-- outlined field, error variant shown -->
+      <rect x="1" y="1" width="598" height="278" fill="#ffffff" stroke="#dadce0"/>
+      <!-- floating label -->
+      <rect x="40" y="30" width="60" height="10" rx="5" fill="#444746"/>
+      <!-- input box with error border -->
+      <rect x="40" y="56" width="360" height="44" rx="4" fill="#ffffff" stroke="#d93025"/>
+      <!-- typed text -->
+      <rect x="56" y="72" width="140" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- helper / error text -->
+      <rect x="40" y="112" width="200" height="8" rx="4" fill="#d93025"/>
+      <!-- keylines -->
+      <line x1="40" y1="56" x2="400" y2="56" stroke="#d93025" stroke-dasharray="3 3"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="28" cy="35" r="11" fill="#1a73e8"/><text x="28" y="39" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="420" cy="78" r="11" fill="#1a73e8"/><text x="420" y="82" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="28" cy="116" r="11" fill="#1a73e8"/><text x="28" y="120" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="28" cy="205" r="11" fill="#1a73e8"/><text x="28" y="209" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+      <!-- filled variant strip -->
+      <rect x="40" y="150" width="360" height="44" rx="4" fill="#e8eaed"/>
+      <rect x="40" y="192" width="360" height="2" fill="#1a73e8"/>
+      <rect x="56" y="166" width="120" height="10" rx="5" fill="#1f1f1f"/>
+    </svg>
+    <ol>
+      <li><strong>Label</strong> — 12px/500 above the input; it is a real
+          <code>&lt;label&gt;</code> wrapping the control, so clicking it
+          focuses the field.</li>
+      <li><strong>Input</strong> — 44px tall, 1px <code>--fl-border</code>,
+          4px radius; hover darkens the border, focus takes the accent border
+          plus a flat 2px-looking inset ring.</li>
+      <li><strong>Helper text</strong> — 12px under the input; on error it
+          recolors to <code>--fl-error</code> and the border follows.</li>
+      <li><strong>Filled variant</strong> — tinted <code>--fl-divider</code>
+          fill, flat accent bottom indicator (2px on focus via inset
+          box-shadow).</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Structure is the API:</strong> <code>fl-field</code> is a
+        <code>&lt;label&gt;</code> wrapping <code>fl-field__label</code>, the
+        input, and optional <code>fl-field__help</code> — in that order. The
+        association is native, no <code>for</code>/<code>id</code> wiring
+        needed.</li>
+    <li><strong>Two ways to mark an error:</strong> add
+        <code>fl-field--error</code> on the label, or set
+        <code>aria-invalid="true"</code> on the input — either alone works and
+        they stack. The second exists so JS validation code never has to know
+        the class name.</li>
+    <li><strong>Helper doubles as the error slot</strong> — reuse the same
+        element and swap its text; the color follows the error state
+        automatically.</li>
+    <li><strong>Filled variant</strong> (<code>fl-field--filled</code>) keeps
+        the same label/help markup; only the box changes. Error state
+        recolors its bottom indicator instead of the full border.</li>
+    <li><strong>Textarea</strong> is <code>&lt;textarea
+        class="fl-field__input"&gt;</code> — height auto, <code>rows</code>
+        sets the initial size, resize is vertical-only so the layout can't
+        blow out.</li>
+    <li><strong>Disabled</strong> is the native attribute — dimmed text on a
+        flat fill, hover darkening switched off. Dim the helper text by
+        writing it in secondary color (the default) — the CSS does not style
+        the label, so prefer <em>removing</em> optional guidance on disabled
+        fields.</li>
+    <li><strong>Custom dropdown is not here yet</strong> — a styled native
+        <code>&lt;select&gt;</code> ships in this release; the custom listbox
+        menu is planned for 0.4 with the overlay work.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The label wraps the input — real <code>&lt;label&gt;</code>
+        association for free, including click-to-focus and screen-reader
+        naming.</li>
+    <li>Mark errors with <code>aria-invalid="true"</code> (which the CSS keys
+        off) and keep the visible error text in <code>fl-field__help</code> —
+        never color alone; the text is the announcement.</li>
+    <li>Never remove the focus style — it is the only focus indicator the
+        flat input has (accent border + inset ring).</li>
+    <li><code>placeholder</code> is a hint, not a label — always ship a
+        <code>fl-field__label</code>; placeholders disappear on input and are
+        skipped by some screen readers.</li>
+    <li>Disabled inputs are skipped by tab order — that is correct; if the
+        field must stay discoverable, prefer <code>readonly</code> +
+        explanation over <code>disabled</code>.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/fields.html — rendered live</span>
+      <a href="../demos/fields.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/fields.html" title="Text fields live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below covers every state.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {% set markup %}
+<!-- Outlined field (default) -->
+<label class="fl-field">
+  <span class="fl-field__label">Email</span>
+  <input class="fl-field__input" type="email" placeholder="you@example.com">
+</label>
+
+<!-- With helper text -->
+<label class="fl-field">
+  <span class="fl-field__label">Password</span>
+  <input class="fl-field__input" type="password">
+  <span class="fl-field__help">At least 8 characters</span>
+</label>
+
+<!-- Error: class on the label OR aria-invalid on the input -->
+<label class="fl-field fl-field--error">
+  <span class="fl-field__label">Email</span>
+  <input class="fl-field__input" type="email" value="not-an-email" aria-invalid="true">
+  <span class="fl-field__help">Enter a valid email address</span>
+</label>
+
+<!-- Filled variant -->
+<label class="fl-field fl-field--filled">
+  <span class="fl-field__label">Search</span>
+  <input class="fl-field__input" type="text">
+</label>
+
+<!-- Textarea -->
+<label class="fl-field">
+  <span class="fl-field__label">Notes</span>
+  <textarea class="fl-field__input" rows="3"></textarea>
+</label>
+
+<!-- Disabled -->
+<label class="fl-field">
+  <span class="fl-field__label">Workspace URL</span>
+  <input class="fl-field__input" type="text" value="acme.flint.app" disabled>
+</label>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(markup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/fields.html">demos/fields.html</a>. Fields also appear
+     in context in <a href="../demos/auth.html">demos/auth.html</a> (the
+     sign-in card).</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-error</code></td><td>Error border, ring and helper text</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Outlined border; filled fill is <code>--fl-divider</code></td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Focus border/ring and the filled indicator</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled text color</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Input corner radius (4px)</td></tr>
+      <tr><td><code>--fl-fs-caption</code></td><td>Label and helper size (12px)</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-error: #b3261e;      /* deeper error red */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}
