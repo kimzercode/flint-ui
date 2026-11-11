@@ -56,8 +56,11 @@
     });
   }
 
-  // A hash pointing into the implementation panel switches to that tab
-  if (/^#i-/.test(location.hash)) { setTab("impl"); }
+  // Establish the initial tab state in the DOM (Design by default, or
+  // Implementation when the hash points into it). Deferred scripts run
+  // before first paint, so the TOC never flashes the full list — and if
+  // this script never loads, no-JS rendering shows everything.
+  setTab(/^#i-/.test(location.hash) ? "impl" : "design");
 
   /* --- 2. Copy buttons ------------------------------------------------------ */
   function fallbackCopy(text) {
