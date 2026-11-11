@@ -6,40 +6,194 @@ title: Cards
 section: components
 current: cards
 depth: 1
-lead: Outlined content containers, no shadows — planned, not yet in the library.
+lead: Outlined content containers, no shadows — flat surfaces for related content and actions.
 toc:
   design:
-    - id: status
-      title: Status
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
   impl:
-    - id: status
-      title: Status
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
 ---
-{% from "macros.njk" import callout with context %}
+{% from "macros.njk" import callout, snippet with context %}
 
 {% set design %}
 <section class="docs-section">
-  <h2 id="d-status">Status</h2>
+  <h2 id="d-usage">Usage</h2>
+  <p>Cards group related content and its actions on a single bordered surface.
+     In the M2 2020 style they are quiet: a 1px border does the separation
+     work that a shadow would do elsewhere, so cards read as *containers*,
+     not as floating layers.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>Content pieces are <strong>heterogeneous</strong> — a title, a
+        paragraph, actions, maybe a nested detail — that belong together.</li>
+    <li>You need scrollable feed content (the mail-style timeline in the
+        demos: section label, then a stack of cards).</li>
+    <li>The card hosts a self-contained interaction (a notification with
+        Dismiss/Upgrade actions).</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>Items are <strong>peers of the same structure</strong> — that is a
+        <a href="lists.html">list</a>, not a card stack; rows are lighter and
+        denser.</li>
+    <li>You need a modal surface — the dialog (planned 0.4) over the scrim is
+        that, not a positioned card.</li>
+    <li>Everything on the page would be a card — borders everywhere is visual
+        noise; let section labels and spacing carry quiet groupings.</li>
+  </ul>
   {{ callout({
-    variant: "planned",
-    title: "In the library since 0.1.0 — full docs page coming",
-    text: "Outlined content containers (fl-card) already ship; they carry the content in every shell demo. This page is pending its full spec write-up.",
-    href: "../roadmap.html",
-    linkText: "See the roadmap"
+    variant: "info",
+    title: "Card vs. list row",
+    text: "Cards for varied, self-contained content. Lists for repeated, peer items. The demos mix them: card stacks in the feed, list rows in the inbox.",
+    href: "lists.html",
+    linkText: "Lists"
   }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 240" role="img" aria-label="Card anatomy diagram">
+      <!-- card -->
+      <rect x="40" y="24" width="380" height="190" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- title -->
+      <rect x="64" y="48" width="180" height="12" rx="6" fill="#444746"/>
+      <!-- text -->
+      <rect x="64" y="76" width="320" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="64" y="92" width="290" height="8" rx="4" fill="#9aa0a6"/>
+      <!-- action row -->
+      <rect x="230" y="168" width="54" height="8" rx="4" fill="#1a73e8"/>
+      <rect x="300" y="160" width="96" height="26" rx="4" fill="#1a73e8"/>
+      <!-- border callout -->
+      <line x1="40" y1="230" x2="420" y2="230" stroke="#1a73e8" stroke-dasharray="3 3"/>
+      <!-- second card below, gap indicator -->
+      <rect x="40" y="236" width="380" height="4" fill="none"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="40" cy="24" r="11" fill="#1a73e8"/><text x="40" y="28" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="64" cy="48" r="11" fill="#1a73e8"/><text x="64" y="52" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="64" cy="80" r="11" fill="#1a73e8"/><text x="64" y="84" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="348" cy="173" r="11" fill="#1a73e8"/><text x="348" y="177" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Surface</strong> — white, 1px <code>--fl-border</code>, 8px radius (<code>--fl-radius-card</code>), 16px padding. Never a shadow.</li>
+      <li><strong>Title</strong> — 16px/500 (<code>--fl-fs-title</code>), the card's <code>h2</code>–<code>h4</code> level.</li>
+      <li><strong>Text</strong> — 14px body in secondary color.</li>
+      <li><strong>Action row (optional)</strong> — text button left of the filled one, right-aligned; mirrors the auth-card convention.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Stacking:</strong> adjacent cards get a 16px gap automatically (<code>.fl-card + .fl-card</code>) — wrap a feed in a container and the rhythm is free.</li>
+    <li><strong>Grouping:</strong> <code>fl-section-label</code> (uppercase caption) heads each group; it collapses its top margin as the first child of a container.</li>
+    <li><strong>Cards are not interactive surfaces by default</strong> — no hover fill, no cursor change. Interactivity belongs to the controls inside. Whole-clickable cards are not in the library (planned pattern: make an inner link cover the card).</li>
+    <li><strong>Composition:</strong> cards nest (the demos show a button row inside a card) and work with every shell's <code>fl-content</code> column, capped at <code>--fl-content-max</code> on desktop.</li>
+    <li><strong>Width:</strong> block-level, fills its container — constrain the parent, don't set card widths.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Use a real heading element for <code>fl-card__title</code> and keep the page's heading order sane (cards are usually <code>h2</code>/<code>h3</code>, never skip levels for styling).</li>
+    <li><code>&lt;article class="fl-card"&gt;</code> gives each card its own landmark-ish region in feed contexts (screen readers list the articles).</li>
+    <li>Action rows keep real buttons — same rules as the buttons page; right-aligned text-then-filled order preserves a logical focus order.</li>
+    <li>The border/separation is presentation, not semantics — no <code>role</code> needed on the card itself.</li>
+  </ul>
 </section>
 {% endset %}
 
 {% set impl %}
 <section class="docs-section">
-  <h2 id="i-status">Status</h2>
-  {{ callout({
-    variant: "planned",
-    title: "No code yet",
-    text: "Snippets, live examples and token tables appear here when the component lands.",
-    href: "../roadmap.html",
-    linkText: "See the roadmap"
-  }) }}
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/cards.html — rendered live</span>
+      <a href="../demos/cards.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/cards.html" title="Cards live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below is the core pattern.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {% set markup %}
+<!-- A labeled group of stacked cards (the feed pattern) -->
+<main class="fl-content">
+  <p class="fl-section-label">Today</p>
+
+  <article class="fl-card">
+    <h2 class="fl-card__title">Design review moved to 15:00</h2>
+    <p class="fl-card__text">The flat-shell discussion is now after lunch.</p>
+  </article>
+
+  <article class="fl-card">
+    <h2 class="fl-card__title">Quota update</h2>
+    <p class="fl-card__text">Storage is at 68% of plan.</p>
+    <div style="margin-top:16px; display:flex; gap:8px; justify-content:flex-end;">
+      <button class="fl-btn fl-btn--text">Dismiss</button>
+      <button class="fl-btn fl-btn--filled">Upgrade</button>
+    </div>
+  </article>
+</main>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {{ snippet(markup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/cards.html">demos/cards.html</a>. Cards also appear in
+     context in <a href="../demos/bottom-nav.html">demos/bottom-nav.html</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-border</code></td><td>The card's 1px separation</td></tr>
+      <tr><td><code>--fl-radius-card</code></td><td>Corner radius (8px)</td></tr>
+      <tr><td><code>--fl-fs-title</code> / <code>--fl-fs-body</code></td><td>Title / text sizes</td></tr>
+      <tr><td><code>--fl-text-secondary</code></td><td>Body text color</td></tr>
+      <tr><td><code>--fl-space-3</code></td><td>Card padding and stack gap</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-radius-card: 12px;   /* soften the corners */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
 </section>
 {% endset %}
 

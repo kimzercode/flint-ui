@@ -399,7 +399,8 @@ a { color: var(--fl-accent); text-decoration: none; }
 .fl-btn--text:hover { background: var(--fl-hover); }
 
 /* --------------------------------------------------------------------------
-   7. Auth shell — top strip + centered 400px column, zero JS
+   7. Auth shell — plain page + centered 400px card, zero JS. No app chrome:
+       auth is a pre-app screen (no top bar, no nav).
    -------------------------------------------------------------------------- */
 .fl-shell-auth {
   display: flex;

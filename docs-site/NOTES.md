@@ -14,3 +14,6 @@ growing bespoke docs CSS forever.
 | Docs sidebar on phones | **Reuses `.fl-drawer` + `.fl-scrim` + flint.js toggling as-is** (hamburger in the docs topbar, data-fl-drawer-open) | Proof the drawer component generalizes beyond app shells |
 | Scrollspy TOC | docs-only JS | Docs-only forever, not a library component |
 | Docs sidebar inner scrolling when the component list outgrows the viewport | none (list is short; sticky wrapper intentionally has no `overflow-y`) | M2-style scrolling sidebar if the index reaches ~20 entries |
+| Button disabled state styling (buttons page documents the gap) | interim: `[disabled]` blocks clicks but keeps full color; docs suggest opacity | `fl-btn[disabled]` + `--fl-disabled`-based treatment in a patch/0.3 |
+| `:active` state for outline/text buttons (only filled has one) | outline/text rest on hover fill | symmetric `:active` fills in a patch/0.3 |
+| Whole-clickable card (feed items that navigate) | cards host controls; rows handle whole-target clicks | documented "link-cover" pattern or `a.fl-card` support |

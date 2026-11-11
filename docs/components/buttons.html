@@ -84,6 +84,16 @@
       </li>
       
       <li>
+        <a href="../components/buttons.html"
+           aria-current="page">Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
         <a href="../components/drawer.html"
            >Drawer shell</a>
       </li>
@@ -102,16 +112,6 @@
 
     <h3 class="docs-sidebar__group">Planned</h3>
     <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
-      
-      <li>
-        <a href="../components/buttons.html"
-           aria-current="page">Buttons</a>
-      </li>
-      
-      <li>
-        <a href="../components/cards.html"
-           >Cards</a>
-      </li>
       
       <li>
         <a href="../components/dialog.html"
@@ -141,7 +141,7 @@
 <article class="docs-article">
   <header class="docs-art-head">
     <h1>Buttons</h1>
-    <p class="docs-art-lead">Filled, outlined and text buttons with flat state layers — planned, not yet in the library.</p>
+    <p class="docs-art-lead">Filled, outlined and text buttons with flat state layers — no shadows, no ripples, 40px touch targets.</p>
   </header>
 
   <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
@@ -171,17 +171,89 @@
                aria-labelledby="tab-design" data-fl-docs-panel="design">
       
 <section class="docs-section">
-  <h2 id="d-status">Status</h2>
-  
-<div class="docs-callout docs-callout--planned">
-  <span class="docs-callout__dot" aria-hidden="true"></span>
-  <div>
-    <h3 class="docs-callout__title">In the library since 0.1.0 — full docs page coming</h3>
-    <p class="docs-callout__text">Filled, outlined and text buttons (fl-btn) already ship; they appear in the bottom-nav and rail demos. This page is pending its full spec write-up.</p>
-    <a class="docs-callout__link" href="../roadmap.html">See the roadmap</a>
-  </div>
-</div>
+  <h2 id="d-usage">Usage</h2>
+  <p>Buttons trigger actions — never navigation between destinations (that is
+     what the shells' tabs and nav rows are for). The three variants encode
+     emphasis: one filled (primary) action per view, outline for important
+     secondary actions, text for everything else.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>There is <strong>one clear primary action</strong> in view — give it
+        <code>fl-btn--filled</code> and everything else less weight.</li>
+    <li>The action sits inside a card, dialog content, or a form's action row
+        (secondary link left, filled button right — the auth-card pattern).</li>
+    <li>Actions are toolbars of equals (Compose / Snooze / Archive) — use
+        text buttons so nothing competes with the content.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>The element navigates to another destination — use a real link or a
+        nav item; buttons that navigate confuse keyboard and screen-reader
+        users.</li>
+    <li>You need icon-only actions in chrome (top bars, list rows) — that is
+        <code>fl-icon-btn</code>, not a text button.</li>
+    <li>More than one filled button would appear in the same view — two
+        primaries cancel each other out.</li>
+  </ul>
+</section>
 
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 300" role="img" aria-label="Button anatomy diagram">
+      <!-- Filled button -->
+      <rect x="1" y="1" width="598" height="99" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="40" y="31" width="120" height="40" rx="4" fill="#1a73e8"/>
+      <rect x="72" y="47" width="56" height="8" rx="4" fill="#ffffff"/>
+      <!-- Outline button -->
+      <rect x="1" y="100" width="598" height="99" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="40" y="130" width="120" height="40" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="72" y="146" width="56" height="8" rx="4" fill="#1a73e8"/>
+      <!-- Text button -->
+      <rect x="1" y="199" width="598" height="99" fill="#ffffff" stroke="#dadce0"/>
+      <rect x="40" y="229" width="120" height="40" rx="4" fill="#ffffff"/>
+      <rect x="72" y="245" width="56" height="8" rx="4" fill="#1a73e8"/>
+      <!-- keyline markers -->
+      <line x1="40" y1="31" x2="160" y2="31" stroke="#1a73e8" stroke-dasharray="3 3"/>
+      <line x1="40" y1="71" x2="160" y2="71" stroke="#1a73e8" stroke-dasharray="3 3"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="28" cy="25" r="11" fill="#1a73e8"/><text x="28" y="29" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="180" cy="51" r="11" fill="#1a73e8"/><text x="180" y="55" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="28" cy="124" r="11" fill="#1a73e8"/><text x="28" y="128" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="28" cy="223" r="11" fill="#1a73e8"/><text x="28" y="227" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>40px height</strong> — M2 touch-target size at every breakpoint; inline-flex centers the label.</li>
+      <li><strong>Filled</strong> — solid accent fill, surface-colored label; hover/active darken via the accent-hover/pressed tokens (a state layer without transparency).</li>
+      <li><strong>Outline</strong> — 1px border, accent label, hover takes the flat <code>--fl-hover</code> fill.</li>
+      <li><strong>Text</strong> — accent label, no fill until hover.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>State layers are fills, not shadows or ripples:</strong> filled darkens on hover and further on press; outline and text take the <code>--fl-hover</code> gray on hover. Transitions run at <code>--fl-dur</code>/<code>--fl-ease</code>.</li>
+    <li><strong>Variants combine with icons:</strong> put a <code>fl-icon</code> placeholder (or a real SVG) inside with 8px margin — the flex layout centers it. Icon sizes are not auto-adjusted inside <code>fl-btn</code>.</li>
+    <li><strong>Adjacent pairs:</strong> the convention is text button left, filled right (Cancel / Confirm), right-aligned with an 8px gap — mirrors the auth-card action row.</li>
+    <li><strong>Buttons are <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code></strong> — both get the styles; anchors should still only be used where the action really is a navigation-adjacent verb ("Create account").</li>
+    <li><strong>Disabled state is not styled in 0.1</strong> — the browser dims nothing here. Interim: <code>[disabled]</code> blocks clicks but keeps full color; add <code>style="opacity:.38"</code> or your own rule. Logged as a docs-driven requirement.</li>
+    <li><strong>Related controls:</strong> <code>fl-icon-btn</code> (40px rounded-square, for chrome) and <code>fl-fab</code> (56px fixed circle docked above the tab bar) — see the bottom-nav shell page.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Buttons are real <code>&lt;button&gt;</code> elements — Enter/Space activation, form submission, and focus are platform behavior; nothing is reimplemented.</li>
+    <li>Labels are visible text; don't ship icon-only text buttons — if there is no room for text, <code>fl-icon-btn</code> + <code>aria-label</code> is the pattern.</li>
+    <li><code>:focus-visible</code> gets the 2px accent ring globally (on the accent-filled button the ring still reads via its offset).</li>
+    <li>State is conveyed by color only in hover/press — which is fine, because those states are pointer-specific; the *enabled/disabled* distinction must not be color-only, so don't rely on the (unstyled) disabled state alone — disable the attribute <em>and</em> add an opacity or text change.</li>
+    <li>Buttons that toggle (e.g. "Follow"/"Following") should carry <code>aria-pressed</code>.</li>
+  </ul>
 </section>
 
       </section>
@@ -190,15 +262,91 @@
                aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
       
 <section class="docs-section">
-  <h2 id="i-status">Status</h2>
-  
-<div class="docs-callout docs-callout--planned">
-  <span class="docs-callout__dot" aria-hidden="true"></span>
-  <div>
-    <h3 class="docs-callout__title">No code yet</h3>
-    <p class="docs-callout__text">Snippets, live examples and token tables appear here when the component lands.</p>
-    <a class="docs-callout__link" href="../roadmap.html">See the roadmap</a>
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/buttons.html — rendered live</span>
+      <a href="../demos/buttons.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/buttons.html" title="Buttons live demo" loading="lazy"></iframe>
   </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below covers the variants.</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Variants: one filled primary per view --&gt;
+&lt;button class=&quot;fl-btn fl-btn--filled&quot;&gt;Compose&lt;/button&gt;
+&lt;button class=&quot;fl-btn fl-btn--outline&quot;&gt;Snooze&lt;/button&gt;
+&lt;button class=&quot;fl-btn fl-btn--text&quot;&gt;Archive&lt;/button&gt;
+
+&lt;!-- With a leading icon placeholder --&gt;
+&lt;button class=&quot;fl-btn fl-btn--filled&quot;&gt;
+  &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot; style=&quot;margin-right:8px;&quot;&gt;&lt;/span&gt;
+  Add item
+&lt;/button&gt;
+
+&lt;!-- Action row (auth-card convention) --&gt;
+&lt;div style=&quot;display:flex; gap:8px; justify-content:flex-end;&quot;&gt;
+  &lt;button class=&quot;fl-btn fl-btn--text&quot;&gt;Cancel&lt;/button&gt;
+  &lt;button class=&quot;fl-btn fl-btn--filled&quot;&gt;Confirm&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Icon-only chrome: not a text button — see fl-icon-btn --&gt;
+&lt;button class=&quot;fl-icon-btn&quot; aria-label=&quot;More options&quot;&gt;
+  &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/buttons.html">demos/buttons.html</a>. Buttons also
+     appear in context in <a href="../demos/bottom-nav.html">demos/bottom-nav.html</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>Filled fill; outline/text label color</td></tr>
+      <tr><td><code>--fl-accent-hover</code></td><td>Filled hover fill</td></tr>
+      <tr><td><code>--fl-accent-pressed</code></td><td>Filled active fill</td></tr>
+      <tr><td><code>--fl-hover</code></td><td>Outline/text hover fill</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Outline variant border</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-fs-body</code></td><td>Label size (14px)</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-accent: #188038;          /* green Google */
+  --fl-accent-hover: #166b30;
+  --fl-accent-pressed: #135626;
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 
 </section>
@@ -210,10 +358,22 @@
       <h2 class="docs-toc__label">Contents</h2>
       <ul class="docs-toc__list" data-fl-docs-toc>
         
-        <li data-fl-docs-toc-tab="design"><a href="#d-status">Status</a></li>
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
         
         
-        <li data-fl-docs-toc-tab="impl"><a href="#i-status">Status</a></li>
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
         
       </ul>
     </aside>

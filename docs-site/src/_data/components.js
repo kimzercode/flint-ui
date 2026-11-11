@@ -18,6 +18,18 @@ const real = [
     summary: "App frame with a top bar and 3–5 destinations pinned to the bottom.",
   },
   {
+    name: "Buttons",
+    slug: "buttons",
+    status: "ready",
+    summary: "Filled, outlined and text buttons with flat state layers.",
+  },
+  {
+    name: "Cards",
+    slug: "cards",
+    status: "ready",
+    summary: "Outlined content containers, no shadows.",
+  },
+  {
     name: "Drawer shell",
     slug: "drawer",
     status: "ready",
@@ -38,22 +50,6 @@ const real = [
 ];
 
 const planned = [
-  {
-    // Exists in the library since 0.1.0 (fl-btn) — full docs page is Phase 1.
-    name: "Buttons",
-    slug: "buttons",
-    status: "planned",
-    plannedIn: "",
-    summary: "Filled, outlined and text buttons with flat state layers.",
-  },
-  {
-    // Exists in the library since 0.1.0 (fl-card) — full docs page is Phase 1.
-    name: "Cards",
-    slug: "cards",
-    status: "planned",
-    plannedIn: "",
-    summary: "Outlined content containers, no shadows.",
-  },
   {
     name: "Dialog",
     slug: "dialog",

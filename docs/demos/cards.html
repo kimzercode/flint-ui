@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — cards demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Basic card</p>
+  <article class="fl-card">
+    <h2 class="fl-card__title">Design review moved to 15:00</h2>
+    <p class="fl-card__text">Surface separation comes from a 1px border, never
+       a shadow — the card is a flat outlined container, nothing more.</p>
+  </article>
+
+  <p class="fl-section-label">Card with actions</p>
+  <article class="fl-card">
+    <h2 class="fl-card__title">Quota update</h2>
+    <p class="fl-card__text">Storage is at 68% of plan. Nothing needed from you yet.</p>
+    <div style="margin-top:16px; display:flex; gap:8px; justify-content:flex-end;">
+      <button class="fl-btn fl-btn--text">Dismiss</button>
+      <button class="fl-btn fl-btn--filled">Upgrade</button>
+    </div>
+  </article>
+
+  <p class="fl-section-label">Section labels group content</p>
+  <article class="fl-card">
+    <h2 class="fl-card__title">Welcome to Flint UI</h2>
+    <p class="fl-card__text">Cards stack with a 16px gap (fl-card + fl-card);
+       fl-section-label captions each group above them.</p>
+  </article>
+
+</main>
+
+</body>
+</html>

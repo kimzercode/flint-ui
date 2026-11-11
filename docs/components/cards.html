@@ -84,6 +84,16 @@
       </li>
       
       <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           aria-current="page">Cards</a>
+      </li>
+      
+      <li>
         <a href="../components/drawer.html"
            >Drawer shell</a>
       </li>
@@ -102,16 +112,6 @@
 
     <h3 class="docs-sidebar__group">Planned</h3>
     <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
-      
-      <li>
-        <a href="../components/buttons.html"
-           >Buttons</a>
-      </li>
-      
-      <li>
-        <a href="../components/cards.html"
-           aria-current="page">Cards</a>
-      </li>
       
       <li>
         <a href="../components/dialog.html"
@@ -141,7 +141,7 @@
 <article class="docs-article">
   <header class="docs-art-head">
     <h1>Cards</h1>
-    <p class="docs-art-lead">Outlined content containers, no shadows — planned, not yet in the library.</p>
+    <p class="docs-art-lead">Outlined content containers, no shadows — flat surfaces for related content and actions.</p>
   </header>
 
   <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
@@ -171,17 +171,96 @@
                aria-labelledby="tab-design" data-fl-docs-panel="design">
       
 <section class="docs-section">
-  <h2 id="d-status">Status</h2>
+  <h2 id="d-usage">Usage</h2>
+  <p>Cards group related content and its actions on a single bordered surface.
+     In the M2 2020 style they are quiet: a 1px border does the separation
+     work that a shadow would do elsewhere, so cards read as *containers*,
+     not as floating layers.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>Content pieces are <strong>heterogeneous</strong> — a title, a
+        paragraph, actions, maybe a nested detail — that belong together.</li>
+    <li>You need scrollable feed content (the mail-style timeline in the
+        demos: section label, then a stack of cards).</li>
+    <li>The card hosts a self-contained interaction (a notification with
+        Dismiss/Upgrade actions).</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>Items are <strong>peers of the same structure</strong> — that is a
+        <a href="lists.html">list</a>, not a card stack; rows are lighter and
+        denser.</li>
+    <li>You need a modal surface — the dialog (planned 0.4) over the scrim is
+        that, not a positioned card.</li>
+    <li>Everything on the page would be a card — borders everywhere is visual
+        noise; let section labels and spacing carry quiet groupings.</li>
+  </ul>
   
-<div class="docs-callout docs-callout--planned">
+<div class="docs-callout docs-callout--info">
   <span class="docs-callout__dot" aria-hidden="true"></span>
   <div>
-    <h3 class="docs-callout__title">In the library since 0.1.0 — full docs page coming</h3>
-    <p class="docs-callout__text">Outlined content containers (fl-card) already ship; they carry the content in every shell demo. This page is pending its full spec write-up.</p>
-    <a class="docs-callout__link" href="../roadmap.html">See the roadmap</a>
+    <h3 class="docs-callout__title">Card vs. list row</h3>
+    <p class="docs-callout__text">Cards for varied, self-contained content. Lists for repeated, peer items. The demos mix them: card stacks in the feed, list rows in the inbox.</p>
+    <a class="docs-callout__link" href="lists.html">Lists</a>
   </div>
 </div>
 
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 240" role="img" aria-label="Card anatomy diagram">
+      <!-- card -->
+      <rect x="40" y="24" width="380" height="190" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- title -->
+      <rect x="64" y="48" width="180" height="12" rx="6" fill="#444746"/>
+      <!-- text -->
+      <rect x="64" y="76" width="320" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="64" y="92" width="290" height="8" rx="4" fill="#9aa0a6"/>
+      <!-- action row -->
+      <rect x="230" y="168" width="54" height="8" rx="4" fill="#1a73e8"/>
+      <rect x="300" y="160" width="96" height="26" rx="4" fill="#1a73e8"/>
+      <!-- border callout -->
+      <line x1="40" y1="230" x2="420" y2="230" stroke="#1a73e8" stroke-dasharray="3 3"/>
+      <!-- second card below, gap indicator -->
+      <rect x="40" y="236" width="380" height="4" fill="none"/>
+      <!-- callout numbers -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="40" cy="24" r="11" fill="#1a73e8"/><text x="40" y="28" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="64" cy="48" r="11" fill="#1a73e8"/><text x="64" y="52" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="64" cy="80" r="11" fill="#1a73e8"/><text x="64" y="84" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="348" cy="173" r="11" fill="#1a73e8"/><text x="348" y="177" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Surface</strong> — white, 1px <code>--fl-border</code>, 8px radius (<code>--fl-radius-card</code>), 16px padding. Never a shadow.</li>
+      <li><strong>Title</strong> — 16px/500 (<code>--fl-fs-title</code>), the card's <code>h2</code>–<code>h4</code> level.</li>
+      <li><strong>Text</strong> — 14px body in secondary color.</li>
+      <li><strong>Action row (optional)</strong> — text button left of the filled one, right-aligned; mirrors the auth-card convention.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Stacking:</strong> adjacent cards get a 16px gap automatically (<code>.fl-card + .fl-card</code>) — wrap a feed in a container and the rhythm is free.</li>
+    <li><strong>Grouping:</strong> <code>fl-section-label</code> (uppercase caption) heads each group; it collapses its top margin as the first child of a container.</li>
+    <li><strong>Cards are not interactive surfaces by default</strong> — no hover fill, no cursor change. Interactivity belongs to the controls inside. Whole-clickable cards are not in the library (planned pattern: make an inner link cover the card).</li>
+    <li><strong>Composition:</strong> cards nest (the demos show a button row inside a card) and work with every shell's <code>fl-content</code> column, capped at <code>--fl-content-max</code> on desktop.</li>
+    <li><strong>Width:</strong> block-level, fills its container — constrain the parent, don't set card widths.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Use a real heading element for <code>fl-card__title</code> and keep the page's heading order sane (cards are usually <code>h2</code>/<code>h3</code>, never skip levels for styling).</li>
+    <li><code>&lt;article class="fl-card"&gt;</code> gives each card its own landmark-ish region in feed contexts (screen readers list the articles).</li>
+    <li>Action rows keep real buttons — same rules as the buttons page; right-aligned text-then-filled order preserves a logical focus order.</li>
+    <li>The border/separation is presentation, not semantics — no <code>role</code> needed on the card itself.</li>
+  </ul>
 </section>
 
       </section>
@@ -190,15 +269,84 @@
                aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
       
 <section class="docs-section">
-  <h2 id="i-status">Status</h2>
-  
-<div class="docs-callout docs-callout--planned">
-  <span class="docs-callout__dot" aria-hidden="true"></span>
-  <div>
-    <h3 class="docs-callout__title">No code yet</h3>
-    <p class="docs-callout__text">Snippets, live examples and token tables appear here when the component lands.</p>
-    <a class="docs-callout__link" href="../roadmap.html">See the roadmap</a>
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/cards.html — rendered live</span>
+      <a href="../demos/cards.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/cards.html" title="Cards live demo" loading="lazy"></iframe>
   </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the markup below is the core pattern.</p>
+  
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- A labeled group of stacked cards (the feed pattern) --&gt;
+&lt;main class=&quot;fl-content&quot;&gt;
+  &lt;p class=&quot;fl-section-label&quot;&gt;Today&lt;/p&gt;
+
+  &lt;article class=&quot;fl-card&quot;&gt;
+    &lt;h2 class=&quot;fl-card__title&quot;&gt;Design review moved to 15:00&lt;/h2&gt;
+    &lt;p class=&quot;fl-card__text&quot;&gt;The flat-shell discussion is now after lunch.&lt;/p&gt;
+  &lt;/article&gt;
+
+  &lt;article class=&quot;fl-card&quot;&gt;
+    &lt;h2 class=&quot;fl-card__title&quot;&gt;Quota update&lt;/h2&gt;
+    &lt;p class=&quot;fl-card__text&quot;&gt;Storage is at 68% of plan.&lt;/p&gt;
+    &lt;div style=&quot;margin-top:16px; display:flex; gap:8px; justify-content:flex-end;&quot;&gt;
+      &lt;button class=&quot;fl-btn fl-btn--text&quot;&gt;Dismiss&lt;/button&gt;
+      &lt;button class=&quot;fl-btn fl-btn--filled&quot;&gt;Upgrade&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+&lt;/main&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/cards.html">demos/cards.html</a>. Cards also appear in
+     context in <a href="../demos/bottom-nav.html">demos/bottom-nav.html</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override inline
+     or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-border</code></td><td>The card's 1px separation</td></tr>
+      <tr><td><code>--fl-radius-card</code></td><td>Corner radius (8px)</td></tr>
+      <tr><td><code>--fl-fs-title</code> / <code>--fl-fs-body</code></td><td>Title / text sizes</td></tr>
+      <tr><td><code>--fl-text-secondary</code></td><td>Body text color</td></tr>
+      <tr><td><code>--fl-space-3</code></td><td>Card padding and stack gap</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-radius-card: 12px;   /* soften the corners */
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 
 </section>
@@ -210,10 +358,22 @@
       <h2 class="docs-toc__label">Contents</h2>
       <ul class="docs-toc__list" data-fl-docs-toc>
         
-        <li data-fl-docs-toc-tab="design"><a href="#d-status">Status</a></li>
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
         
         
-        <li data-fl-docs-toc-tab="impl"><a href="#i-status">Status</a></li>
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
         
       </ul>
     </aside>
