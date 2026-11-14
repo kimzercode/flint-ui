@@ -6,40 +6,263 @@ title: Dialog
 section: components
 current: dialog
 depth: 1
-lead: Modal dialog over the existing scrim, with focus handling — planned, not yet in the library.
+lead: The native <dialog> wearing Flint's card — focus, Escape, scrim and stacking come from the platform; flint.js only wires the triggers.
 toc:
   design:
-    - id: status
-      title: Status
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
   impl:
-    - id: status
-      title: Status
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
 ---
-{% from "macros.njk" import callout with context %}
+{% from "macros.njk" import callout, snippet with context %}
 
 {% set design %}
 <section class="docs-section">
-  <h2 id="d-status">Status</h2>
+  <h2 id="d-usage">Usage</h2>
+  <p>A dialog interrupts the flow to demand a decision or a short piece of
+     input. It is the most expensive surface in an interface — everything on
+     screen goes inert behind it — so it must be the only thing the user can
+     act on while open.</p>
+  <h3>Do use it for</h3>
+  <ul>
+    <li><strong>Destructive confirmations</strong> — "Delete conversation?"
+        with Cancel and a danger action.</li>
+    <li><strong>Short forms</strong> — rename, invite, move-to; a single
+        <a href="text-fields.html">field</a> plus actions. Enter submits via
+        <code>method="dialog"</code>.</li>
+    <li><strong>Decisions that block the flow</strong> — unsaved-changes
+        warnings before navigation.</li>
+  </ul>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Non-blocking feedback</strong> — "Message sent" is a
+        snackbar, not a dialog; never make the user click an OK to dismiss
+        good news.</li>
+    <li><strong>Long or exploratory content</strong> — release notes,
+        settings, browsing. That is the <a href="bottom-sheet.html">bottom
+        sheet</a> or a normal page; dialogs cap at ~88vh for a reason.</li>
+    <li><strong>Chaining decisions</strong> — a wizard behind three OKs is a
+        page, badly compressed.</li>
+  </ul>
   {{ callout({
-    variant: "planned",
-    title: "Planned in 0.4 — not yet in the library",
-    text: "Modal dialog over the existing scrim, with focus handling. This page exists so the sidebar has an honest destination; there is nothing to use yet.",
-    href: "../roadmap.html",
-    linkText: "See the roadmap"
+    variant: "info",
+    title: "The hard parts are platform work — by design",
+    text: "showModal() provides the focus trap, the inert background, Escape-to-close and top-layer stacking natively. Flint deliberately ships no custom focus management: the classic hand-rolled overlay is 300 lines of fragile JS. flint.js only wires data-fl-open / data-fl-close and returns focus to the invoker on every close path. Open and close animations are pure CSS (@starting-style + allow-discrete).",
+    href: "text-fields.html",
+    linkText: "Field family"
   }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 260" role="img" aria-label="Dialog anatomy diagram">
+      <rect x="1" y="1" width="598" height="258" fill="#5f6368" opacity="0.12"/>
+      <!-- surface -->
+      <rect x="90" y="40" width="420" height="170" rx="8" fill="#ffffff" stroke="#dadce0"/>
+      <!-- title -->
+      <rect x="110" y="62" width="150" height="12" rx="6" fill="#1f1f1f"/>
+      <!-- body text -->
+      <rect x="110" y="88" width="360" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="110" y="104" width="300" height="8" rx="4" fill="#9aa0a6"/>
+      <!-- actions -->
+      <rect x="366" y="180" width="60" height="20" rx="4" fill="none" stroke="#dadce0"/>
+      <rect x="376" y="187" width="40" height="6" rx="3" fill="#1a73e8"/>
+      <rect x="440" y="180" width="50" height="20" rx="4" fill="#dadce0"/>
+      <rect x="450" y="187" width="30" height="6" rx="3" fill="#ffffff"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="78" cy="125" r="11" fill="#1a73e8"/><text x="78" y="129" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="300" cy="45" r="11" fill="#1a73e8"/><text x="300" y="49" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="300" cy="97" r="11" fill="#1a73e8"/><text x="300" y="101" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="300" cy="190" r="11" fill="#1a73e8"/><text x="300" y="194" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Surface</strong> — the card vocabulary: <code>--fl-radius-card</code>,
+          1px border, 24px padding. Flex column; long bodies scroll inside
+          while title and actions stay pinned.</li>
+      <li><strong>Title</strong> — the headline size (24px/400), wired with
+          <code>aria-labelledby</code>.</li>
+      <li><strong>Body</strong> — supporting text, or a
+          <a href="text-fields.html">field</a> for form dialogs.</li>
+      <li><strong>Actions</strong> — right-aligned; Cancel as a text button,
+          the confirm as filled — or <code>fl-btn--danger</code>
+          (<code>--fl-error</code>) for destructive confirms.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Markup contract:</strong> any element with
+        <code>data-fl-open="dialog-id"</code> opens it;
+        <code>data-fl-close</code> inside the dialog closes it; or close it
+        yourself with <code>flint.dialog.close(el)</code> /
+        <code>el.close()</code>.</li>
+    <li><strong>Cancel/confirm results are free:</strong> put the actions in
+        <code>&lt;form method="dialog"&gt;</code> — submitting closes the
+        dialog and records the pressed button's <code>value</code> in
+        <code>dialog.returnValue</code>. Read it after close; no extra JS.
+        Buttons outside the form can still submit it with the
+        <code>form</code> attribute.</li>
+    <li><strong>Focus:</strong> moves to the first focusable control on open;
+        returns to the invoker on every close path (button, Escape, scrim
+        click, submit).</li>
+    <li><strong>Dismissal:</strong> Escape and scrim clicks both close. If a
+        dialog must not be dismissible (unsaved changes), that is an author
+        decision: prevent the native <code>cancel</code> event and hide
+        <code>data-fl-close</code>.</li>
+    <li><strong>Stacking:</strong> a dialog can open over a
+        <a href="bottom-sheet.html">bottom sheet</a> (or another dialog) —
+        the top layer stacks them in DOM order and Escape peels only the top
+        one.</li>
+    <li><strong>Scroll lock:</strong> the page locks while any overlay is
+        open, restored on close.</li>
+    <li><strong>Animation:</strong> 150ms fade + scale in, slide/scale out,
+        scrim fading on the same clock — all CSS,
+        <code>prefers-reduced-motion</code> disables it entirely.</li>
+    <li><strong>No-JS fallback (honest):</strong> without flint.js the dialog
+        stays hidden and the page keeps working — the content is not lost,
+        it just can't be opened. Call <code>showModal()</code> yourself with
+        one line, or drive it from your own code; the CSS has no JS
+        dependencies. See the <a href="overlay.html">overlay infra
+        demo</a> for the raw lifecycle.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Give the dialog <code>aria-labelledby</code> pointing at its title —
+        the screen reader announces the dialog by name.</li>
+    <li>The inert background is native: nothing behind the dialog is
+        focusable, clickable or announced. No <code>aria-hidden</code> is
+        juggled on the page — the classic bug doesn't exist here.</li>
+    <li>Focus starts on the first control (usually Cancel — the safe choice)
+        and cycles within the dialog. Keep Cancel first in the DOM.</li>
+    <li><code>fl-btn--danger</code> uses <code>--fl-error</code> (#d93025,
+        4.9:1 on white — AA for its 14px/500 text).</li>
+    <li>Don't remove the focus ring; the global <code>:focus-visible</code>
+        ring is what makes the trap visible to keyboard users.</li>
+  </ul>
 </section>
 {% endset %}
 
 {% set impl %}
 <section class="docs-section">
-  <h2 id="i-status">Status</h2>
-  {{ callout({
-    variant: "planned",
-    title: "No code yet",
-    text: "Snippets, live examples and token tables appear here when the component lands.",
-    href: "../roadmap.html",
-    linkText: "See the roadmap"
-  }) }}
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/dialog.html — rendered live</span>
+      <a href="../demos/dialog.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/dialog.html" title="Dialog live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>Destructive confirm — actions in <code>method="dialog"</code> forms:</p>
+  {% set confirmMarkup %}
+<button class="fl-btn fl-btn--outline" data-fl-open="dlg-delete">Delete conversation</button>
+
+<dialog class="fl-dialog" id="dlg-delete" aria-labelledby="dlg-delete-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-delete-t">Delete conversation?</h2>
+    <p class="fl-dialog__body">
+      This conversation will move to the trash. You can restore it for 30 days.
+    </p>
+    <div class="fl-dialog__actions">
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel">Cancel</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--danger" value="delete">Delete</button></form>
+    </div>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(confirmMarkup) }}
+  <p>Form dialog — a field family body; Enter submits, Save submits from the
+     actions row via <code>form="rename-form"</code>:</p>
+  {% set formMarkup %}
+<dialog class="fl-dialog" id="dlg-rename" aria-labelledby="dlg-rename-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-rename-t">Rename label</h2>
+    <form class="fl-dialog__body" method="dialog" id="rename-form">
+      <label class="fl-field">
+        <span class="fl-field__label">Label name</span>
+        <input class="fl-field__input" value="Finance">
+      </label>
+    </form>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" form="rename-form" value="save">Save</button>
+    </div>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(formMarkup) }}
+  <p>Reading the result — zero extra plumbing:</p>
+  {% set resultMarkup %}
+document.querySelector("#dlg-rename").addEventListener("close", () => {
+  const decision = document.querySelector("#dlg-rename").returnValue; // "save" | ""
+});
+{% endset %}
+  {{ snippet(resultMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/dialog.html">demos/dialog.html</a> covers the
+     destructive confirm, a form dialog and a long scrollable body. The raw
+     overlay lifecycle (stacking over the bottom sheet, Escape, scrim, focus
+     return) is in <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-scrim</code></td><td>The backdrop, shared with the bottom sheet and drawer</td></tr>
+      <tr><td><code>--fl-surface</code></td><td>The card fill</td></tr>
+      <tr><td><code>--fl-border</code></td><td>The 1px card border</td></tr>
+      <tr><td><code>--fl-radius-card</code></td><td>Corner radius (8px)</td></tr>
+      <tr><td><code>--fl-error</code></td><td>The danger action</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Open/close animation timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every overlay follows */
+  --fl-radius-card: 4px;          /* squarer dialogs */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
 </section>
 {% endset %}
 

@@ -400,12 +400,15 @@ a { color: var(--fl-accent); text-decoration: none; }
 .fl-btn--outline:hover { background: var(--fl-hover); }
 
 .fl-btn--text { color: var(--fl-accent); }
-.fl-btn--text:hover { background: var(--fl-hover); }
+.fl-btn--danger { color: var(--fl-error); }   /* destructive dialogs: delete/confirm */
+.fl-btn--text:hover,
+.fl-btn--danger:hover { background: var(--fl-hover); }
 
 /* :active for the lighter variants — --fl-divider is the darker flat fill
    the icon button already uses, so all variants share one pressed depth. */
 .fl-btn--outline:active,
-.fl-btn--text:active { background: var(--fl-divider); }
+.fl-btn--text:active,
+.fl-btn--danger:active { background: var(--fl-divider); }
 
 /* Disabled: must follow the variant rules above so it wins the cascade.
    Flat treatment: gray fill for filled, gray border/label for the rest —
@@ -419,7 +422,8 @@ a { color: var(--fl-accent); text-decoration: none; }
   border-color: var(--fl-divider);
   color: var(--fl-disabled);
 }
-.fl-btn--text:disabled { color: var(--fl-disabled); }
+.fl-btn--text:disabled,
+.fl-btn--danger:disabled { color: var(--fl-disabled); }
 
 /* --------------------------------------------------------------------------
    6b. Selection controls — checkbox, radio, switch. Native inputs with
@@ -1093,26 +1097,37 @@ dialog.fl-dialog[open] {
 }
 
 .fl-dialog__surface {
+  display: flex;
+  flex-direction: column;
   background: var(--fl-surface);
   border: 1px solid var(--fl-border);
   border-radius: var(--fl-radius-card);
   padding: var(--fl-space-4);
   max-height: min(88vh, 640px);
-  overflow: auto;
+  overflow: hidden;   /* the body scrolls; title and actions stay pinned */
 }
 
 .fl-dialog__title {
+  flex: none;
   font-size: var(--fl-fs-headline);
   font-weight: 400;
   margin: 0 0 var(--fl-space-2);
 }
 
 .fl-dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;      /* lets the body shrink so IT scrolls, not the surface */
+  overflow-y: auto;
   color: var(--fl-text-secondary);
   margin: 0 0 var(--fl-space-4);
 }
 
+/* Fields inside dialogs start flush under the title (fl-field's own
+   margin-top is for stacked fields on a page). */
+.fl-dialog__body > .fl-field:first-child { margin-top: 0; }
+
 .fl-dialog__actions {
+  flex: none;
   display: flex;
   justify-content: flex-end;
   gap: var(--fl-space-2);

@@ -9,7 +9,7 @@ long-term plan). Update the status column as steps land.
 | Step | Deliverable | Status |
 |---|---|---|
 | 1 | Infra: native `<dialog>` wiring, §13 CSS, `demos/overlay.html` | ✅ `bfccd5a` (24 Playwright checks pass) |
-| 2 | **Dialog component**: pinned-actions surface, `fl-btn--danger`, `demos/dialog.html`, docs page (retire stub) | ⬅ next |
+| 2 | **Dialog component**: pinned-actions surface, `fl-btn--danger`, `demos/dialog.html`, docs page (retire stub) | ✅ step 2 |
 | 3 | Bottom sheet: full presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | |
 | 4 | Snackbar: CSS + auto-dismiss timer in flint.js, `data-fl-open` dispatch on `.fl-snackbar`, docs | |
 | 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | |

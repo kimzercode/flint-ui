@@ -30,6 +30,12 @@ const real = [
     summary: "Outlined content containers, no shadows.",
   },
   {
+    name: "Dialog",
+    slug: "dialog",
+    status: "ready",
+    summary: "Native <dialog> in the card vocabulary — focus, Escape and stacking from the platform.",
+  },
+  {
     name: "Drawer shell",
     slug: "drawer",
     status: "ready",
@@ -68,13 +74,6 @@ const real = [
 ];
 
 const planned = [
-  {
-    name: "Dialog",
-    slug: "dialog",
-    status: "planned",
-    plannedIn: "0.4",
-    summary: "Modal dialog over the existing scrim, with focus handling.",
-  },
   {
     name: "Bottom sheet",
     slug: "bottom-sheet",

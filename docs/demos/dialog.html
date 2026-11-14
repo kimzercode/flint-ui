@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — dialog demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Destructive confirm</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-delete">Delete conversation</button>
+
+  <p class="fl-section-label">Form dialog</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-rename">Rename label</button>
+
+  <p class="fl-section-label">Long content — body scrolls, actions stay pinned</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-notes">Release notes</button>
+
+</main>
+
+<!-- Destructive confirm: the cancel action is a text button, the destructive
+     action is a danger (error-colored) text button — the M2 dialog idiom.
+     <form method="dialog"> closes natively and records the pressed button
+     in dialog.returnValue. -->
+<dialog class="fl-dialog" id="dlg-delete" aria-labelledby="dlg-delete-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-delete-t">Delete conversation?</h2>
+    <p class="fl-dialog__body">This conversation will move to the trash. You can restore it for 30 days.</p>
+    <div class="fl-dialog__actions">
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel">Cancel</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--danger" value="delete">Delete</button></form>
+    </div>
+  </div>
+</dialog>
+
+<!-- Form dialog: a real fl-field inside the dialog body. The form carries
+     method="dialog" so Enter submits and closes; the Save button lives in
+     the actions row but still submits the form via form="rename-form". -->
+<dialog class="fl-dialog" id="dlg-rename" aria-labelledby="dlg-rename-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-rename-t">Rename label</h2>
+    <form class="fl-dialog__body" method="dialog" id="rename-form">
+      <label class="fl-field">
+        <span class="fl-field__label">Label name</span>
+        <input class="fl-field__input" value="Finance">
+      </label>
+    </form>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" form="rename-form" value="save">Save</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Long content: the body flexes and scrolls inside the surface while the
+     actions row stays visible — no need for a second scrollbar illusion. -->
+<dialog class="fl-dialog" id="dlg-notes" aria-labelledby="dlg-notes-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-notes-t">What's new in 0.4</h2>
+    <div class="fl-dialog__body">
+      <p style="margin:0 0 12px">Dialogs and bottom sheets land on a shared overlay layer built on the native <code>&lt;dialog&gt;</code> element.</p>
+      <p style="margin:0 0 12px">The focus trap, the inert background, Escape-to-close and top-layer stacking are platform work — the library ships none of them.</p>
+      <p style="margin:0 0 12px">The scrim is one token, <code>--fl-scrim</code>, shared by every overlay type including the drawer.</p>
+      <p style="margin:0 0 12px">Open and close are both animated in CSS: entry via <code>@starting-style</code>, exit via <code>allow-discrete</code> on <code>display</code> and <code>overlay</code>.</p>
+      <p style="margin:0 0 12px">Scroll lock is one rule: <code>html:has(dialog[open])</code>. No body-class bookkeeping in flint.js.</p>
+      <p style="margin:0 0 12px">Long dialog content scrolls in the body while the title and action row stay pinned — flexbox, not JavaScript.</p>
+      <p style="margin:0 0 12px">Destructive confirmations get a dedicated danger text button in <code>--fl-error</code>.</p>
+      <p style="margin:0 0 12px">Forms work inside dialogs: the field family composes unchanged, and Enter submits through <code>method="dialog"</code>.</p>
+      <p style="margin:0 0 12px">Everything degrades honestly: without JavaScript, dialogs stay hidden and the rest of the page keeps working.</p>
+      <p style="margin:0">Reduced-motion users get instant open and close — the transitions simply don't run.</p>
+    </div>
+    <div class="fl-dialog__actions">
+      <form method="dialog"><button class="fl-btn fl-btn--filled" value="ok">Got it</button></form>
+    </div>
+  </div>
+</dialog>
+
+</body>
+</html>
