@@ -6,13 +6,19 @@ title: Dialog
 section: components
 current: dialog
 depth: 1
-lead: The native <dialog> wearing Flint's card — focus, Escape, scrim and stacking come from the platform; flint.js only wires the triggers.
+lead: Four dialog types on the native <dialog> — focus, Escape, scrim and stacking come from the platform; flint.js only wires triggers and the non-dismissible opt-out.
 toc:
   design:
     - id: usage
       title: Usage
+    - id: types
+      title: Types
     - id: anatomy
       title: Anatomy
+    - id: actions
+      title: Actions
+    - id: dismissal
+      title: Dismissal
     - id: behavior
       title: Behavior
     - id: accessibility
@@ -67,6 +73,52 @@ toc:
 </section>
 
 <section class="docs-section">
+  <h2 id="d-types">Types</h2>
+  <p>Material 2 defines four dialog types. Flint ships them as one surface
+     plus three modifiers — the differences are content and layout, not
+     separate components.</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Type</th><th>Shape</th><th>Use it for</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Alert</strong></td>
+        <td>Title + body + actions (the default, no modifier)</td>
+        <td>One decision that blocks the flow — "Delete conversation?",
+            unsaved-changes warnings</td>
+      </tr>
+      <tr>
+        <td><strong>Simple</strong></td>
+        <td>Title + vertical option list
+            (<code>fl-dialog__list</code> + <code>fl-dialog__option</code>);
+            picking a row closes with that row's value</td>
+        <td>Choosing from a small set without a form — "Apply label", pick an
+            account</td>
+      </tr>
+      <tr>
+        <td><strong>Confirmation</strong></td>
+        <td>Question title + dismissive/confirming pair; when the decision
+            needs a choice, radio/checkbox rows in the list and the confirm
+            stays <code>disabled</code> until one is made</td>
+        <td>"Filter by priority?" — decide, then confirm</td>
+      </tr>
+      <tr>
+        <td><strong>Full-screen</strong></td>
+        <td><code>fl-dialog--fullscreen</code> + <code>fl-dialog__header</code>
+            (close, title, confirming action in the top bar); body scrolls</td>
+        <td>The mobile form pattern — compose, settings sub-pages; content too
+            big for a card</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Rule of thumb: <em>one</em> decision → alert; pick <em>one of N</em> →
+     simple; choose <em>then</em> confirm → confirmation; the content is a
+     real form → full-screen (or a <a href="bottom-sheet.html">bottom
+     sheet</a>, when it isn't destructive).</p>
+</section>
+
+<section class="docs-section">
   <h2 id="d-anatomy">Anatomy</h2>
   <div class="docs-anatomy">
     <svg viewBox="0 0 600 260" role="img" aria-label="Dialog anatomy diagram">
@@ -107,6 +159,45 @@ toc:
 </section>
 
 <section class="docs-section">
+  <h2 id="d-actions">Actions</h2>
+  <ul>
+    <li><strong>Order:</strong> the dismissive action sits left of the
+        confirming action — keep that DOM order; it is also the tab order and
+        the visual order.</li>
+    <li><strong>Acknowledgment carries one action.</strong> An alert that only
+        informs gets a single OK / Got it — no decorative Cancel beside it.</li>
+    <li><strong>Confirm only when a choice exists.</strong> In confirmation
+        dialogs with radio/checkbox rows, keep the confirming action
+        <code>disabled</code> until a choice is made — one
+        <code>change</code> listener in author code (snippet below).</li>
+    <li><strong>Stacked actions:</strong> long labels or narrow surfaces get
+        <code>fl-dialog__actions--stacked</code> — full-width buttons with the
+        confirming action <em>above</em> the dismissive one. DOM order is
+        unchanged (dismiss first, confirm second); the modifier reverses the
+        visual order.</li>
+    <li><strong>Buttons:</strong> Cancel is a text button, the confirm is
+        filled, and destructive confirms are
+        <code>fl-btn--danger</code>.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-dismissal">Dismissal</h2>
+  <p>By default a dialog closes on Escape and on a scrim click — flint.js
+     wires both, and focus returns to the invoker on every close path. Some
+     dialogs must be answered: an unsaved-changes warning whose only options
+     are "Keep" and "Discard" makes no sense to dismiss by tapping the void.</p>
+  <p>Add <code>data-fl-dismissible="false"</code> to the <code>&lt;dialog&gt;</code>
+     and both dismissal paths are refused (Escape via the native
+     <code>cancel</code> event, scrim clicks in the wiring), while explicit
+     actions keep working — <code>data-fl-close</code> buttons and
+     <code>method="dialog"</code> submits are unaffected.</p>
+  <p><strong>Use it sparingly.</strong> A dialog the user cannot leave must
+     still offer a safe way out — a Cancel/Keep action — or it is a trap.
+     Non-dismissible is for decisions, never for information.</p>
+</section>
+
+<section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
     <li><strong>Markup contract:</strong> any element with
@@ -123,10 +214,10 @@ toc:
     <li><strong>Focus:</strong> moves to the first focusable control on open;
         returns to the invoker on every close path (button, Escape, scrim
         click, submit).</li>
-    <li><strong>Dismissal:</strong> Escape and scrim clicks both close. If a
-        dialog must not be dismissible (unsaved changes), that is an author
-        decision: prevent the native <code>cancel</code> event and hide
-        <code>data-fl-close</code>.</li>
+    <li><strong>Dismissal:</strong> Escape and scrim clicks both close —
+        unless the dialog opts out with
+        <code>data-fl-dismissible="false"</code> (see
+        <a href="#d-dismissal">Dismissal</a>).</li>
     <li><strong>Stacking:</strong> a dialog can open over a
         <a href="bottom-sheet.html">bottom sheet</a> (or another dialog) —
         the top layer stacks them in DOM order and Escape peels only the top
@@ -229,14 +320,108 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
 });
 {% endset %}
   {{ snippet(resultMarkup) }}
+  <p>Simple dialog — one <code>method="dialog"</code> form wraps the option
+     list; every row is a submit button, so picking one closes and records its
+     value. Rows are <code>fl-dialog__option</code> (48px, hover state layer,
+     optional leading icon — you supply the SVG):</p>
+  {% set simpleMarkup %}
+<dialog class="fl-dialog" id="dlg-label" aria-labelledby="dlg-label-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-label-t">Apply label</h2>
+    <div class="fl-dialog__list">
+      <form method="dialog">
+        <button class="fl-dialog__option" value="finance">
+          <svg width="18" height="18" viewBox="0 0 24 24"><!-- your icon --></svg>
+          Finance
+        </button>
+      </form>
+      <form method="dialog">
+        <button class="fl-dialog__option" value="personal">Personal</button>
+      </form>
+    </div>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+    </div>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(simpleMarkup) }}
+  <p>Confirmation — the confirming action stays <code>disabled</code> until a
+     choice exists (author code, one listener):</p>
+  {% set confirmationMarkup %}
+<dialog class="fl-dialog" id="dlg-filter" aria-labelledby="dlg-filter-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-filter-t">Filter by priority?</h2>
+    <form class="fl-dialog__body" method="dialog" id="filter-form">
+      <div class="fl-dialog__list">
+        <label class="fl-dialog__option">
+          <input type="radio" name="prio" class="fl-radio" value="high"> High priority
+        </label>
+        <label class="fl-dialog__option">
+          <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
+        </label>
+      </div>
+    </form>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" id="filter-confirm"
+              form="filter-form" value="filter" disabled>Filter</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // author code — enable the confirm once the required choice exists
+  document.getElementById("dlg-filter").addEventListener("change", function () {
+    document.getElementById("filter-confirm").disabled = false;
+  });
+</script>
+{% endset %}
+  {{ snippet(confirmationMarkup) }}
+  <p>Full-screen — the mobile form pattern; the confirming action lives in
+     the header, the body scrolls beneath it:</p>
+  {% set fullscreenMarkup %}
+<dialog class="fl-dialog fl-dialog--fullscreen" id="compose" aria-labelledby="compose-t">
+  <div class="fl-dialog__surface">
+    <div class="fl-dialog__header">
+      <button class="fl-icon-btn" data-fl-close aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24"><!-- X icon --></svg>
+      </button>
+      <h2 class="fl-dialog__title" id="compose-t">New message</h2>
+      <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>
+    </div>
+    <form class="fl-dialog__body" method="dialog" id="compose-form">
+      <!-- fl-field fields — the body scrolls, the header stays pinned -->
+    </form>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(fullscreenMarkup) }}
+  <p>Non-dismissible with stacked actions — the user must choose; long labels
+     stack full-width with the confirming action on top:</p>
+  {% set dismissMarkup %}
+<dialog class="fl-dialog" id="unsaved" data-fl-dismissible="false" aria-labelledby="unsaved-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="unsaved-t">Discard this draft?</h2>
+    <p class="fl-dialog__body">Your reply hasn't been sent yet.</p>
+    <div class="fl-dialog__actions fl-dialog__actions--stacked">
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="keep">Keep editing</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--danger" value="discard">Discard the draft permanently</button></form>
+    </div>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(dismissMarkup) }}
 </section>
 
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
-  <p><a href="../demos/dialog.html">demos/dialog.html</a> covers the
-     destructive confirm, a form dialog and a long scrollable body. The raw
-     overlay lifecycle (stacking over the bottom sheet, Escape, scrim, focus
-     return) is in <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
+  <p><a href="../demos/dialog.html">demos/dialog.html</a> covers all four
+     types — destructive confirm, form dialog, simple option list, confirmation
+     with a disabled-until-chosen confirm, full-screen compose — plus the
+     non-dismissible dialog with stacked actions. The raw overlay lifecycle
+     (stacking over the bottom sheet, Escape, scrim, focus return) is in
+     <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
 </section>
 
 <section class="docs-section">

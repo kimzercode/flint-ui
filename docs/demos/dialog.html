@@ -11,21 +11,30 @@
 
 <main style="max-width:640px; margin:0 auto; padding:32px 20px;">
 
-  <p class="fl-section-label">Destructive confirm</p>
+  <p class="fl-section-label">Alert — destructive confirm</p>
   <button class="fl-btn fl-btn--outline" data-fl-open="dlg-delete">Delete conversation</button>
 
   <p class="fl-section-label">Form dialog</p>
   <button class="fl-btn fl-btn--outline" data-fl-open="dlg-rename">Rename label</button>
 
-  <p class="fl-section-label">Long content — body scrolls, actions stay pinned</p>
-  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-notes">Release notes</button>
+  <p class="fl-section-label">Simple dialog — pick from a list</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-label">Apply label</button>
+
+  <p class="fl-section-label">Confirmation — confirm stays disabled until a choice</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-filter">Filter by priority</button>
+
+  <p class="fl-section-label">Full-screen — mobile compose pattern</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-compose">New message</button>
+
+  <p class="fl-section-label">Non-dismissible + stacked actions</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="dlg-unsaved">Unsaved draft</button>
 
 </main>
 
-<!-- Destructive confirm: the cancel action is a text button, the destructive
-     action is a danger (error-colored) text button — the M2 dialog idiom.
-     <form method="dialog"> closes natively and records the pressed button
-     in dialog.returnValue. -->
+<!-- Alert (destructive confirm): the cancel action is a text button, the
+     destructive action is a danger (error-colored) text button — the M2
+     dialog idiom. <form method="dialog"> closes natively and records the
+     pressed button in dialog.returnValue. -->
 <dialog class="fl-dialog" id="dlg-delete" aria-labelledby="dlg-delete-t">
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-delete-t">Delete conversation?</h2>
@@ -56,28 +65,116 @@
   </div>
 </dialog>
 
-<!-- Long content: the body flexes and scrolls inside the surface while the
-     actions row stays visible — no need for a second scrollbar illusion. -->
-<dialog class="fl-dialog" id="dlg-notes" aria-labelledby="dlg-notes-t">
+<!-- Simple dialog: an option list — picking a row closes with that row's
+     value as returnValue. One form wraps the list; every row is a submit
+     button. Rows are fl-dialog__option (48px, state layer on hover). -->
+<dialog class="fl-dialog" id="dlg-label" aria-labelledby="dlg-label-t">
   <div class="fl-dialog__surface">
-    <h2 class="fl-dialog__title" id="dlg-notes-t">What's new in 0.4</h2>
-    <div class="fl-dialog__body">
-      <p style="margin:0 0 12px">Dialogs and bottom sheets land on a shared overlay layer built on the native <code>&lt;dialog&gt;</code> element.</p>
-      <p style="margin:0 0 12px">The focus trap, the inert background, Escape-to-close and top-layer stacking are platform work — the library ships none of them.</p>
-      <p style="margin:0 0 12px">The scrim is one token, <code>--fl-scrim</code>, shared by every overlay type including the drawer.</p>
-      <p style="margin:0 0 12px">Open and close are both animated in CSS: entry via <code>@starting-style</code>, exit via <code>allow-discrete</code> on <code>display</code> and <code>overlay</code>.</p>
-      <p style="margin:0 0 12px">Scroll lock is one rule: <code>html:has(dialog[open])</code>. No body-class bookkeeping in flint.js.</p>
-      <p style="margin:0 0 12px">Long dialog content scrolls in the body while the title and action row stay pinned — flexbox, not JavaScript.</p>
-      <p style="margin:0 0 12px">Destructive confirmations get a dedicated danger text button in <code>--fl-error</code>.</p>
-      <p style="margin:0 0 12px">Forms work inside dialogs: the field family composes unchanged, and Enter submits through <code>method="dialog"</code>.</p>
-      <p style="margin:0 0 12px">Everything degrades honestly: without JavaScript, dialogs stay hidden and the rest of the page keeps working.</p>
-      <p style="margin:0">Reduced-motion users get instant open and close — the transitions simply don't run.</p>
+    <h2 class="fl-dialog__title" id="dlg-label-t">Apply label</h2>
+    <div class="fl-dialog__list">
+      <form method="dialog">
+        <button class="fl-dialog__option" value="finance">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20.59 13.41l-8.17 8.17a2 2 0 0 1-2.83 0L2 14V2h12l7.41 7.41a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>
+          Finance
+        </button>
+      </form>
+      <form method="dialog">
+        <button class="fl-dialog__option" value="personal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Personal
+        </button>
+      </form>
+      <form method="dialog">
+        <button class="fl-dialog__option" value="work">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          Work
+        </button>
+      </form>
     </div>
     <div class="fl-dialog__actions">
-      <form method="dialog"><button class="fl-btn fl-btn--filled" value="ok">Got it</button></form>
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
     </div>
   </div>
 </dialog>
+
+<!-- Confirmation dialog: the deciding choice is a radio list; the confirming
+     action stays disabled until a choice exists (author JS — see below).
+     DOM order: dismissive left, confirming right. -->
+<dialog class="fl-dialog" id="dlg-filter" aria-labelledby="dlg-filter-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-filter-t">Filter by priority?</h2>
+    <form class="fl-dialog__body" method="dialog" id="filter-form" style="margin-bottom:0">
+      <div class="fl-dialog__list" style="margin-bottom:0">
+        <label class="fl-dialog__option">
+          <input type="radio" name="prio" class="fl-radio" value="high"> High priority
+        </label>
+        <label class="fl-dialog__option">
+          <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
+        </label>
+        <label class="fl-dialog__option">
+          <input type="radio" name="prio" class="fl-radio" value="low"> Low priority
+        </label>
+      </div>
+    </form>
+    <div class="fl-dialog__actions" style="margin-top:var(--fl-space-4)">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" id="filter-confirm" form="filter-form" value="filter" disabled>Filter</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Full-screen dialog: the mobile form pattern. The confirming action lives
+     in the header (M2 full-screen idiom); the close button on the left; the
+     body scrolls beneath. -->
+<dialog class="fl-dialog fl-dialog--fullscreen" id="dlg-compose" aria-labelledby="dlg-compose-t">
+  <div class="fl-dialog__surface">
+    <div class="fl-dialog__header">
+      <button class="fl-icon-btn" data-fl-close aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <h2 class="fl-dialog__title" id="dlg-compose-t">New message</h2>
+      <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>
+    </div>
+    <form class="fl-dialog__body" method="dialog" id="compose-form">
+      <label class="fl-field" style="margin-top:0">
+        <span class="fl-field__label">To</span>
+        <input class="fl-field__input" value="ada@example.com">
+      </label>
+      <label class="fl-field">
+        <span class="fl-field__label">Subject</span>
+        <input class="fl-field__input" value="Flint 0.4 review">
+      </label>
+      <label class="fl-field">
+        <span class="fl-field__label">Message</span>
+        <textarea class="fl-field__input" rows="8">Dialogs are done — bottom sheet next.</textarea>
+      </label>
+    </form>
+  </div>
+</dialog>
+
+<!-- Non-dismissible + stacked actions: the user must choose, so the scrim
+     click and Escape are refused (data-fl-dismissible="false"); the two
+     explicit actions remain. Long labels stack full-width — confirming on
+     top, dismissive below. -->
+<dialog class="fl-dialog" id="dlg-unsaved" data-fl-dismissible="false" aria-labelledby="dlg-unsaved-t">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="dlg-unsaved-t">Discard this draft?</h2>
+    <p class="fl-dialog__body">Your reply hasn't been sent yet. Discarding it can't be undone.</p>
+    <div class="fl-dialog__actions fl-dialog__actions--stacked">
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="keep">Keep editing</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--danger" value="discard">Discard the draft permanently</button></form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* Author code, not library code: enable the confirming action once the
+   required choice exists. (Non-dismissible/stacked demo needs no JS — the
+   library handles dismissal; the buttons close via method="dialog".) */
+document.getElementById("dlg-filter").addEventListener("change", function () {
+  document.getElementById("filter-confirm").disabled = false;
+});
+</script>
 
 </body>
 </html>

@@ -1,9 +1,10 @@
 /*!
  * Flint UI — flint.js v0.4.0-dev
  * The entire JS surface: nav selected-state, drawer toggling, and the overlay
- * wiring (dialog / bottom sheet triggers + focus return). The CSS and the
- * platform do the rest (aria-current/body classes, the <dialog> focus trap,
- * the inert background), so the library still renders correctly with JS off.
+ * wiring (dialog / bottom sheet triggers, focus return, non-dismissible
+ * opt-out). The CSS and the platform do the rest (aria-current/body classes,
+ * the <dialog> focus trap, the inert background), so the library still
+ * renders correctly with JS off.
  */
 (function () {
   "use strict";
@@ -75,6 +76,17 @@
     }
   }, true);
 
+  /* Non-dismissible dialogs (data-fl-dismissible="false"): the user must
+     choose an action, so Escape (the native "cancel" event) is refused.
+     Scrim clicks are refused in the click handler below; explicit
+     data-fl-close buttons and <form method="dialog"> still close. */
+  document.addEventListener("cancel", function (e) {
+    if (e.target.getAttribute &&
+        e.target.getAttribute("data-fl-dismissible") === "false") {
+      e.preventDefault();
+    }
+  }, true);
+
   /* --- Wiring ------------------------------------------------------------- */
   document.addEventListener("click", function (e) {
     if (e.target.closest("[data-fl-drawer-open]")) {
@@ -103,8 +115,10 @@
 
     /* A click whose target is the <dialog> element itself is a scrim click:
        the card look and all padding live on the inner surface, so clicks on
-       the card never reach the dialog element. */
+       the card never reach the dialog element. Non-dismissible dialogs
+       ignore it. */
     if (e.target.matches && e.target.matches("dialog.fl-dialog[open], dialog.fl-sheet[open]")) {
+      if (e.target.getAttribute("data-fl-dismissible") === "false") return;
       closeDialog(e.target);
     }
   });

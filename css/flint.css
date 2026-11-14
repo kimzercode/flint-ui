@@ -1103,7 +1103,7 @@ dialog.fl-dialog[open] {
   border: 1px solid var(--fl-border);
   border-radius: var(--fl-radius-card);
   padding: var(--fl-space-4);
-  max-height: min(88vh, 640px);
+  max-height: min(88vh, 560px);   /* M2 dialog cap: 560dp wide and tall */
   overflow: hidden;   /* the body scrolls; title and actions stay pinned */
 }
 
@@ -1134,6 +1134,88 @@ dialog.fl-dialog[open] {
 }
 
 .fl-dialog__actions form { margin: 0; }
+
+/* Simple & confirmation dialogs: vertical option rows (M2's list dialogs).
+   Rows bleed to the surface edges so the state layer reads like a list-item
+   hover; the list itself scrolls when long (same flex contract as __body). */
+.fl-dialog__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 calc(-1 * var(--fl-space-4)) var(--fl-space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.fl-dialog__option {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-3);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--fl-space-2) var(--fl-space-4);
+  font: inherit;
+  text-align: left;
+  color: var(--fl-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+.fl-dialog__option:hover { background: var(--fl-hover); }
+.fl-dialog__option:active { background: var(--fl-divider); }
+.fl-dialog__option > svg,
+.fl-dialog__option > .fl-radio,
+.fl-dialog__option > .fl-check { flex: 0 0 auto; }
+
+/* Narrow surfaces / long labels: actions stack full-width. DOM order stays
+   dismiss-then-confirm (matching the horizontal left-to-right rule);
+   column-reverse puts the confirming action on top, as M2 shows. */
+.fl-dialog__actions--stacked {
+  flex-direction: column-reverse;
+  align-items: stretch;
+}
+.fl-dialog__actions--stacked form,
+.fl-dialog__actions--stacked .fl-btn { width: 100%; }
+
+/* Full-screen dialog: the mobile form pattern (compose, settings sub-page).
+   The confirming action lives in the header; the body scrolls beneath it.
+   Slides up like the sheet — a transform swap, no new animation budget. */
+dialog.fl-dialog--fullscreen {
+  width: 100%;
+  height: 100%;
+  transform: translateY(16px);
+}
+dialog.fl-dialog--fullscreen[open] {
+  inset: 0;
+  margin: 0;
+  transform: none;
+}
+@starting-style {
+  dialog.fl-dialog--fullscreen[open] { transform: translateY(16px); }
+}
+dialog.fl-dialog--fullscreen .fl-dialog__surface {
+  height: 100%;
+  max-height: none;   /* the cap is for the card; fullscreen fills the viewport */
+  border: none;
+  border-radius: 0;
+}
+
+/* Top bar of the full-screen dialog: close on the left, confirming action
+   pinned right (M2 full-screen dialog header). */
+.fl-dialog__header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  margin: 0 0 var(--fl-space-3);
+}
+.fl-dialog__header .fl-dialog__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: var(--fl-fs-title);
+  line-height: 1;
+}
 
 /* Bottom sheet: same lifecycle, different presentation — docked to the
    bottom edge, full width, exits by sliding down. Full component styling

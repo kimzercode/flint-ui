@@ -24,8 +24,8 @@ We do not follow the M2 docs to the letter. Concretely:
 |---|---|---|
 | 1 | Infra: native `<dialog>` wiring, §13 CSS, `demos/overlay.html` | ✅ `bfccd5a` (24 Playwright checks pass) |
 | 2 | **Dialog component**: pinned-actions surface, `fl-btn--danger`, `demos/dialog.html`, docs page (retire stub) | ✅ `dd9b4cf` (15 Playwright checks pass) |
-| 2b | **Dialog completion** (M2 audit): 560px height cap, `.fl-dialog__list`/`__option` (simple + confirmation choice rows), `.fl-dialog__actions--stacked`, `.fl-dialog--fullscreen` + `.fl-dialog__header`, `data-fl-dismissible="false"` (ignore scrim + Escape, keep `data-fl-close`), demos (pick-a-label, confirmation w/ disabled confirm, full-screen compose), docs Types/Actions/Dismissal sections | ⬅ next |
-| 3 | Bottom sheet: presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | |
+| 2b | **Dialog completion** (M2 audit): 560px height cap, `.fl-dialog__list`/`__option` (simple + confirmation choice rows), `.fl-dialog__actions--stacked`, `.fl-dialog--fullscreen` + `.fl-dialog__header`, `data-fl-dismissible="false"` (ignore scrim + Escape, keep `data-fl-close`), demos (pick-a-label, confirmation w/ disabled confirm, full-screen compose), docs Types/Actions/Dismissal sections | ✅ (30 Playwright checks pass) |
+| 3 | Bottom sheet: presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | ⬅ next |
 | 4 | Snackbar: CSS + auto-dismiss timer in flint.js, `data-fl-open` dispatch on `.fl-snackbar`, docs | |
 | 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | |
 | 6 | Tooltip: CSS-only hover/focus, four directions, docs | |
