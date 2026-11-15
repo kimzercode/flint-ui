@@ -41,6 +41,7 @@
       {% endfor %}
     </ul>
 
+    {% if components.planned.length %}
     <h3 class="docs-sidebar__group">Planned</h3>
     <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
       {% for c in components.planned %}
@@ -50,6 +51,7 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   </nav>
   </div>
 </aside>

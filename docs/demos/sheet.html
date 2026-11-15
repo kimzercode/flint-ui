@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — bottom sheet demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Option list — the canonical sheet</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="sheet-sort">Sort conversations</button>
+
+  <p class="fl-section-label">Form sheet</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="sheet-label">New label</button>
+
+  <p class="fl-section-label">Long content — body scrolls, title stays pinned</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="sheet-about">About this library</button>
+
+</main>
+
+<!-- Option list: the M2 modal bottom sheet idiom — a vertical list of
+     actions/choices. The rows are the dialog family's fl-dialog__option,
+     reused as-is (same 48px row, same state layer). One method="dialog"
+     form wraps the list; picking a row closes and records its value. -->
+<dialog class="fl-sheet" id="sheet-sort" aria-labelledby="sheet-sort-t">
+  <div class="fl-sheet__surface">
+    <div class="fl-sheet__handle" aria-hidden="true"></div>
+    <h2 class="fl-sheet__title" id="sheet-sort-t">Sort conversations</h2>
+    <div class="fl-sheet__body">
+      <div class="fl-dialog__list">
+        <form method="dialog">
+          <button class="fl-dialog__option" value="date" autofocus>Date received</button>
+        </form>
+        <form method="dialog">
+          <button class="fl-dialog__option" value="unread">Unread first</button>
+        </form>
+        <form method="dialog">
+          <button class="fl-dialog__option" value="sender">Sender</button>
+        </form>
+        <form method="dialog">
+          <button class="fl-dialog__option" value="subject">Subject</button>
+        </form>
+        <form method="dialog">
+          <button class="fl-dialog__option" value="starred">Starred first</button>
+        </form>
+      </div>
+    </div>
+    <div class="fl-sheet__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Form sheet: fields live in the scrollable body; the actions row is
+     pinned. Enter submits via method="dialog", Save submits from the
+     actions row via form="label-form". -->
+<dialog class="fl-sheet" id="sheet-label" aria-labelledby="sheet-label-t">
+  <div class="fl-sheet__surface">
+    <div class="fl-sheet__handle" aria-hidden="true"></div>
+    <h2 class="fl-sheet__title" id="sheet-label-t">New label</h2>
+    <form class="fl-sheet__body" method="dialog" id="label-form">
+      <label class="fl-field">
+        <span class="fl-field__label">Label name</span>
+        <input class="fl-field__input" placeholder="e.g. Finance" autofocus>
+      </label>
+      <div class="fl-dialog__list" style="margin:var(--fl-space-2) calc(-1 * var(--fl-space-4)) 0">
+        <label class="fl-dialog__option">
+          <input type="checkbox" class="fl-check" checked> Show in the nav rail
+        </label>
+      </div>
+    </form>
+    <div class="fl-sheet__actions">
+      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" form="label-form" value="create">Create</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Long content: the body flexes and scrolls inside the surface while the
+     handle and title stay pinned. -->
+<dialog class="fl-sheet" id="sheet-about" aria-labelledby="sheet-about-t">
+  <div class="fl-sheet__surface">
+    <div class="fl-sheet__handle" aria-hidden="true"></div>
+    <h2 class="fl-sheet__title" id="sheet-about-t">About Flint</h2>
+    <div class="fl-sheet__body">
+      <p style="margin:0 0 12px">Flint is a flat Material 2 library for building web apps with plain HTML — one stylesheet, one small script, no build step and no dependencies.</p>
+      <p style="margin:0 0 12px">Surfaces are 1px-bordered cards, never shadows. State layers are flat fills at a shared duration. The density is 44px controls, not the 56px Material default.</p>
+      <p style="margin:0 0 12px">The overlay layer is the native <code>&lt;dialog&gt;</code>: focus trap, inert background, Escape and top-layer stacking come from the platform, so flint.js stays small.</p>
+      <p style="margin:0 0 12px">Bottom sheets share that layer — same scrim token, same focus protocol, same scroll lock, one rule of <code>html:has(dialog[open])</code>.</p>
+      <p style="margin:0 0 12px">The drag handle is a glyph, not a gesture: sheets close on scrim tap, Escape or their own actions. Drag-to-dismiss is not supported and not claimed.</p>
+      <p style="margin:0 0 12px">Every component degrades honestly: without JavaScript the page renders and works; overlays simply stay closed until you open them.</p>
+      <p style="margin:0 0 12px">Long content scrolls inside the body while the handle and title stay pinned — flexbox, not JavaScript.</p>
+      <p style="margin:0 0 12px">Fields, buttons, lists and selection controls all compose inside sheets exactly as they do on a page.</p>
+      <p style="margin:0 0 12px">Reduced-motion users get instant open and close; the transitions simply don't run.</p>
+      <p style="margin:0">Everything above is a documented decision, not an accident — the docs say what deviates from Material 2 and why.</p>
+    </div>
+    <div class="fl-sheet__actions">
+      <form method="dialog"><button class="fl-btn fl-btn--filled" value="ok" autofocus>Got it</button></form>
+    </div>
+  </div>
+</dialog>
+
+</body>
+</html>

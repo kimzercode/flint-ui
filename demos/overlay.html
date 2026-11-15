@@ -16,6 +16,7 @@
 
   <p class="fl-section-label">Bottom sheet (infra preview)</p>
   <button class="fl-btn" data-fl-open="sheet-sort" id="inv-sheet">Sort</button>
+  <p class="fl-dialog__body" style="margin:0">The full component presentation and docs live on the Bottom sheet page — <code>demos/sheet.html</code>.</p>
 
   <p class="fl-section-label">Scroll-lock probe</p>
   <p class="fl-dialog__body" style="margin:0">The page scrolls normally while no overlay is open, and locks while one is. Filler follows so the page has real height to scroll.</p>
@@ -46,9 +47,10 @@
      button uses data-fl-close, and it can stack a dialog on top. -->
 <dialog class="fl-sheet" id="sheet-sort" aria-labelledby="sheet-sort-t">
   <div class="fl-sheet__surface">
-    <h2 class="fl-dialog__title" id="sheet-sort-t">Sort by</h2>
-    <p class="fl-dialog__body">Sheet content stays scrollable at small heights. Open a dialog over this sheet to test the stack.</p>
-    <div class="fl-dialog__actions">
+    <div class="fl-sheet__handle" aria-hidden="true"></div>
+    <h2 class="fl-sheet__title" id="sheet-sort-t">Sort by</h2>
+    <p class="fl-sheet__body">Sheet content stays scrollable at small heights. Open a dialog over this sheet to test the stack.</p>
+    <div class="fl-sheet__actions">
       <button class="fl-btn fl-btn--text" data-fl-open="dlg-nested" id="inv-nested">Dialog over sheet</button>
       <button class="fl-btn" data-fl-close>Close</button>
     </div>

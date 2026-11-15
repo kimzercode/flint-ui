@@ -84,6 +84,11 @@
       </li>
       
       <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
         <a href="../components/buttons.html"
            >Buttons</a>
       </li>
@@ -130,15 +135,7 @@
       
     </ul>
 
-    <h3 class="docs-sidebar__group">Planned</h3>
-    <ul class="docs-side-btns docs-side-btns--planned" id="docs-side-planned">
-      
-      <li>
-        <a href="../components/bottom-sheet.html"
-           >Bottom sheet<small>0.4</small></a>
-      </li>
-      
-    </ul>
+    
   </nav>
   </div>
 </aside>
@@ -363,9 +360,14 @@
         <code>dialog.returnValue</code>. Read it after close; no extra JS.
         Buttons outside the form can still submit it with the
         <code>form</code> attribute.</li>
-    <li><strong>Focus:</strong> moves to the first focusable control on open;
-        returns to the invoker on every close path (button, Escape, scrim
-        click, submit).</li>
+    <li><strong>Focus:</strong> moves to the first focusable control on open
+        and returns to the invoker on every close path (button, Escape, scrim
+        click, submit). One platform quirk to know: Chromium makes scrollable
+        containers keyboard-focusable, so if the body overflows, the
+        <em>scroll region</em> wins the initial focus (keyboard scrolling
+        works immediately). Be explicit instead — set <code>autofocus</code>
+        on the control that should receive initial focus; it's the platform's
+        own mechanism and this is what the demos do.</li>
     <li><strong>Dismissal:</strong> Escape and scrim clicks both close —
         unless the dialog opts out with
         <code>data-fl-dismissible="false"</code> (see
@@ -446,7 +448,7 @@
       This conversation will move to the trash. You can restore it for 30 days.
     &lt;/p&gt;
     &lt;div class=&quot;fl-dialog__actions&quot;&gt;
-      &lt;form method=&quot;dialog&quot;&gt;&lt;button class=&quot;fl-btn fl-btn--text&quot; value=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;&lt;/form&gt;
+      &lt;form method=&quot;dialog&quot;&gt;&lt;button class=&quot;fl-btn fl-btn--text&quot; value=&quot;cancel&quot; autofocus&gt;Cancel&lt;/button&gt;&lt;/form&gt;
       &lt;form method=&quot;dialog&quot;&gt;&lt;button class=&quot;fl-btn fl-btn--danger&quot; value=&quot;delete&quot;&gt;Delete&lt;/button&gt;&lt;/form&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -465,7 +467,7 @@
     &lt;form class=&quot;fl-dialog__body&quot; method=&quot;dialog&quot; id=&quot;rename-form&quot;&gt;
       &lt;label class=&quot;fl-field&quot;&gt;
         &lt;span class=&quot;fl-field__label&quot;&gt;Label name&lt;/span&gt;
-        &lt;input class=&quot;fl-field__input&quot; value=&quot;Finance&quot;&gt;
+        &lt;input class=&quot;fl-field__input&quot; value=&quot;Finance&quot; autofocus&gt;
       &lt;/label&gt;
     &lt;/form&gt;
     &lt;div class=&quot;fl-dialog__actions&quot;&gt;

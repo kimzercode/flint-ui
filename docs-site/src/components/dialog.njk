@@ -211,9 +211,14 @@ toc:
         <code>dialog.returnValue</code>. Read it after close; no extra JS.
         Buttons outside the form can still submit it with the
         <code>form</code> attribute.</li>
-    <li><strong>Focus:</strong> moves to the first focusable control on open;
-        returns to the invoker on every close path (button, Escape, scrim
-        click, submit).</li>
+    <li><strong>Focus:</strong> moves to the first focusable control on open
+        and returns to the invoker on every close path (button, Escape, scrim
+        click, submit). One platform quirk to know: Chromium makes scrollable
+        containers keyboard-focusable, so if the body overflows, the
+        <em>scroll region</em> wins the initial focus (keyboard scrolling
+        works immediately). Be explicit instead — set <code>autofocus</code>
+        on the control that should receive initial focus; it's the platform's
+        own mechanism and this is what the demos do.</li>
     <li><strong>Dismissal:</strong> Escape and scrim clicks both close —
         unless the dialog opts out with
         <code>data-fl-dismissible="false"</code> (see
@@ -286,7 +291,7 @@ toc:
       This conversation will move to the trash. You can restore it for 30 days.
     </p>
     <div class="fl-dialog__actions">
-      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel">Cancel</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel" autofocus>Cancel</button></form>
       <form method="dialog"><button class="fl-btn fl-btn--danger" value="delete">Delete</button></form>
     </div>
   </div>
@@ -302,7 +307,7 @@ toc:
     <form class="fl-dialog__body" method="dialog" id="rename-form">
       <label class="fl-field">
         <span class="fl-field__label">Label name</span>
-        <input class="fl-field__input" value="Finance">
+        <input class="fl-field__input" value="Finance" autofocus>
       </label>
     </form>
     <div class="fl-dialog__actions">

@@ -18,6 +18,12 @@ const real = [
     summary: "App frame with a top bar and 3–5 destinations pinned to the bottom.",
   },
   {
+    name: "Bottom sheet",
+    slug: "bottom-sheet",
+    status: "ready",
+    summary: "Sheet docked to the bottom edge on the native <dialog> — option lists and compact forms.",
+  },
+  {
     name: "Buttons",
     slug: "buttons",
     status: "ready",
@@ -33,7 +39,7 @@ const real = [
     name: "Dialog",
     slug: "dialog",
     status: "ready",
-    summary: "Native <dialog> in the card vocabulary — focus, Escape and stacking from the platform.",
+    summary: "Native <dialog> in the card vocabulary — four types, stacking and focus from the platform.",
   },
   {
     name: "Drawer shell",
@@ -73,15 +79,7 @@ const real = [
   },
 ];
 
-const planned = [
-  {
-    name: "Bottom sheet",
-    slug: "bottom-sheet",
-    status: "planned",
-    plannedIn: "0.4",
-    summary: "Sheet docked above the tab bar, reusing the scrim.",
-  },
-];
+const planned = [];
 
 const all = [...real, ...planned];
 

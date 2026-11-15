@@ -43,7 +43,7 @@
     <h2 class="fl-dialog__title" id="dlg-delete-t">Delete conversation?</h2>
     <p class="fl-dialog__body">This conversation will move to the trash. You can restore it for 30 days.</p>
     <div class="fl-dialog__actions">
-      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel">Cancel</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="cancel" autofocus>Cancel</button></form>
       <form method="dialog"><button class="fl-btn fl-btn--danger" value="delete">Delete</button></form>
     </div>
   </div>
@@ -58,7 +58,7 @@
     <form class="fl-dialog__body" method="dialog" id="rename-form">
       <label class="fl-field">
         <span class="fl-field__label">Label name</span>
-        <input class="fl-field__input" value="Finance">
+        <input class="fl-field__input" value="Finance" autofocus>
       </label>
     </form>
     <div class="fl-dialog__actions">
@@ -76,7 +76,7 @@
     <h2 class="fl-dialog__title" id="dlg-label-t">Apply label</h2>
     <div class="fl-dialog__list">
       <form method="dialog">
-        <button class="fl-dialog__option" value="finance">
+        <button class="fl-dialog__option" value="finance" autofocus>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20.59 13.41l-8.17 8.17a2 2 0 0 1-2.83 0L2 14V2h12l7.41 7.41a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>
           Finance
         </button>
@@ -120,7 +120,7 @@
       </div>
     </form>
     <div class="fl-dialog__actions" style="margin-top:var(--fl-space-4)">
-      <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--text" data-fl-close autofocus>Cancel</button>
       <button class="fl-btn fl-btn--filled" id="filter-confirm" form="filter-form" value="filter" disabled>Filter</button>
     </div>
   </div>
@@ -141,7 +141,7 @@
     <form class="fl-dialog__body" method="dialog" id="compose-form">
       <label class="fl-field" style="margin-top:0">
         <span class="fl-field__label">To</span>
-        <input class="fl-field__input" value="ada@example.com">
+        <input class="fl-field__input" value="ada@example.com" autofocus>
       </label>
       <label class="fl-field">
         <span class="fl-field__label">Subject</span>
@@ -166,7 +166,7 @@ This draft is long on purpose: the compose body scrolls under the pinned header.
     <h2 class="fl-dialog__title" id="dlg-unsaved-t">Discard this draft?</h2>
     <p class="fl-dialog__body">Your reply hasn't been sent yet. Discarding it can't be undone.</p>
     <div class="fl-dialog__actions fl-dialog__actions--stacked">
-      <form method="dialog"><button class="fl-btn fl-btn--text" value="keep">Keep editing</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--text" value="keep" autofocus>Keep editing</button></form>
       <form method="dialog"><button class="fl-btn fl-btn--danger" value="discard">Discard the draft permanently</button></form>
     </div>
   </div>
@@ -199,7 +199,7 @@ document.getElementById("dlg-filter").addEventListener("change", function () {
       <p style="margin:0">Reduced-motion users get instant open and close — the transitions simply don't run.</p>
     </div>
     <div class="fl-dialog__actions">
-      <form method="dialog"><button class="fl-btn fl-btn--filled" value="ok">Got it</button></form>
+      <form method="dialog"><button class="fl-btn fl-btn--filled" value="ok" autofocus>Got it</button></form>
     </div>
   </div>
 </dialog>

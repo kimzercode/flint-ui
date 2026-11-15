@@ -1196,6 +1196,7 @@ dialog.fl-dialog--fullscreen[open] {
 }
 dialog.fl-dialog--fullscreen .fl-dialog__surface {
   height: 100%;
+  max-height: none;   /* the cap is for the card; fullscreen fills the viewport */
   border: none;
   border-radius: 0;
 }
@@ -1217,8 +1218,9 @@ dialog.fl-dialog--fullscreen .fl-dialog__surface {
 }
 
 /* Bottom sheet: same lifecycle, different presentation — docked to the
-   bottom edge, full width, exits by sliding down. Full component styling
-   (drag handle, desktop width) lands with the Bottom sheet page. */
+   bottom edge, top radius, static drag handle (honest: a glyph, not a
+   gesture — drag-to-dismiss is not supported and not claimed), slide-up
+   entry. Desktop gets a 560px sheet instead of a full-bleed tray. */
 dialog.fl-sheet {
   transform: translateY(16px);
 }
@@ -1234,6 +1236,10 @@ dialog.fl-sheet[open] {
   transform: none;
 }
 
+@media (min-width: 600px) {
+  dialog.fl-sheet[open] { width: min(92vw, 560px); }
+}
+
 @starting-style {
   dialog.fl-sheet[open] {
     transform: translateY(16px);   /* slides up instead of scaling */
@@ -1241,14 +1247,55 @@ dialog.fl-sheet[open] {
 }
 
 .fl-sheet__surface {
+  display: flex;
+  flex-direction: column;
   background: var(--fl-surface);
   border: 1px solid var(--fl-border);
   border-bottom: none;
   border-radius: var(--fl-radius-lg) var(--fl-radius-lg) 0 0;
-  padding: var(--fl-space-3) var(--fl-space-4) var(--fl-space-4);
-  max-height: min(86vh, 720px);
-  overflow: auto;
+  padding: var(--fl-space-2) var(--fl-space-4) var(--fl-space-4);
+  max-height: min(86vh, 640px);
+  overflow: hidden;   /* the body scrolls; handle, title and actions stay pinned */
 }
+
+/* Static drag handle — the M2 glyph. It signals "this is a sheet"; it does
+   nothing, and the docs say so. */
+.fl-sheet__handle {
+  flex: none;
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fl-divider);
+  margin: var(--fl-space-2) auto var(--fl-space-3);
+}
+
+.fl-sheet__title {
+  flex: none;
+  font-size: var(--fl-fs-title);
+  font-weight: 500;
+  margin: 0 0 var(--fl-space-3);
+}
+
+.fl-sheet__body {
+  flex: 1 1 auto;
+  min-height: 0;      /* the body shrinks so IT scrolls, not the surface */
+  overflow-y: auto;
+  color: var(--fl-text-secondary);
+}
+
+/* Fields inside sheets start flush (fl-field's margin-top is for stacked
+   fields on a page). */
+.fl-sheet__body > .fl-field:first-child { margin-top: 0; }
+
+.fl-sheet__actions {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--fl-space-2);
+  margin-top: var(--fl-space-4);
+}
+
+.fl-sheet__actions form { margin: 0; }
 
 /* Reduced motion: transitions off entirely (closes go instant — fine). */
 @media (prefers-reduced-motion: reduce) {
