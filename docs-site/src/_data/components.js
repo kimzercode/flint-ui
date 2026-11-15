@@ -60,6 +60,12 @@ const real = [
     summary: "App frame that is a bottom nav on mobile and an 80px icon rail on desktop.",
   },
   {
+    name: "Snackbar",
+    slug: "snackbar",
+    status: "ready",
+    summary: "Inverse-surface status message with an optional Undo action — one at a time, 4s auto-dismiss.",
+  },
+  {
     name: "Select",
     slug: "select",
     status: "ready",

@@ -1,0 +1,253 @@
+---
+layout: layouts/base.njk
+permalink: components/snackbar.html
+assetRoot: ../
+title: Snackbar
+section: components
+current: snackbar
+depth: 1
+lead: Low-priority status feedback on the inverse surface — never modal, one at a time, gone on its own.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A snackbar confirms that a process the user started has completed —
+     minimal interruption, optional action, zero demanded attention. It is
+     the lowest-priority member of the feedback family:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Component</th><th>Priority</th><th>User action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Snackbar</strong></td><td>Low</td><td>Optional — disappears by itself</td></tr>
+      <tr><td><a href="bottom-sheet.html">Bottom sheet</a></td><td>Medium</td><td>Optional — a choice, dismissible</td></tr>
+      <tr><td><a href="dialog.html">Dialog</a></td><td>Highest</td><td>Required — blocks the page until answered</td></tr>
+    </tbody>
+  </table>
+  <h3>Do use it for</h3>
+  <ul>
+    <li><strong>Process confirmations</strong> — "Conversation saved",
+        "Message sent", "Address copied".</li>
+    <li><strong>Amendable outcomes</strong> — an <strong>Undo</strong> action
+        is the classic snackbar move: the process happened, and here's a 4s
+        window to reverse it.</li>
+  </ul>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Anything that needs a decision</strong> — that's a dialog.</li>
+    <li><strong>Errors that need context or recovery</strong> — a snackbar
+        can't hold an explanation; use a dialog or inline field errors.</li>
+    <li><strong>Dismiss buttons</strong> — M2 is explicit: a dismiss action
+        is unnecessary because snackbars disappear on their own. Flint still
+        wires <code>data-fl-close</code> inside a snackbar, but don't build
+        UIs around it.</li>
+    <li><strong>Icons</strong> — the message is the content; if it needs an
+        icon, it's a different component.</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "Flat by identity — no elevation",
+    text: "M2 asks for a shadow under the snackbar container; we deliberately ship none. The inverse surface (near-black on light content) provides the separation, matching the flat Google look of the 2020 era. Like every token: --fl-text is the container, --fl-surface is the label.",
+    href: "dialog.html",
+    linkText: "Feedback family"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 200" role="img" aria-label="Snackbar anatomy diagram">
+      <!-- screen behind -->
+      <rect x="1" y="1" width="598" height="198" fill="#5f6368" opacity="0.12"/>
+      <!-- snackbar -->
+      <rect x="60" y="80" width="480" height="48" rx="4" fill="#1f1f1f"/>
+      <!-- label -->
+      <rect x="76" y="100" width="180" height="8" rx="4" fill="#ffffff"/>
+      <!-- action -->
+      <rect x="452" y="96" width="72" height="16" rx="4" fill="#8ab4f8"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="50" cy="104" r="11" fill="#1a73e8"/><text x="50" y="108" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="300" cy="60" r="11" fill="#1a73e8"/><text x="300" y="64" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="550" cy="104" r="11" fill="#1a73e8"/><text x="550" y="108" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Text label</strong> — one line (two on mobile), directly
+          related to the process performed. No icons.</li>
+      <li><strong>Container</strong> — opaque inverse surface, 4px radius,
+          48px min-height; docked 8px from the bottom edge. No shadow (see
+          the callout above).</li>
+      <li><strong>Action</strong> — optional, exactly one: a text button in
+          the bright accent (<code>--fl-accent-inverse</code>), never filled,
+          never the label's color.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Markup contract:</strong> any element with
+        <code>data-fl-open="snackbar-id"</code> shows it; flint.js adds
+        <code>is-visible</code> and starts the timer. Or drive it yourself:
+        <code>flint.snackbar.show(el)</code> /
+        <code>flint.snackbar.hide(el)</code> — the class is plain CSS.</li>
+    <li><strong>Auto-dismiss:</strong> 4 seconds, then it leaves on its own.
+        Re-triggering the same snackbar restarts the clock.</li>
+    <li><strong>One at a time (M2):</strong> showing a second snackbar hides
+        the first — they replace, never stack.</li>
+    <li><strong>Non-modal:</strong> the page stays fully interactive — no
+        focus trap, no scroll lock, no inert background. The snackbar never
+        takes focus.</li>
+    <li><strong>Placement:</strong> docked to the bottom edge, 8px insets,
+        above FABs (z-layer <code>--fl-z-snackbar</code>). In wide layouts it
+        is left-anchored and capped at 560px — pick one alignment and keep it
+        consistent everywhere (M2 forbids mixing).</li>
+    <li><strong>Above persistent navigation:</strong> over a bottom-nav
+        shell, lift it with one line — see the recipe below. It should never
+        cover tab bars or FABs.</li>
+    <li><strong>Animation:</strong> rises 8px and fades in, fades out on
+        leave — CSS only, <code>prefers-reduced-motion</code> disables it.</li>
+    <li><strong>No-JS fallback (honest):</strong> the element is hidden
+        (<code>opacity: 0; pointer-events: none</code>); with JS off the page
+        renders and works, the snackbar just never shows. Toggle
+        <code>is-visible</code> from your own code for a zero-flint path.</li>
+  </ul>
+  <p>Recipe — snackbar above a persistent bottom nav:</p>
+  {% set tabbarRecipe %}
+.fl-snackbar { bottom: calc(var(--fl-tabbar-h) + var(--fl-space-2)); }
+{% endset %}
+  {{ snippet(tabbarRecipe) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Give the snackbar <code>role="status"</code> — screen readers announce
+        it politely when it appears, without moving focus.</li>
+    <li>Because it is announced and then vanishes, don't put anything the
+        user must read in a snackbar — anything important belongs in the page
+        itself.</li>
+    <li>The action is a real <code>&lt;button&gt;</code> — focusable and
+        activatable like any control; it doesn't need <code>type="button"</code>
+        outside a form, but it doesn't hurt.</li>
+    <li>Contrast: <code>--fl-surface</code> white on <code>--fl-text</code>
+        #1f1f1f is ~16:1; the bright action
+        (<code>--fl-accent-inverse</code> #8ab4f8) is ~7.9:1 on the same
+        surface — both clear AA.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/snackbar.html — rendered live</span>
+      <a href="../demos/snackbar.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/snackbar.html" title="Snackbar live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>Plain message — shown by any trigger, auto-dismissed after 4s:</p>
+  {% set plainMarkup %}
+<button class="fl-btn" data-fl-open="snack-saved">Save conversation</button>
+
+<div class="fl-snackbar" id="snack-saved" role="status">
+  Conversation saved to your Favorites
+</div>
+{% endset %}
+  {{ snippet(plainMarkup) }}
+  <p>Message + Undo — the single action, bright accent on the inverse
+     surface; the click handler is author code:</p>
+  {% set undoMarkup %}
+<div class="fl-snackbar" id="snack-archived" role="status">
+  Your photo has been archived
+  <button class="fl-snackbar__action" type="button">Undo</button>
+</div>
+
+<script>
+  document.querySelector("#snack-archived .fl-snackbar__action")
+    .addEventListener("click", function () {
+      // …amend the process, then confirm with its own snackbar
+      flint.snackbar.show(document.getElementById("snack-restored"));
+    });
+</script>
+{% endset %}
+  {{ snippet(undoMarkup) }}
+  <p>Programmatic control — same clock, same one-at-a-time rule:</p>
+  {% set apiMarkup %}
+flint.snackbar.show(document.getElementById("snack-sent"));
+flint.snackbar.hide(document.getElementById("snack-sent"));
+{% endset %}
+  {{ snippet(apiMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/snackbar.html">demos/snackbar.html</a> covers the
+     plain message, the Undo action and the replacement behavior (fire two
+     triggers quickly — the first leaves).</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-text</code></td><td>The inverse container fill</td></tr>
+      <tr><td><code>--fl-surface</code></td><td>The label color on the container</td></tr>
+      <tr><td><code>--fl-accent-inverse</code></td><td>The action text (readable on dark)</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-z-snackbar</code></td><td>Layer order (above FABs, below overlays)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Show/hide animation timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-accent-inverse: #c9a6ff;   /* a purple action, still AA on --fl-text */
+  --fl-radius: 0;                 /* square snackbars */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

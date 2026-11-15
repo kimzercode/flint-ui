@@ -2,9 +2,10 @@
  * Flint UI — flint.js v0.4.0-dev
  * The entire JS surface: nav selected-state, drawer toggling, and the overlay
  * wiring (dialog / bottom sheet triggers, focus return, non-dismissible
- * opt-out). The CSS and the platform do the rest (aria-current/body classes,
- * the <dialog> focus trap, the inert background), so the library still
- * renders correctly with JS off.
+ * opt-out) plus the snackbar (one at a time, 4s auto-dismiss). The CSS and
+ * the platform do the rest (aria-current/body classes, the <dialog> focus
+ * trap, the inert background), so the library still renders correctly with
+ * JS off.
  */
 (function () {
   "use strict";
@@ -87,6 +88,22 @@
     }
   }, true);
 
+  /* --- Snackbar: status feedback, not modal ------------------------------ *
+   * One at a time (M2) and a 4s auto-dismiss timer. The visible state is a
+   * plain class, so author JS can drive it without this file. */
+  function showSnackbar(el) {
+    var current = document.querySelector(".fl-snackbar.is-visible");
+    if (current && current !== el) hideSnackbar(current);   /* never stack */
+    clearTimeout(el.__flintTimer);
+    el.classList.add("is-visible");
+    el.__flintTimer = setTimeout(function () { hideSnackbar(el); }, 4000);
+  }
+
+  function hideSnackbar(el) {
+    clearTimeout(el.__flintTimer);
+    el.classList.remove("is-visible");
+  }
+
   /* --- Wiring ------------------------------------------------------------- */
   document.addEventListener("click", function (e) {
     if (e.target.closest("[data-fl-drawer-open]")) {
@@ -102,6 +119,7 @@
     if (openBtn) {
       var target = document.getElementById(openBtn.getAttribute("data-fl-open"));
       if (target && target.tagName === "DIALOG") openDialog(target, openBtn);
+      else if (target && target.classList.contains("fl-snackbar")) showSnackbar(target);
       return;
     }
 
@@ -109,7 +127,12 @@
     if (closeBtn) {
       var dlg = closeBtn.closest("dialog");
       var id = closeBtn.getAttribute("data-fl-close");
-      if (dlg && (!id || dlg.id === id)) closeDialog(dlg);
+      if (dlg && (!id || dlg.id === id)) {
+        closeDialog(dlg);
+        return;
+      }
+      var snack = closeBtn.closest(".fl-snackbar");
+      if (snack && (!id || snack.id === id)) hideSnackbar(snack);
       return;
     }
 
@@ -145,6 +168,7 @@
   window.flint = {
     scan: scan,
     drawer: setDrawer,
-    dialog: { open: openDialog, close: closeDialog }
+    dialog: { open: openDialog, close: closeDialog },
+    snackbar: { show: showSnackbar, hide: hideSnackbar }
   };
 })();

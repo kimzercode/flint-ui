@@ -19,6 +19,7 @@
   --fl-accent: #1a73e8;
   --fl-accent-hover: #1b66c9;
   --fl-accent-pressed: #1557b0;
+  --fl-accent-inverse: #8ab4f8;  /* accent on the inverse surface (snackbar) */
   --fl-tint: #e8f0fe;          /* selected-state tint */
 
   /* Flat "elevation" */
@@ -59,6 +60,7 @@
   /* Layers */
   --fl-z-fab: 10;
   --fl-z-topbar: 20;
+  --fl-z-snackbar: 25;   /* above FABs (M2), below modal overlays */
   --fl-z-focus: 30;
 
   /* Motion */
@@ -1306,3 +1308,66 @@ dialog.fl-sheet[open] {
     transition: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   14. Snackbar — inverse-surface status message
+   Non-modal by design: it never takes focus and never blocks the page, so
+   this is plain fixed CSS, not <dialog>. flint.js owns the M2 one-at-a-time
+   rule and the 4s auto-dismiss timer; the visible state is a plain class
+   (is-visible) so any author JS can drive it. Flat like everything here:
+   the inverse surface gives the separation M2 asks a shadow to provide.
+   -------------------------------------------------------------------------- */
+
+.fl-snackbar {
+  position: fixed;
+  inset: auto var(--fl-space-2) var(--fl-space-2);  /* 8dp from the edges */
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-3);
+  min-height: 48px;   /* 48dp single line → 64dp two lines (M2) */
+  padding: var(--fl-space-2) var(--fl-space-3);
+  background: var(--fl-text);       /* M2 inverse surface — opaque by spec */
+  color: var(--fl-surface);
+  border-radius: var(--fl-radius);
+  z-index: var(--fl-z-snackbar);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity var(--fl-dur) var(--fl-ease),
+              transform var(--fl-dur) var(--fl-ease);
+}
+
+.fl-snackbar.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Wide layouts: left-anchored (the Gmail-2020 idiom), capped reading width.
+   Keep it consistent — M2 forbids mixing alignments. */
+@media (min-width: 600px) {
+  .fl-snackbar {
+    inset: auto auto var(--fl-space-2) var(--fl-space-2);
+    max-width: 560px;
+  }
+}
+
+/* The single action: text in the bright accent — M2's rule that the action
+   must not share the label's color, and must not be a filled button. */
+.fl-snackbar__action {
+  flex: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--fl-accent-inverse);
+  background: none;
+  border: none;
+  border-radius: var(--fl-radius);
+  padding: var(--fl-space-1) var(--fl-space-2);
+  cursor: pointer;
+  transition: background-color var(--fl-dur) var(--fl-ease);
+}
+.fl-snackbar__action:hover { background: rgb(255 255 255 / 0.08); }
+.fl-snackbar__action:active { background: rgb(255 255 255 / 0.12); }
+
+/* Persistent bottom navigation raises the sheet line, not the snackbar —
+   apps with a tab bar lift the snackbar above it (see docs recipe). */

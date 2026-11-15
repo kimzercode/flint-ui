@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — snackbar demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Plain message</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-saved">Save conversation</button>
+
+  <p class="fl-section-label">Message + Undo action</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-archived">Archive photo</button>
+
+  <p class="fl-section-label">One at a time — fire both quickly</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-sent">Send message</button>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-copied">Copy address</button>
+
+  <p class="fl-section-label">Dismiss action — wired but discouraged (M2: it disappears on its own)</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-warn">Warn about storage</button>
+
+</main>
+
+<!-- Plain message: role="status" announces it politely when shown; it
+     disappears on its own — no dismiss action needed (M2 cautions against
+     one). -->
+<div class="fl-snackbar" id="snack-saved" role="status">
+  Conversation saved to your Favorites
+</div>
+
+<!-- Message + Undo: the single action in the bright accent. The action's
+     click is author code — the library only shows and times the snackbar.
+     Undo responds with its own snackbar, demonstrating the replacement. -->
+<div class="fl-snackbar" id="snack-archived" role="status">
+  Your photo has been archived
+  <button class="fl-snackbar__action" type="button">Undo</button>
+</div>
+
+<!-- Two more messages for the replacement check: triggering the second
+     while the first is visible hides it — never stacked. -->
+<div class="fl-snackbar" id="snack-sent" role="status">
+  Message sent to Ada
+</div>
+
+<div class="fl-snackbar" id="snack-copied" role="status">
+  Address copied to your Clipboard
+</div>
+
+<!-- Dismiss action: the wiring exists (data-fl-close works in any
+     snackbar), but M2 cautions against it — the snackbar leaves on its
+     own. Shipped for completeness, not for showcase. -->
+<div class="fl-snackbar" id="snack-warn" role="status">
+  Storage almost full
+  <button class="fl-snackbar__action" type="button" data-fl-close>Dismiss</button>
+</div>
+
+<div class="fl-snackbar" id="snack-restored" role="status">
+  Photo restored
+</div>
+
+<script>
+/* Author code: the Undo action amends the process and answers with its own
+   snackbar (flint.snackbar.show restarts the one-at-a-time clock). */
+document.querySelector("#snack-archived .fl-snackbar__action")
+  .addEventListener("click", function () {
+    flint.snackbar.hide(document.getElementById("snack-archived"));
+    flint.snackbar.show(document.getElementById("snack-restored"));
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Snackbar — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.3.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.3.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/snackbar.html"
+           aria-current="page">Snackbar</a>
+      </li>
+      
+      <li>
+        <a href="../components/select.html"
+           >Select</a>
+      </li>
+      
+      <li>
+        <a href="../components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+    </ul>
+
+    
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Snackbar</h1>
+    <p class="docs-art-lead">Low-priority status feedback on the inverse surface — never modal, one at a time, gone on its own.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A snackbar confirms that a process the user started has completed —
+     minimal interruption, optional action, zero demanded attention. It is
+     the lowest-priority member of the feedback family:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Component</th><th>Priority</th><th>User action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Snackbar</strong></td><td>Low</td><td>Optional — disappears by itself</td></tr>
+      <tr><td><a href="bottom-sheet.html">Bottom sheet</a></td><td>Medium</td><td>Optional — a choice, dismissible</td></tr>
+      <tr><td><a href="dialog.html">Dialog</a></td><td>Highest</td><td>Required — blocks the page until answered</td></tr>
+    </tbody>
+  </table>
+  <h3>Do use it for</h3>
+  <ul>
+    <li><strong>Process confirmations</strong> — "Conversation saved",
+        "Message sent", "Address copied".</li>
+    <li><strong>Amendable outcomes</strong> — an <strong>Undo</strong> action
+        is the classic snackbar move: the process happened, and here's a 4s
+        window to reverse it.</li>
+  </ul>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Anything that needs a decision</strong> — that's a dialog.</li>
+    <li><strong>Errors that need context or recovery</strong> — a snackbar
+        can't hold an explanation; use a dialog or inline field errors.</li>
+    <li><strong>Dismiss buttons</strong> — M2 is explicit: a dismiss action
+        is unnecessary because snackbars disappear on their own. Flint still
+        wires <code>data-fl-close</code> inside a snackbar, but don't build
+        UIs around it.</li>
+    <li><strong>Icons</strong> — the message is the content; if it needs an
+        icon, it's a different component.</li>
+  </ul>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">Flat by identity — no elevation</h3>
+    <p class="docs-callout__text">M2 asks for a shadow under the snackbar container; we deliberately ship none. The inverse surface (near-black on light content) provides the separation, matching the flat Google look of the 2020 era. Like every token: --fl-text is the container, --fl-surface is the label.</p>
+    <a class="docs-callout__link" href="dialog.html">Feedback family</a>
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 200" role="img" aria-label="Snackbar anatomy diagram">
+      <!-- screen behind -->
+      <rect x="1" y="1" width="598" height="198" fill="#5f6368" opacity="0.12"/>
+      <!-- snackbar -->
+      <rect x="60" y="80" width="480" height="48" rx="4" fill="#1f1f1f"/>
+      <!-- label -->
+      <rect x="76" y="100" width="180" height="8" rx="4" fill="#ffffff"/>
+      <!-- action -->
+      <rect x="452" y="96" width="72" height="16" rx="4" fill="#8ab4f8"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="50" cy="104" r="11" fill="#1a73e8"/><text x="50" y="108" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="300" cy="60" r="11" fill="#1a73e8"/><text x="300" y="64" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="550" cy="104" r="11" fill="#1a73e8"/><text x="550" y="108" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Text label</strong> — one line (two on mobile), directly
+          related to the process performed. No icons.</li>
+      <li><strong>Container</strong> — opaque inverse surface, 4px radius,
+          48px min-height; docked 8px from the bottom edge. No shadow (see
+          the callout above).</li>
+      <li><strong>Action</strong> — optional, exactly one: a text button in
+          the bright accent (<code>--fl-accent-inverse</code>), never filled,
+          never the label's color.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Markup contract:</strong> any element with
+        <code>data-fl-open="snackbar-id"</code> shows it; flint.js adds
+        <code>is-visible</code> and starts the timer. Or drive it yourself:
+        <code>flint.snackbar.show(el)</code> /
+        <code>flint.snackbar.hide(el)</code> — the class is plain CSS.</li>
+    <li><strong>Auto-dismiss:</strong> 4 seconds, then it leaves on its own.
+        Re-triggering the same snackbar restarts the clock.</li>
+    <li><strong>One at a time (M2):</strong> showing a second snackbar hides
+        the first — they replace, never stack.</li>
+    <li><strong>Non-modal:</strong> the page stays fully interactive — no
+        focus trap, no scroll lock, no inert background. The snackbar never
+        takes focus.</li>
+    <li><strong>Placement:</strong> docked to the bottom edge, 8px insets,
+        above FABs (z-layer <code>--fl-z-snackbar</code>). In wide layouts it
+        is left-anchored and capped at 560px — pick one alignment and keep it
+        consistent everywhere (M2 forbids mixing).</li>
+    <li><strong>Above persistent navigation:</strong> over a bottom-nav
+        shell, lift it with one line — see the recipe below. It should never
+        cover tab bars or FABs.</li>
+    <li><strong>Animation:</strong> rises 8px and fades in, fades out on
+        leave — CSS only, <code>prefers-reduced-motion</code> disables it.</li>
+    <li><strong>No-JS fallback (honest):</strong> the element is hidden
+        (<code>opacity: 0; pointer-events: none</code>); with JS off the page
+        renders and works, the snackbar just never shows. Toggle
+        <code>is-visible</code> from your own code for a zero-flint path.</li>
+  </ul>
+  <p>Recipe — snackbar above a persistent bottom nav:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>.fl-snackbar { bottom: calc(var(--fl-tabbar-h) + var(--fl-space-2)); }</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Give the snackbar <code>role="status"</code> — screen readers announce
+        it politely when it appears, without moving focus.</li>
+    <li>Because it is announced and then vanishes, don't put anything the
+        user must read in a snackbar — anything important belongs in the page
+        itself.</li>
+    <li>The action is a real <code>&lt;button&gt;</code> — focusable and
+        activatable like any control; it doesn't need <code>type="button"</code>
+        outside a form, but it doesn't hurt.</li>
+    <li>Contrast: <code>--fl-surface</code> white on <code>--fl-text</code>
+        #1f1f1f is ~16:1; the bright action
+        (<code>--fl-accent-inverse</code> #8ab4f8) is ~7.9:1 on the same
+        surface — both clear AA.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/snackbar.html — rendered live</span>
+      <a href="../demos/snackbar.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/snackbar.html" title="Snackbar live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Plain message — shown by any trigger, auto-dismissed after 4s:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;button class=&quot;fl-btn&quot; data-fl-open=&quot;snack-saved&quot;&gt;Save conversation&lt;/button&gt;
+
+&lt;div class=&quot;fl-snackbar&quot; id=&quot;snack-saved&quot; role=&quot;status&quot;&gt;
+  Conversation saved to your Favorites
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Message + Undo — the single action, bright accent on the inverse
+     surface; the click handler is author code:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;div class=&quot;fl-snackbar&quot; id=&quot;snack-archived&quot; role=&quot;status&quot;&gt;
+  Your photo has been archived
+  &lt;button class=&quot;fl-snackbar__action&quot; type=&quot;button&quot;&gt;Undo&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  document.querySelector(&quot;#snack-archived .fl-snackbar__action&quot;)
+    .addEventListener(&quot;click&quot;, function () {
+      // …amend the process, then confirm with its own snackbar
+      flint.snackbar.show(document.getElementById(&quot;snack-restored&quot;));
+    });
+&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Programmatic control — same clock, same one-at-a-time rule:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>flint.snackbar.show(document.getElementById(&quot;snack-sent&quot;));
+flint.snackbar.hide(document.getElementById(&quot;snack-sent&quot;));</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/snackbar.html">demos/snackbar.html</a> covers the
+     plain message, the Undo action and the replacement behavior (fire two
+     triggers quickly — the first leaves).</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-text</code></td><td>The inverse container fill</td></tr>
+      <tr><td><code>--fl-surface</code></td><td>The label color on the container</td></tr>
+      <tr><td><code>--fl-accent-inverse</code></td><td>The action text (readable on dark)</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-z-snackbar</code></td><td>Layer order (above FABs, below overlays)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Show/hide animation timing</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-accent-inverse: #c9a6ff;   /* a purple action, still AA on --fl-text */
+  --fl-radius: 0;                 /* square snackbars */
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.3.0" defer></script>
+<script src="../js/docs-ui.js?v=0.3.0" defer></script>
+
+</body>
+</html>
