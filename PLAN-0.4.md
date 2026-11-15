@@ -28,8 +28,8 @@ We do not follow the M2 docs to the letter. Concretely:
 | 3 | Bottom sheet: presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | ✅ (22 Playwright checks pass) |
 | 4 | Snackbar: CSS + auto-dismiss timer in flint.js, `data-fl-open` dispatch on `.fl-snackbar`, docs | ✅ (17 Playwright checks pass) |
 | 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | ✅ (11 Playwright checks; audited against user's `progress-docs/` M2 refs: 48dp default, grow+shrink sweep, one-type-per-activity docs, tint-track deviation documented) |
-| 6 | Tooltip: CSS-only hover/focus, four directions, docs | ⬅ next |
-| 7 | **Forms completion** (Addendum B): `.fl-field__prefix`/`__suffix`, `__counter`, leading/trailing `__icon` slots, `data-fl-password-toggle`, `field-sizing: content` auto-grow, docs recipes (helper↔error swap, live counter) + decision notes | |
+| 6 | Tooltip: CSS-only hover/focus, four directions, docs | ✅ (19 Playwright checks; audited against user's `tooltips-docs/` M2 refs: 24/32px heights + 8/16px gaps, grey-800 container, 300ms hover delay / 0 focus, no arrow no shadow, pointer-events:none, WCAG 1.4.13 + long-press gaps documented) |
+| 7 | **Forms completion** (Addendum B): `.fl-field__prefix`/`__suffix`, `__counter`, leading/trailing `__icon` slots, `data-fl-password-toggle`, `field-sizing: content` auto-grow, docs recipes (helper↔error swap, live counter) + decision notes | ⬅ next |
 | 8 | Overlays guide page (shared layer, focus protocol, no-JS fallbacks) + trim repetition from component pages | |
 | 9 | Release: `?v=0.4.0` in `base.njk`, CSS/JS headers drop `-dev` (also fix footer "v0.1.0"), `components.js` (dialog/sheet → ready, + snackbar/progress/tooltip), CHANGELOG `[0.4.0]` ("overlays + forms completion"), ROADMAP ✅ (README + `roadmap.njk` synced), tag `v0.4.0`, GitHub release, live-site check | |
 

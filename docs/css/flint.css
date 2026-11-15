@@ -27,6 +27,7 @@
   --fl-border: #dadce0;        /* replaces every shadow */
   --fl-divider: #e8eaed;
   --fl-scrim: rgb(32 33 36 / 0.45);   /* overlay backdrops — shared with the drawer */
+  --fl-tooltip-bg: #3c4043;    /* tooltip container — Google grey 800 (2020) */
 
   /* Disabled */
   --fl-disabled: #9aa0a6;
@@ -59,6 +60,7 @@
 
   /* Layers */
   --fl-z-fab: 10;
+  --fl-z-tooltip: 15;    /* above FABs, below topbar/snackbar/overlays */
   --fl-z-topbar: 20;
   --fl-z-snackbar: 25;   /* above FABs (M2), below modal overlays */
   --fl-z-focus: 30;
@@ -66,6 +68,7 @@
   /* Motion */
   --fl-ease: cubic-bezier(0.2, 0, 0, 1);
   --fl-dur: 150ms;
+  --fl-tip-delay: 300ms;   /* hover show delay (focus shows immediately) */
 }
 
 /* --------------------------------------------------------------------------
@@ -1457,4 +1460,99 @@ dialog.fl-sheet[open] {
     background-position: 50% 0;   /* the 40% bar parked at center */
   }
   .fl-progress-circle.is-indeterminate { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   16. Tooltip — identifying label for icon-only controls
+   CSS only, zero JS. The M2 tooltip: a plain grey rectangle (no arrow, no
+   shadow — the spec's own don't), 12px label, shown on hover and keyboard
+   focus. Hidden with visibility+opacity so it's out of the accessibility
+   tree when not shown; pointer-events:none keeps it from ever getting in
+   the way. Four direction modifiers answer M2's "keep it visible / don't
+   crop" — there is no auto-flip without JS, so the author picks the inward
+   direction near edges.
+   -------------------------------------------------------------------------- */
+
+.fl-tip {
+  position: relative;
+  display: inline-flex;
+}
+
+.fl-tip__bubble {
+  --fl-tip-gap: 8px;           /* M2 desktop gap; 16px on touch-size screens */
+  position: absolute;
+  z-index: var(--fl-z-tooltip);
+  pointer-events: none;
+  width: max-content;   /* outgrow the narrow anchor wrapper; cap below */
+  max-width: 240px;
+  min-height: 24px;            /* M2 desktop height */
+  padding: 4px 8px;            /* 12px/16px label + 4px = 24px */
+  background: var(--fl-tooltip-bg);
+  color: var(--fl-surface);
+  font-size: var(--fl-fs-caption);
+  line-height: 16px;
+  text-align: center;
+  border-radius: var(--fl-radius);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--fl-dur) var(--fl-ease),
+              visibility 0s var(--fl-dur);  /* stay visible through the fade-out */
+  /* Default direction: above, centered (the M2 placement) */
+  bottom: calc(100% + var(--fl-tip-gap));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fl-tip:hover .fl-tip__bubble,
+.fl-tip:focus-within .fl-tip__bubble {
+  opacity: 1;
+  visibility: visible;
+  /* Hover waits (--fl-tip-delay) so sweeping a toolbar doesn't fire every
+     tooltip; focus waits for nobody. */
+  transition-delay: var(--fl-tip-delay), 0s;
+}
+
+/* Focus overrides the shared rule: keyboard users get it immediately */
+.fl-tip:focus-within .fl-tip__bubble {
+  transition-delay: 0s, 0s;
+}
+
+/* Direction modifiers — same gap, other sides */
+.fl-tip--bottom .fl-tip__bubble {
+  bottom: auto;
+  top: calc(100% + var(--fl-tip-gap));
+  left: 50%;
+  transform: translateX(-50%);
+}
+.fl-tip--left .fl-tip__bubble {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: calc(100% + var(--fl-tip-gap));
+  transform: translateY(-50%);
+}
+.fl-tip--right .fl-tip__bubble {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + var(--fl-tip-gap));
+  right: auto;
+  transform: translateY(-50%);
+}
+
+/* M2 mobile tooltip: 32dp tall, 16dp from the anchor. (Long-press — the
+   touch trigger itself — needs JS and is not shipped; see docs.) */
+@media (max-width: 600px) {
+  .fl-tip__bubble {
+    --fl-tip-gap: 16px;
+    min-height: 32px;
+    padding: 8px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-tip__bubble,
+  .fl-tip:hover .fl-tip__bubble,
+  .fl-tip:focus-within .fl-tip__bubble {
+    transition: none;
+  }
 }

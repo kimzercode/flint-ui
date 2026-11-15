@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Tooltip — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.3.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.3.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/snackbar.html"
+           >Snackbar</a>
+      </li>
+      
+      <li>
+        <a href="../components/progress.html"
+           >Progress</a>
+      </li>
+      
+      <li>
+        <a href="../components/select.html"
+           >Select</a>
+      </li>
+      
+      <li>
+        <a href="../components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+      <li>
+        <a href="../components/tooltip.html"
+           aria-current="page">Tooltip</a>
+      </li>
+      
+    </ul>
+
+    
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Tooltip</h1>
+    <p class="docs-art-lead">A short label that names an icon-only control — hover or keyboard focus, gone on leave. CSS only, zero JavaScript.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A tooltip names an element's function in label-length text. It is
+     <em>supplementary</em> — the control must work, and make sense, without
+     it. The M2 spec's own do-cases:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Use it for</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Icon-only interactive imagery</strong> — controls with no visible text</td><td>A printer icon → "Print ⌘ + P"</td></tr>
+      <tr><td><strong>Distinguishing similar elements</strong></td><td>Three align icons → "Align left / center / right"</td></tr>
+      <tr><td><strong>Distinguishing icon-only actions</strong></td><td>Cut, copy, paste — same-ish glyphs, one word apart</td></tr>
+    </tbody>
+  </table>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Restating visible text</strong> — a PRINT button already says
+        PRINT; a tooltip repeating it is noise (an explicit M2 don't).</li>
+    <li><strong>Rich content</strong> — avatars, cards, names and emails
+        belong to a <a href="dialog.html">dialog</a> or a popover, never a
+        tooltip (also an explicit M2 don't).</li>
+    <li><strong>Anything the user must not miss</strong> — tooltips vanish;
+        important information lives in the page, a
+        <a href="snackbar.html">snackbar</a>, or inline text.</li>
+    <li><strong>Every control</strong> — tooltips describe differences;
+        labeling the obvious interrupts the task.</li>
+  </ul>
+  <p>Keep the text <strong>succinct</strong> (1–5 words) and in
+     <strong>sentence case</strong> — "Align left", not "Aligns the current
+     paragraph to the left margin of the document".</p>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">No shadow — twice agreed</h3>
+    <p class="docs-callout__text">M2&#39;s tooltip spec says &#39;don&#39;t display shadows on tooltips&#39; in its own don&#39;t panel, so the flat rule needed no exception here. The grey-800 container (#3c4043, the Google-2020 idiom) does the separation, with white caption text.</p>
+    <a class="docs-callout__link" href="snackbar.html">Snackbar — the other dark surface</a>
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 220" role="img" aria-label="Tooltip anatomy diagram">
+      <!-- anchor icon button -->
+      <rect x="272" y="130" width="56" height="56" rx="8" fill="#f1f3f4" stroke="#dadce0"/>
+      <rect x="292" y="150" width="16" height="16" rx="2" fill="#5f6368"/>
+      <!-- gap line -->
+      <rect x="290" y="106" width="20" height="8" fill="#1a73e8" opacity="0.15"/>
+      <!-- tooltip -->
+      <rect x="250" y="82" width="100" height="24" rx="4" fill="#3c4043"/>
+      <rect x="270" y="90" width="60" height="8" rx="4" fill="#ffffff"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="240" cy="94" r="11" fill="#1a73e8"/><text x="240" y="98" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="360" cy="94" r="11" fill="#1a73e8"/><text x="360" y="98" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="300" cy="120" r="11" fill="#1a73e8"/><text x="300" y="124" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="300" cy="170" r="11" fill="#1a73e8"/><text x="300" y="174" fill="#ffffff" text-anchor="middle">4</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Text label</strong> — 12px caption, sentence case, white,
+          centered; wraps at 240px if it must.</li>
+      <li><strong>Container</strong> — grey 800, 4px radius, 24px tall, no
+          arrow, no shadow. A plain rectangle, per the spec.</li>
+      <li><strong>Gap</strong> — 8px from the anchor (16px on touch-size
+          screens, with a 32px-tall container — M2's mobile spec).</li>
+      <li><strong>Anchor</strong> — the control being named; it keeps its own
+          <code>aria-label</code> (see accessibility).</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Zero JavaScript</strong> — the component is pure CSS:
+        <code>:hover</code> and <code>:focus-within</code> do everything.
+        Works with flint.js loaded or not.</li>
+    <li><strong>Markup contract:</strong> a <code>.fl-tip</code> wrapper
+        around the trigger, plus a <code>.fl-tip__bubble</code> with
+        <code>role="tooltip"</code> and an id; the trigger points at it with
+        <code>aria-describedby</code>.</li>
+    <li><strong>Hover shows after 300ms</strong>
+        (<code>--fl-tip-delay</code>) so sweeping a toolbar doesn't fire
+        every tooltip; <strong>focus shows immediately</strong>.</li>
+    <li><strong>Anchored to the target, not the cursor</strong> — it appears
+        centered on the control and stays put while the pointer moves within
+        it (the spec's behavior figure). It hides when the pointer leaves
+        the target.</li>
+    <li><strong>Stays while focused</strong> — keyboard focus keeps it
+        visible until blur, per WCAG 1.4.13 (hover/focus content persists
+        while the pointer or focus remains).</li>
+    <li><strong>Four directions</strong> — <code>fl-tip--bottom</code>,
+        <code>fl-tip--left</code>, <code>fl-tip--right</code>, top by
+        default. There is <strong>no auto-flip</strong> (that needs JS
+        positioning): near a viewport edge, pick the inward direction —
+        that's how the spec's "keep the position visible / don't crop"
+        rule is honored without script.</li>
+    <li><strong>Touch:</strong> M2's mobile trigger is long-press, which CSS
+        can't do — not shipped in 0.4. Tapping a button focuses it on
+        Android, so <code>:focus-within</code> often shows the tooltip
+        there; iOS Safari doesn't focus buttons on tap, so it won't. If you
+        need the long-press pattern, it's a few lines of your own JS
+        toggling a class.</li>
+    <li><strong>Fade only</strong> — 150ms in and out, per the spec's
+        transition pattern; <code>prefers-reduced-motion</code> makes it
+        instant.</li>
+    <li><strong>Never interactive</strong> — the bubble is
+        <code>pointer-events: none</code>; it can't be hovered, clicked, or
+        selected.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The bubble gets <code>role="tooltip"</code> and an <code>id</code>;
+        the trigger points at it with <code>aria-describedby</code> — the
+        ARIA Authoring Practices tooltip pattern.</li>
+    <li><strong>The trigger must have its own accessible name</strong> —
+        <code>aria-label</code> on an icon button, or visible text. The
+        tooltip is never the sole carrier of a control's identity: it's
+        visually helpful, the label is what assistive tech relies on.</li>
+    <li><strong>Keyboard parity</strong> — <code>:focus-within</code> shows
+        the same tooltip for Tab users, immediately (no 300ms wait).</li>
+    <li>Hidden state uses <code>visibility: hidden</code> + opacity, so an
+        invisible bubble is out of the accessibility tree; visible state is
+        announced as the control's description.</li>
+    <li><strong>Known gap, honestly:</strong> WCAG 1.4.13 also asks that
+        hover/focus content be dismissible with Escape without losing
+        focus — CSS can't do that. Impact here is low because the tooltip
+        only restates the control's own label and covers nothing; if your
+        audit requires it, one <code>keydown</code> listener toggling a
+        class closes it.</li>
+    <li><strong>Touch gap, honestly:</strong> no long-press in 0.4 (see
+        behavior). Don't gate a feature on the tooltip being reachable on
+        touch.</li>
+    <li>Contrast: white on grey 800 (#3c4043) is ~10.6:1 — well past AA at
+        12px.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real
+     <code>flint.css</code> — no <code>flint.js</code>, because there is
+     none to load.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/tooltip.html — rendered live</span>
+      <a href="../demos/tooltip.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/tooltip.html" title="Tooltip live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>No script tag needed — this component is CSS only.</p>
+  <p>An icon button with a tooltip (the core pattern):</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;span class=&quot;fl-tip&quot;&gt;
+  &lt;button class=&quot;fl-icon-btn&quot; aria-label=&quot;Align left&quot; aria-describedby=&quot;tip-al&quot;&gt;
+    &lt;svg viewBox=&quot;0 0 20 20&quot; width=&quot;20&quot; height=&quot;20&quot; fill=&quot;currentColor&quot; aria-hidden=&quot;true&quot;&gt;…&lt;/svg&gt;
+  &lt;/button&gt;
+  &lt;span class=&quot;fl-tip__bubble&quot; id=&quot;tip-al&quot; role=&quot;tooltip&quot;&gt;Align left&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>The four directions — one modifier on the wrapper, top by default:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;span class=&quot;fl-tip&quot;&gt;…&lt;/span&gt;                    &lt;!-- above (default) --&gt;
+&lt;span class=&quot;fl-tip fl-tip--bottom&quot;&gt;…&lt;/span&gt;     &lt;!-- below --&gt;
+&lt;span class=&quot;fl-tip fl-tip--left&quot;&gt;…&lt;/span&gt;       &lt;!-- beside, pointing left --&gt;
+&lt;span class=&quot;fl-tip fl-tip--right&quot;&gt;…&lt;/span&gt;      &lt;!-- beside, pointing right --&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/tooltip.html">demos/tooltip.html</a> covers the
+     spec's do-cases (align toolbar, cut/copy/paste), all four directions,
+     a wrapping label, and a tooltip floating over imagery.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-tooltip-bg</code></td><td>The container fill (grey 800)</td></tr>
+      <tr><td><code>--fl-surface</code></td><td>The label color on it</td></tr>
+      <tr><td><code>--fl-fs-caption</code></td><td>The 12px label size</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-tip-delay</code></td><td>The hover show delay (300ms; focus never waits)</td></tr>
+      <tr><td><code>--fl-z-tooltip</code></td><td>Layer order (above FABs, below topbar/snackbar)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Fade timing</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-tooltip-bg: #0b8043;   /* a green tooltip, Google-2020 green 800 */
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.3.0" defer></script>
+<script src="../js/docs-ui.js?v=0.3.0" defer></script>
+
+</body>
+</html>

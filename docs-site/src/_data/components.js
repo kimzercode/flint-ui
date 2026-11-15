@@ -89,6 +89,12 @@ const real = [
     status: "ready",
     summary: "Outlined and filled inputs with helper text, error states and a textarea.",
   },
+  {
+    name: "Tooltip",
+    slug: "tooltip",
+    status: "ready",
+    summary: "CSS-only identifying label for icon-only controls — hover and keyboard focus, zero JS.",
+  },
 ];
 
 const planned = [];
