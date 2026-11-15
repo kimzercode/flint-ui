@@ -1,0 +1,240 @@
+---
+layout: layouts/base.njk
+permalink: components/progress.html
+assetRoot: ../
+title: Progress
+section: components
+current: progress
+depth: 1
+lead: Determinate and indeterminate progress in two shapes — a restyled native element and a conic-gradient ring. Zero JavaScript.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>Progress shows that work is happening and, when you can, how far along
+     it is. Pick the shape by context:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Shape</th><th>Use for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Linear</strong></td><td>In-flow waits tied to content — uploads, loading a list, a multi-step form</td></tr>
+      <tr><td><strong>Circle</strong></td><td>Standalone waits — page transitions, connecting states, spots too tight for a bar</td></tr>
+    </tbody>
+  </table>
+  <h3>Determinate vs indeterminate</h3>
+  <ul>
+    <li><strong>Determinate</strong> whenever the fraction is knowable — a
+        progress bar that moves honestly beats a spinner that guesses.</li>
+    <li><strong>Indeterminate</strong> when duration is unknown — do not
+        animate a fake percent toward an invented 100%.</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "The state lives in the platform, not in classes",
+    text: "Linear progress is the native <progress> element: value/max IS the state and :indeterminate (no value attribute) is the platform's own switch. The circle is a div — its state is one custom property, --fl-progress-value.",
+    href: "snackbar.html",
+    linkText: "Pair it with a snackbar"
+  }) }}
+  <p>A common pairing: an indeterminate spinner while connecting, then a
+     determinate bar for the transfer, then a snackbar to confirm — three
+     honest states, no invented numbers.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 190" role="img" aria-label="Progress anatomy diagram">
+      <!-- linear -->
+      <rect x="60" y="58" width="280" height="4" rx="2" fill="#e8f0fe"/>
+      <rect x="60" y="58" width="140" height="4" rx="2" fill="#1a73e8"/>
+      <!-- circle -->
+      <circle cx="470" cy="60" r="20" fill="none" stroke="#e8f0fe" stroke-width="4"/>
+      <path d="M 470 40 A 20 20 0 1 1 455.4 45.9" fill="none" stroke="#1a73e8" stroke-width="4" stroke-linecap="butt"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="50" cy="60" r="11" fill="#1a73e8"/><text x="50" y="64" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="205" cy="40" r="11" fill="#1a73e8"/><text x="205" y="44" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="515" cy="60" r="11" fill="#1a73e8"/><text x="515" y="64" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Track</strong> — the tint (<code>--fl-tint</code>), 4px
+          thick, 2px radius on the linear bar.</li>
+      <li><strong>Fill</strong> — the accent (<code>--fl-accent</code>);
+          width is the native <code>value</code> for linear, the arc is
+          <code>--fl-progress-value</code> for the circle.</li>
+      <li><strong>Circle ring</strong> — 4px stroke cut out of a
+          conic-gradient disc with a mask; sized by
+          <code>--fl-progress-size</code> (40px default).</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Zero JavaScript</strong> — the component ships no script at
+        all. flint.js isn't involved; the page below runs with JS off
+        entirely (the demo's only script is the author demo moving the
+        value).</li>
+    <li><strong>Linear determinate:</strong> set
+        <code>value</code>/<code>max</code> — the native attributes. Moving
+        the value moves the fill; the width change eases over
+        <code>--fl-dur</code>.</li>
+    <li><strong>Linear indeterminate:</strong> remove the
+        <code>value</code> attribute — <code>:indeterminate</code> swaps in a
+        40%-wide accent bar sweeping the track (1.2s loop).</li>
+    <li><strong>Circle determinate:</strong> set
+        <code>--fl-progress-value: 0–100</code> (inline or from your JS).
+        The ring is a conic-gradient — no JS library, no SVG arc math.</li>
+    <li><strong>Circle indeterminate:</strong> add the
+        <code>is-indeterminate</code> class — a 270° accent arc rotates
+        (0.9s loop).</li>
+    <li><strong>Sizing:</strong> <code>--fl-progress-size</code> scales the
+        circle (stroke stays 4px); the linear bar is 4px tall and
+        full-width of its container.</li>
+    <li><strong>Reduced motion:</strong> the sweep stops and the bar parks
+        at center; the spinning circle stops as a static 270° arc — state
+        stays readable without the animation.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li><strong>Linear:</strong> the native <code>&lt;progress&gt;</code>
+        element is already a <code>progressbar</code> — just add
+        <code>aria-label</code>. Don't add <code>role</code>; the platform
+        has it.</li>
+    <li><strong>Circle:</strong> a plain <code>div</code> knows nothing —
+        give it <code>role="progressbar"</code>,
+        <code>aria-valuemin/max/now</code> (determinate) or
+        <code>aria-label</code> alone (indeterminate), and update
+        <code>aria-valuenow</code> when <code>--fl-progress-value</code>
+        changes.</li>
+    <li><strong>Label the process, not the widget</strong> — "Uploading
+        files", not "Progress".</li>
+    <li><strong>Indeterminate is announced as such</strong> by both
+        shapes — no fake percentages, matching the no-fake-100% rule
+        above.</li>
+    <li><strong>Contrast:</strong> the accent (#1a73e8) on the tint
+        (#e8f0fe) track reads as a state indicator, not text — the honest
+        pairing M2 uses; nearby text should carry the actual numbers.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real
+     <code>flint.css</code> — and, true to the component, no
+     <code>flint.js</code> at all.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/progress.html — rendered live</span>
+      <a href="../demos/progress.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/progress.html" title="Progress live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>No script tag needed — this component is CSS only.</p>
+  <p>Linear — determinate; the native attributes are the whole API:</p>
+  {% set linearMarkup %}
+<progress class="fl-progress" value="35" max="100"
+          aria-label="Uploading files"></progress>
+{% endset %}
+  {{ snippet(linearMarkup) }}
+  <p>Linear — indeterminate: drop the <code>value</code> attribute:</p>
+  {% set linearInd %}
+<progress class="fl-progress" aria-label="Loading feed"></progress>
+{% endset %}
+  {{ snippet(linearInd) }}
+  <p>Circle — determinate: the value is one custom property:</p>
+  {% set circleMarkup %}
+<div class="fl-progress-circle" style="--fl-progress-value: 60" role="progressbar"
+     aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"
+     aria-label="Backing up"></div>
+{% endset %}
+  {{ snippet(circleMarkup) }}
+  <p>Circle — indeterminate: one class:</p>
+  {% set circleInd %}
+<div class="fl-progress-circle is-indeterminate" role="progressbar"
+     aria-label="Connecting"></div>
+{% endset %}
+  {{ snippet(circleInd) }}
+  <p>Moving it from your JS (linear and circle):</p>
+  {% set jsMarkup %}
+// linear: the native element is the state
+bar.value = percent;
+
+// circle: the property is the state — keep aria-valuenow in step
+ring.style.setProperty("--fl-progress-value", percent);
+ring.setAttribute("aria-valuenow", percent);
+{% endset %}
+  {{ snippet(jsMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/progress.html">demos/progress.html</a> covers both
+     shapes, all four states, and the size token — the +/- buttons on the
+     determinate bar are the only script on the page.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-accent</code></td><td>The fill / arc</td></tr>
+      <tr><td><code>--fl-tint</code></td><td>The track / ring background</td></tr>
+      <tr><td><code>--fl-progress-value</code></td><td>The circle's determinate state (0–100, per element)</td></tr>
+      <tr><td><code>--fl-progress-size</code></td><td>The circle's diameter (per element)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Fill easing and loop timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-accent: #0b8043;   /* a green progress, Google-2020 green 600 */
+  --fl-tint: #ceead6;     /* its matching track tint */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

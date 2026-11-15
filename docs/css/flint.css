@@ -1371,3 +1371,86 @@ dialog.fl-sheet[open] {
 
 /* Persistent bottom navigation raises the sheet line, not the snackbar —
    apps with a tab bar lift the snackbar above it (see docs recipe). */
+
+/* --------------------------------------------------------------------------
+   15. Progress — linear (<progress>) and circular (conic-gradient ring)
+   Zero JavaScript. The linear one is the native element restyled: the value
+   attribute IS the state, and `:indeterminate` (no value attribute) swaps in
+   a sweeping bar — the platform's own determinate/indeterminate switch. The
+   circular one is a div with role="progressbar" and the value expressed as
+   the --fl-progress-value custom property. Flat M2 palette throughout:
+   tint track, accent fill, 4dp thickness.
+   -------------------------------------------------------------------------- */
+
+.fl-progress {
+  appearance: none;
+  -moz-appearance: none;
+  display: block;
+  width: 100%;
+  height: 4px;                 /* M2 linear thickness */
+  border: none;
+  margin: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--fl-tint);  /* the track shows through transparent pseudos */
+}
+
+/* Fill: WebKit splits bar/value; Firefox has a single fill pseudo. Both
+   transparent where the element's own background already paints. */
+.fl-progress::-webkit-progress-bar { background: transparent; }
+.fl-progress::-webkit-progress-value {
+  background: var(--fl-accent);
+  transition: width var(--fl-dur) var(--fl-ease);
+}
+.fl-progress::-moz-progress-bar {
+  background: var(--fl-accent);
+  transition: width var(--fl-dur) var(--fl-ease);
+}
+
+/* Indeterminate = no value attribute. Pseudos stand down; a 40%-wide accent
+   bar sweeps the track (background-position math: ±100% clears a 40% image
+   fully off both edges). */
+.fl-progress:indeterminate::-webkit-progress-value { background: transparent; }
+.fl-progress:indeterminate::-moz-progress-bar { background: transparent; }
+.fl-progress:indeterminate {
+  background: var(--fl-tint)
+              linear-gradient(90deg,
+                var(--fl-accent) 0 40%, transparent 40% 100%) no-repeat;
+  background-size: 40% 100%;
+  animation: fl-progress-sweep 1.2s var(--fl-ease) infinite;
+}
+@keyframes fl-progress-sweep {
+  from { background-position: -100% 0; }
+  to   { background-position:  200% 0; }
+}
+
+.fl-progress-circle {
+  display: inline-block;
+  width: var(--fl-progress-size, 40px);
+  height: var(--fl-progress-size, 40px);
+  border-radius: 50%;
+  /* Determinate: the author sets --fl-progress-value (0–100). */
+  background: conic-gradient(
+    var(--fl-accent) calc(var(--fl-progress-value, 0) * 1%),
+    var(--fl-tint) 0
+  );
+  -webkit-mask: radial-gradient(circle closest-side,
+    transparent calc(100% - 4.5px), #000 calc(100% - 4px));
+  mask: radial-gradient(circle closest-side,
+    transparent calc(100% - 4.5px), #000 calc(100% - 4px));
+}
+
+/* Indeterminate: a 270° arc spins — the classic M2 circular spinner. */
+.fl-progress-circle.is-indeterminate {
+  background: conic-gradient(var(--fl-accent) 0 270deg, transparent 270deg);
+  animation: fl-progress-spin 0.9s linear infinite;
+}
+@keyframes fl-progress-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-progress:indeterminate {
+    animation: none;
+    background-position: 50% 0;   /* the 40% bar parked at center */
+  }
+  .fl-progress-circle.is-indeterminate { animation: none; }
+}

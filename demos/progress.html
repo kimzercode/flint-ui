@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — progress demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Linear — determinate (native &lt;progress&gt;)</p>
+  <progress class="fl-progress" id="lin-det" value="35" max="100"
+            aria-label="Uploading files"></progress>
+  <p style="display:flex; gap:8px; margin-top:12px;">
+    <button class="fl-btn fl-btn--outline" data-add="-15">−15</button>
+    <button class="fl-btn fl-btn--outline" data-add="15">+15</button>
+  </p>
+
+  <p class="fl-section-label">Linear — indeterminate (drop the value attribute)</p>
+  <progress class="fl-progress" aria-label="Loading feed"></progress>
+
+  <p class="fl-section-label">Circle — determinate (--fl-progress-value)</p>
+  <div class="fl-progress-circle" style="--fl-progress-value: 25" role="progressbar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" aria-label="Backing up"></div>
+  <div class="fl-progress-circle" style="--fl-progress-value: 60" role="progressbar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-label="Backing up"></div>
+  <div class="fl-progress-circle" style="--fl-progress-value: 90" role="progressbar"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="90" aria-label="Backing up"></div>
+
+  <p class="fl-section-label">Circle — indeterminate (is-indeterminate spins)</p>
+  <div class="fl-progress-circle is-indeterminate" role="progressbar"
+       aria-label="Connecting"></div>
+
+  <p class="fl-section-label">Sizes — one token (--fl-progress-size)</p>
+  <div class="fl-progress-circle is-indeterminate" style="--fl-progress-size: 24px" role="progressbar"
+       aria-label="Small spinner"></div>
+  <div class="fl-progress-circle is-indeterminate" style="--fl-progress-size: 48px" role="progressbar"
+       aria-label="Large spinner"></div>
+
+</main>
+
+<script>
+/* Author code: the native element carries the state — moving the value
+   attribute is all it takes. (This demo's only script; the component
+   itself is zero-JS.) */
+document.querySelectorAll("[data-add]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var el = document.getElementById("lin-det");
+    var v = Math.min(100, Math.max(0, Number(el.value) + Number(b.dataset.add)));
+    el.value = v;
+    el.setAttribute("aria-label", "Uploading files — " + v + "%");
+  });
+});
+</script>
+
+</body>
+</html>

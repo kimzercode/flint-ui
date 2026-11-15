@@ -66,6 +66,12 @@ const real = [
     summary: "Inverse-surface status message with an optional Undo action — one at a time, 4s auto-dismiss.",
   },
   {
+    name: "Progress",
+    slug: "progress",
+    status: "ready",
+    summary: "Linear <progress> and a conic-gradient circle — determinate or indeterminate, zero JavaScript.",
+  },
+  {
     name: "Select",
     slug: "select",
     status: "ready",
