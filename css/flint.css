@@ -1419,15 +1419,19 @@ dialog.fl-sheet[open] {
   background-size: 40% 100%;
   animation: fl-progress-sweep 1.2s var(--fl-ease) infinite;
 }
+/* M2: the indeterminate bar grows and shrinks while it travels. One bar
+   approximating that choreography (M2 uses two) — grows to 70%, back to
+   20% at the edges, every pass. */
 @keyframes fl-progress-sweep {
-  from { background-position: -100% 0; }
-  to   { background-position:  200% 0; }
+  0%   { background-position: -100% 0; background-size: 20% 100%; }
+  60%  { background-size: 70% 100%; }
+  100% { background-position:  200% 0; background-size: 20% 100%; }
 }
 
 .fl-progress-circle {
   display: inline-block;
-  width: var(--fl-progress-size, 40px);
-  height: var(--fl-progress-size, 40px);
+  width: var(--fl-progress-size, 48px);   /* M2 circular: 48dp */
+  height: var(--fl-progress-size, 48px);
   border-radius: 50%;
   /* Determinate: the author sets --fl-progress-value (0–100). */
   background: conic-gradient(

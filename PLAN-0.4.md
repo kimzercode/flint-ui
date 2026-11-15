@@ -27,7 +27,7 @@ We do not follow the M2 docs to the letter. Concretely:
 | 2b | **Dialog completion** (M2 audit): 560px height cap, `.fl-dialog__list`/`__option` (simple + confirmation choice rows), `.fl-dialog__actions--stacked`, `.fl-dialog--fullscreen` + `.fl-dialog__header`, `data-fl-dismissible="false"` (ignore scrim + Escape, keep `data-fl-close`), demos (pick-a-label, confirmation w/ disabled confirm, full-screen compose), docs Types/Actions/Dismissal sections | ✅ (30 Playwright checks pass) |
 | 3 | Bottom sheet: presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | ✅ (22 Playwright checks pass) |
 | 4 | Snackbar: CSS + auto-dismiss timer in flint.js, `data-fl-open` dispatch on `.fl-snackbar`, docs | ✅ (17 Playwright checks pass) |
-| 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | ✅ (11 Playwright checks pass) |
+| 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | ✅ (11 Playwright checks; audited against user's `progress-docs/` M2 refs: 48dp default, grow+shrink sweep, one-type-per-activity docs, tint-track deviation documented) |
 | 6 | Tooltip: CSS-only hover/focus, four directions, docs | ⬅ next |
 | 7 | **Forms completion** (Addendum B): `.fl-field__prefix`/`__suffix`, `__counter`, leading/trailing `__icon` slots, `data-fl-password-toggle`, `field-sizing: content` auto-grow, docs recipes (helper↔error swap, live counter) + decision notes | |
 | 8 | Overlays guide page (shared layer, focus protocol, no-JS fallbacks) + trim repetition from component pages | |

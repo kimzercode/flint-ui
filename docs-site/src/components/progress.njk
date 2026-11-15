@@ -50,6 +50,20 @@ toc:
     <li><strong>Indeterminate</strong> when duration is unknown — do not
         animate a fake percent toward an invented 100%.</li>
   </ul>
+  <h3>M2's consistency rules</h3>
+  <ul>
+    <li><strong>One type per activity</strong> — if a refresh shows a circle
+        on one screen, the same action never shows a bar elsewhere.</li>
+    <li><strong>Sequences show overall progress</strong> — a multi-step
+        process gets one indicator of the whole, not one per step.</li>
+    <li><strong>Never decorative</strong> — an indicator that doesn't
+        reflect a real process is noise; take it out.</li>
+    <li><strong>In buttons: rare and short</strong> — a spinner inside an
+        action is for short indeterminate waits (2–5s: "Connecting…").
+        Don't attach progress to every button; and for longer waits, let a
+        <a href="snackbar.html">snackbar</a> or notification carry the
+        outcome instead.</li>
+  </ul>
   {{ callout({
     variant: "info",
     title: "The state lives in the platform, not in classes",
@@ -87,7 +101,11 @@ toc:
           <code>--fl-progress-value</code> for the circle.</li>
       <li><strong>Circle ring</strong> — 4px stroke cut out of a
           conic-gradient disc with a mask; sized by
-          <code>--fl-progress-size</code> (40px default).</li>
+          <code>--fl-progress-size</code> (48px default, M2's circular
+          spec). M2's circular track is invisible; Flint paints a faint
+          tint ring so the scale reads at a glance — hide it per element
+          with <code>style="--fl-tint: transparent"</code> for the strict
+          M2 look.</li>
     </ol>
   </div>
 </section>
@@ -104,14 +122,17 @@ toc:
         the value moves the fill; the width change eases over
         <code>--fl-dur</code>.</li>
     <li><strong>Linear indeterminate:</strong> remove the
-        <code>value</code> attribute — <code>:indeterminate</code> swaps in a
-        40%-wide accent bar sweeping the track (1.2s loop).</li>
+        <code>value</code> attribute — <code>:indeterminate</code> swaps in
+        a bar that grows and shrinks while sweeping the track (M2's
+        choreography, one bar instead of two; 1.2s loop).</li>
     <li><strong>Circle determinate:</strong> set
         <code>--fl-progress-value: 0–100</code> (inline or from your JS).
         The ring is a conic-gradient — no JS library, no SVG arc math.</li>
     <li><strong>Circle indeterminate:</strong> add the
         <code>is-indeterminate</code> class — a 270° accent arc rotates
-        (0.9s loop).</li>
+        (0.9s loop). M2's arc also grows and shrinks as it travels; Flint
+        keeps a fixed arc — the same 2020-era idiom, one less moving
+        part.</li>
     <li><strong>Sizing:</strong> <code>--fl-progress-size</code> scales the
         circle (stroke stays 4px); the linear bar is 4px tall and
         full-width of its container.</li>
