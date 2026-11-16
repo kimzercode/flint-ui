@@ -72,9 +72,26 @@ depth: 0
       </tr>
       <tr>
         <td><strong>0.5.0</strong></td>
-        <td>Data display</td>
+        <td>Data display + app chrome</td>
         <td>Data table, standalone tabs, pagination, avatar, chips (split
-            from badges).</td>
+            from badges) — plus the app-chrome set that enables a
+            Gmail/Keep-style master-detail app build: <strong>menu</strong>
+            (dropdown with scrim, Escape, instant dismiss — deferred here
+            from 0.4), <strong>side sheet</strong> (standard + modal,
+            completes the sheet family; audit against a
+            <code>sheets-side-docs/</code> reference folder before
+            building), <strong>top app bar</strong> promoted to a component
+            (own docs page, safe-area top inset, action ordering,
+            scroll-hide, contextual action bar state;
+            extended/prominent/dense/images-in-bar/translucency deliberately
+            discarded — mobile-first native feel), <strong>split shell</strong>
+            (list pane + detail pane ≥600px), <strong>checkbox-driven
+            selection state</strong> on list rows, docs recipes (empty
+            state, card grid). <strong>Acceptance: the notes prototype
+            (<code>prototype/test-mdl2.html</code>) rebuilt entirely on
+            Flint components as the first <code>samples/</code> entry —
+            zero hand-rolled chrome; only the app logic (data, undo) is
+            author code.</strong></td>
       </tr>
       <tr>
         <td><strong>0.6.0</strong></td>

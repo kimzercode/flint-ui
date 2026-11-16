@@ -78,6 +78,16 @@ Deferred (already logged): listbox menu (0.5).
 
 ## After 0.4 (decided sequencing)
 
+**0.5 scope decision (2026-11-16, user directive):** 0.5 keeps its data-display
+row (data table, tabs, pagination, avatar, chips) and gains the app-chrome set
+needed to build a Gmail/Keep-style master-detail app: menu (pulled forward from
+this deferral), side sheet, top app bar promoted to a component (extended/
+prominent/dense/images/translucency variants permanently discarded — mobile-first
+native feel), split shell, checkbox-driven list selection state, empty-state and
+card-grid docs recipes. **The notes prototype (`prototype/test-mdl2.html`) is
+rebuilt entirely on Flint components as the first `samples/` entry and that
+rebuild is 0.5's acceptance gate** — no hand-rolled chrome survives.
+
 Fictional-app samples (`samples/`, flagship mail client; every shipping
 component in ≥1 sample) → template gallery → guided-build docs page → themed
 token-override variants → tutorial series last (~0.7, near API freeze).
