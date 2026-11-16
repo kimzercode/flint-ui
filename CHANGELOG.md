@@ -4,6 +4,101 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.4.0] — 2026-11-16
+
+The containment + forms completion release: five new components, the
+field architecture rebuilt on the field-box contract, and the web-native
+fixes that make overlays feel at home in a browser (safe areas, dvh,
+hover guards). Every new component is audit-driven against the official
+M2 reference screenshots.
+
+### Added
+
+- **Dialog** — the native `<dialog>` in the card vocabulary: showModal()
+  provides the focus trap, inert background, Escape and top-layer
+  stacking; Flint draws the scrim (`--fl-scrim`), the surface and the
+  CSS-only open/close transitions.
+  - Pinned-actions surface (title/actions fixed, body scrolls).
+  - The M2 dialog types: alert, simple (option rows), confirmation
+    (disabled-until-chosen), form, and full-screen (header with close +
+    confirming action).
+  - `fl-dialog__actions--stacked` — full-width stacked actions for narrow
+    surfaces, confirming action on top as M2 shows.
+  - `data-fl-dismissible="false"` — scrim and Escape refused; explicit
+    actions still close (decisions, not information).
+- **Bottom sheet** — audited against 28 M2 references:
+  - Modal sheet on `<dialog>`, docked bottom, initial height capped at
+    **50dvh** (M2's 50% rule) with `--full` (100dvh + internal scroll +
+    required close action) for content that needs the screen.
+  - **Standard sheet** (`fl-sheet--standard`) — persistent, non-modal, no
+    scrim, no JS: a fixed block element for mini-players, cart bars,
+    selection counts; layers below the snackbar.
+  - **Grid contents** — the "Open in…" idiom: fixed 3-column
+    icon+label tiles.
+  - Rows promoted to **`.fl-option`** with `--fl-option-h`: 56px in
+    sheets, 48px in dialogs (both spec numbers, one row component).
+  - The drag handle was **removed** — it isn't in the M2 spec and
+    signaled a gesture that doesn't exist. Swipe-to-dismiss is a
+    documented gap (it fights the sheet's own scroll).
+- **Snackbar** — inverse-surface status message, non-modal by design:
+  one at a time (M2 rule), 4s auto-dismiss in flint.js, optional action
+  button (`--fl-accent-inverse`), `fl-snackbar--above-nav` not needed —
+  it layers above FABs and the standard sheet.
+- **Progress** — linear `<progress>` (determinate + the M2 grow-and-shrink
+  indeterminate sweep) and a conic-gradient circle (270° spin), zero JS.
+- **Tooltip** — CSS-only identifying label for icon-only controls: grey
+  800 container, no arrow, no shadow (the spec's own don'ts), four
+  direction modifiers, 300ms hover delay / instant focus, hidden from
+  the accessibility tree when not shown.
+- **Forms completion** — the field architecture rebuilt (one structure
+  for every field):
+  - `.fl-field__box` owns the chrome; `.fl-field__input` is a naked
+    control — one owner per concern, `--_` state tokens.
+  - Affixes (`__prefix`/`__suffix`), leading/trailing `__icon` slots,
+    `__footer` with helper/error swap and a live `__counter`.
+  - `data-fl-password-toggle` (the one bit of field JS), 
+    `fl-field__input--grow` auto-grow (`field-sizing: content` + rows
+    fallback).
+  - Labels are siblings with `for` (valid HTML with trailing buttons,
+    clean accessible names) — a deliberate contract change.
+- **Web-native fixes** (audit-surfaced, all surfaces):
+  - `env(safe-area-inset-bottom)` on sheet actions, standard sheet and
+    snackbar.
+  - `dvh` viewport caps everywhere (`vh` fallbacks where they work).
+  - Every hover fill guarded by `@media (hover: hover)` — touch never
+    leaves a stuck state.
+  - `overscroll-behavior: contain` on scroll regions;
+    `-webkit-tap-highlight-color: transparent` in the reset.
+  - `--fl-z-sheet` layer token (standard sheet below the snackbar).
+
+### Changed
+
+- **Scrim token** aligned to M2: `--fl-scrim: rgb(0 0 0 / 0.32)` (was
+  `rgb(32 33 36 / 0.45)`), shared by dialog, sheet and drawer.
+- Dialog surface padding moved from the surface to the slots (surface
+  padding 0) — the same one-owner-per-contract rule as the field box.
+- The 0.4 roadmap theme is "Feedback & containment" — **"overlay" is
+  retired as a concept** (Material has no overlay component); shared
+  behavior lives on each component page with cross-links.
+
+### Removed
+
+- `demos/overlay.html` and the planned "overlays guide page".
+- `.fl-sheet__handle` and the bottom-sheet's `min(86vh, 640px)` initial
+  height (superseded by the 50dvh cap).
+- `.fl-dialog__option` (renamed to the shared `.fl-option`).
+
+### Deliberately not implemented
+
+- **Expanding bottom sheet** — retired, not deferred: on the web its
+  collapsed state is a FAB/sticky action bar and its expanded state is
+  `fl-dialog--fullscreen`; the only unique part is the morph state
+  machine.
+- **Swipe-to-dismiss** and the **Android back-gesture shim** — documented
+  gaps; the designed fix (history state + dialog stack) is a 0.5 item.
+- **Elevation** on sheets/dialogs — flat 1px borders, unchanged
+  deviation.
+
 ## [0.3.0] — 2026-11-11
 
 The forms release: real forms are buildable with zero JavaScript, and

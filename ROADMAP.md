@@ -23,8 +23,8 @@ Guiding principles:
 |---|---|---|
 | **0.2.0** | Docs foundation | `docs/` static site built with Flint (shell from the m2-mock prototype), page template with copy-button snippets, docs pages for the five shipping components (bottom-nav, drawer, rail, auth, lists), SVG anatomy illustrations. Buttons and cards already exist as 0.1 building blocks — their full pages follow as docs-only work; dialog and bottom sheet are planned for 0.4. Prereq: repo pushed to GitHub. |
 | **0.3.0** | Forms | ✅ Checkbox, radio, switch, styled native select, text-field variants (filled, error/helper, textarea), button disabled/active states — first library growth since 0.1, driven by docs needs. Zero JS forms; semantic `--fl-error` token precedes theming. |
-| **0.4.0** | Feedback & containment | Dialog (scrim already exists), bottom sheet (same scrim, docks above the tab bar), snackbar, progress (linear/circular), tooltip, chips split from badges. |
-| **0.5.0** | Data display | Data table, standalone tabs, pagination, avatar. |
+| **0.4.0** | Feedback & containment | ✅ Dialog (five M2 types, non-dismissible opt-out), bottom sheet (modal + standard, 50dvh cap, grid contents, no drag handle), snackbar (one at a time, 4s auto-dismiss), progress (linear + circular, zero JS), tooltip (CSS-only, four directions) — plus the forms-completion pass: field architecture rebuilt (box owns the chrome), affixes, icons, counter, password toggle, valid-HTML label contract. "Overlay" retired as a concept. |
+| **0.5.0** | Data display | Data table, standalone tabs, pagination, avatar, chips (split from badges). |
 | **0.6.0** | Theming | Dark theme (token-driven, cheap), theming guide, brand-override example. |
 | **0.7.0** | Quality | Accessibility audit, reduced-motion support, browser matrix, icon guidance (real SVG set vs. placeholders). |
 | **1.0.0** | API freeze | Class-naming promise, full docs coverage. The "mini design system" milestone. |

@@ -218,7 +218,7 @@ Key tokens: `--fl-surface`, `--fl-text`, `--fl-text-secondary`, `--fl-icon`,
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for the full path from component library to
-mini design system: forms (0.3, ✅), containment (0.4), data display (0.5),
+mini design system: forms (0.3, ✅), containment (0.4, ✅), data display (0.5),
 theming (0.6), quality (0.7), API freeze (1.0). The docs site lives at
 [flint-ui docs](https://kimzercode.github.io/flint-ui/) and is built with
 Flint itself.
@@ -232,6 +232,13 @@ Done in 0.2.0: the docs site, published on GitHub Pages.
 Done in 0.3.0: text-field variants (filled, error/helper, textarea,
 disabled), checkbox/radio/switch, a styled native select, and button
 disabled/active states — real forms, zero JavaScript.
+
+Done in 0.4.0: dialog, bottom sheet (modal + standard), snackbar,
+progress, tooltip — audited against the official M2 references — plus the
+forms-completion pass (field-box architecture, affixes, icons, counter,
+password toggle) and the web-native overlay fixes (safe areas, dvh,
+hover guards). "Overlay" is retired as a concept; the theme is
+containment.
 
 ## License
 

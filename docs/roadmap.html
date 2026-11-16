@@ -6,8 +6,8 @@
   <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
   <title>Roadmap — Flint UI</title>
   <!-- ?v= busts file:// browser caches; bump with library versions -->
-  <link rel="stylesheet" href="css/flint.css?v=0.3.0">
-  <link rel="stylesheet" href="css/docs.css?v=0.3.0">
+  <link rel="stylesheet" href="css/flint.css?v=0.4.0">
+  <link rel="stylesheet" href="css/docs.css?v=0.4.0">
 </head>
 <body class="docs">
 
@@ -214,14 +214,20 @@
       <tr>
         <td><strong>0.4.0</strong></td>
         <td>Feedback &amp; containment</td>
-        <td>Dialog (scrim already exists), bottom sheet (same scrim, docks
-            above the tab bar), snackbar, progress (linear/circular), tooltip,
-            chips split from badges.</td>
+        <td>✅ Dialog (five M2 types, non-dismissible opt-out), bottom
+            sheet (modal + standard, 50dvh cap, grid contents, no drag
+            handle), snackbar (one at a time, 4s auto-dismiss), progress
+            (linear + circular, zero JS), tooltip (CSS-only, four
+            directions) — plus the forms-completion pass: field
+            architecture rebuilt (box owns the chrome), affixes, icons,
+            counter, password toggle, valid-HTML label contract.
+            "Overlay" retired as a concept.</td>
       </tr>
       <tr>
         <td><strong>0.5.0</strong></td>
         <td>Data display</td>
-        <td>Data table, standalone tabs, pagination, avatar.</td>
+        <td>Data table, standalone tabs, pagination, avatar, chips (split
+            from badges).</td>
       </tr>
       <tr>
         <td><strong>0.6.0</strong></td>
@@ -267,7 +273,7 @@
     </main>
 
     <footer class="docs-footer">
-      <p class="docs-footer__brand">Flint UI v0.1.0</p>
+      <p class="docs-footer__brand">Flint UI v0.4.0</p>
       <nav class="docs-footer__links" aria-label="Footer">
         <a href="get-started.html">Get started</a>
         <a href="roadmap.html">Roadmap</a>
@@ -278,8 +284,8 @@
   </div>
 </div>
 
-<script src="js/flint.js?v=0.3.0" defer></script>
-<script src="js/docs-ui.js?v=0.3.0" defer></script>
+<script src="js/flint.js?v=0.4.0" defer></script>
+<script src="js/docs-ui.js?v=0.4.0" defer></script>
 
 </body>
 </html>
