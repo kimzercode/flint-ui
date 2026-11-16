@@ -305,10 +305,12 @@ toc:
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-rename-t">Rename label</h2>
     <form class="fl-dialog__body" method="dialog" id="rename-form">
-      <label class="fl-field">
-        <span class="fl-field__label">Label name</span>
-        <input class="fl-field__input" value="Finance" autofocus>
-      </label>
+      <div class="fl-field">
+        <label class="fl-field__label" for="dlg-label-name">Label name</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="dlg-label-name" value="Finance" autofocus>
+        </div>
+      </div>
     </form>
     <div class="fl-dialog__actions">
       <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>

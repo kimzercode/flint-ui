@@ -2,10 +2,10 @@
  * Flint UI — flint.js v0.4.0-dev
  * The entire JS surface: nav selected-state, drawer toggling, and the overlay
  * wiring (dialog / bottom sheet triggers, focus return, non-dismissible
- * opt-out) plus the snackbar (one at a time, 4s auto-dismiss). The CSS and
- * the platform do the rest (aria-current/body classes, the <dialog> focus
- * trap, the inert background), so the library still renders correctly with
- * JS off.
+ * opt-out), the snackbar (one at a time, 4s auto-dismiss) and the password
+ * field toggle. The CSS and the platform do the rest (aria-current/body
+ * classes, the <dialog> focus trap, the inert background), so the library
+ * still renders correctly with JS off.
  */
 (function () {
   "use strict";
@@ -88,6 +88,31 @@
     }
   }, true);
 
+  /* --- Password toggle: show/hide a password field ------------------------ *
+   * The action label swaps ("Show password" ↔ "Hide password") — no
+   * aria-pressed, which would announce a contradictory state next to a
+   * changing name. The input is resolved via aria-controls first,
+   * closest(".fl-field") as fallback. Typing a type flip resets the caret
+   * in some engines, so selection is saved and restored. */
+  function togglePassword(btn) {
+    var id = btn.getAttribute("aria-controls");
+    var input = id ? document.getElementById(id) : null;
+    if (!input) {
+      var field = btn.closest(".fl-field");
+      input = field && field.querySelector(".fl-field__input");
+    }
+    if (!input || (input.type !== "password" && input.type !== "text")) return;
+
+    var show = input.type === "password";
+    var start = input.selectionStart;
+    var end = input.selectionEnd;
+    input.type = show ? "text" : "password";
+    input.focus();
+    try { input.setSelectionRange(start, end); } catch (err) { /* not selectable */ }
+    btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    btn.classList.toggle("is-revealed", show);   /* icon-swap hook for authors */
+  }
+
   /* --- Snackbar: status feedback, not modal ------------------------------ *
    * One at a time (M2) and a 4s auto-dismiss timer. The visible state is a
    * plain class, so author JS can drive it without this file. */
@@ -112,6 +137,13 @@
     }
     if (e.target.closest("[data-fl-drawer-close]")) {
       setDrawer(false);
+      return;
+    }
+
+    var pwToggle = e.target.closest("[data-fl-password-toggle]");
+    if (pwToggle) {
+      e.preventDefault();          /* even if type="button" was forgotten */
+      togglePassword(pwToggle);
       return;
     }
 

@@ -56,10 +56,12 @@
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-rename-t">Rename label</h2>
     <form class="fl-dialog__body" method="dialog" id="rename-form">
-      <label class="fl-field">
-        <span class="fl-field__label">Label name</span>
-        <input class="fl-field__input" value="Finance" autofocus>
-      </label>
+      <div class="fl-field">
+        <label class="fl-field__label" for="rn-label">Label name</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="rn-label" value="Finance" autofocus>
+        </div>
+      </div>
     </form>
     <div class="fl-dialog__actions">
       <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
@@ -139,20 +141,26 @@
       <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>
     </div>
     <form class="fl-dialog__body" method="dialog" id="compose-form">
-      <label class="fl-field" style="margin-top:0">
-        <span class="fl-field__label">To</span>
-        <input class="fl-field__input" value="ada@example.com" autofocus>
-      </label>
-      <label class="fl-field">
-        <span class="fl-field__label">Subject</span>
-        <input class="fl-field__input" value="Flint 0.4 review">
-      </label>
-      <label class="fl-field">
-        <span class="fl-field__label">Message</span>
-        <textarea class="fl-field__input" rows="30">Dialogs are done — bottom sheet next.
+      <div class="fl-field" style="margin-top:0">
+        <label class="fl-field__label" for="cp-to">To</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="cp-to" value="ada@example.com" autofocus>
+        </div>
+      </div>
+      <div class="fl-field">
+        <label class="fl-field__label" for="cp-subject">Subject</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="cp-subject" value="Flint 0.4 review">
+        </div>
+      </div>
+      <div class="fl-field">
+        <label class="fl-field__label" for="cp-message">Message</label>
+        <div class="fl-field__box">
+          <textarea class="fl-field__input" id="cp-message" rows="30">Dialogs are done — bottom sheet next.
 
 This draft is long on purpose: the compose body scrolls under the pinned header.</textarea>
-      </label>
+        </div>
+      </div>
     </form>
   </div>
 </dialog>

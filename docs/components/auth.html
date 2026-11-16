@@ -254,7 +254,11 @@
     <ol>
       <li><strong>Card</strong> — max 400px, centered on a plain page, 1px border, generous padding; the only surface. No top bar, no nav — auth is a pre-app screen.</li>
       <li><strong>Title + subtitle</strong> — "Sign in" plus one line of context; the card's <code>h1</code> doubles as the page heading.</li>
-      <li><strong>Fields</strong> — <code>fl-field</code>: label above, bordered input; the label wraps the input so clicking it focuses.</li>
+      <li><strong>Fields</strong> — <code>fl-field</code>: label above, the
+          field box draws the border; the label is linked with
+          <code>for</code> so clicking it focuses. The password field uses
+          the <code>data-fl-password-toggle</code> toggle (the page's only
+          JavaScript need).</li>
       <li><strong>Action row</strong> — secondary link ("Create account") left, filled button right.</li>
     </ol>
   </div>
@@ -275,7 +279,11 @@
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>Each field is a <code>&lt;label class="fl-field"&gt;</code> wrapping its input — the label association is structural, no <code>for</code>/<code>id</code> needed.</li>
+    <li>Each field is a <code>&lt;div class="fl-field"&gt;</code> holding a
+        <code>&lt;label class="fl-field__label" for&gt;</code> and a
+        <code>fl-field__box</code> around the control — the label is a
+        sibling linked with <code>for</code>, so clicking it focuses the
+        field.</li>
     <li>Use the right <code>autocomplete</code> tokens (<code>email</code>, <code>current-password</code>, <code>new-password</code>) — password managers and the HTML spec both expect them.</li>
     <li>The card is a <code>&lt;form&gt;</code> and its title is the page's <code>&lt;h1&gt;</code> — with no app chrome there is no other heading, so the hierarchy starts right at "Sign in".</li>
     <li>Errors: use native validation first (<code>required</code>, <code>type</code>); server errors should be announced with <code>role="alert"</code> text inside the card.</li>
@@ -302,12 +310,14 @@
 
 <section class="docs-section">
   <h2 id="i-code">Code</h2>
-  <p>Only the stylesheet is needed — the auth shell uses no JavaScript.</p>
+  <p>The stylesheet covers the whole shell; add flint.js if you use the
+     password toggle.</p>
   
   
   
 <div class="docs-snippet">
-  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;</code></pre>
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;   &lt;!-- only for the password toggle --&gt;</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 
@@ -321,17 +331,26 @@
       &lt;h1 class=&quot;fl-auth-card__title&quot;&gt;Sign in&lt;/h1&gt;
       &lt;p class=&quot;fl-auth-card__subtitle&quot;&gt;Use your Flint account to continue.&lt;/p&gt;
 
-      &lt;label class=&quot;fl-field&quot;&gt;
-        &lt;span class=&quot;fl-field__label&quot;&gt;Email&lt;/span&gt;
-        &lt;input class=&quot;fl-field__input&quot; type=&quot;email&quot; name=&quot;email&quot;
-               autocomplete=&quot;email&quot; required&gt;
-      &lt;/label&gt;
+      &lt;div class=&quot;fl-field&quot;&gt;
+        &lt;label class=&quot;fl-field__label&quot; for=&quot;email&quot;&gt;Email&lt;/label&gt;
+        &lt;div class=&quot;fl-field__box&quot;&gt;
+          &lt;input class=&quot;fl-field__input&quot; id=&quot;email&quot; type=&quot;email&quot; name=&quot;email&quot;
+                 autocomplete=&quot;email&quot; required&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
 
-      &lt;label class=&quot;fl-field&quot;&gt;
-        &lt;span class=&quot;fl-field__label&quot;&gt;Password&lt;/span&gt;
-        &lt;input class=&quot;fl-field__input&quot; type=&quot;password&quot; name=&quot;password&quot;
-               autocomplete=&quot;current-password&quot; required&gt;
-      &lt;/label&gt;
+      &lt;div class=&quot;fl-field&quot;&gt;
+        &lt;label class=&quot;fl-field__label&quot; for=&quot;password&quot;&gt;Password&lt;/label&gt;
+        &lt;div class=&quot;fl-field__box&quot;&gt;
+          &lt;input class=&quot;fl-field__input&quot; id=&quot;password&quot; type=&quot;password&quot;
+                 name=&quot;password&quot; autocomplete=&quot;current-password&quot; required&gt;
+          &lt;button type=&quot;button&quot; class=&quot;fl-field__icon fl-field__icon--trailing&quot;
+                  data-fl-password-toggle aria-controls=&quot;password&quot;
+                  aria-label=&quot;Show password&quot;&gt;
+            &lt;svg …&gt;&lt;/svg&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
 
       &lt;div style=&quot;margin-top:16px; text-align:right;&quot;&gt;
         &lt;a href=&quot;#&quot;&gt;Forgot password?&lt;/a&gt;

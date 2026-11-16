@@ -260,15 +260,16 @@
       </g>
     </svg>
     <ol>
-      <li><strong>The field box</strong> — exactly
-          <code>fl-field__input</code>: 44px, 1px border, 4px radius, the
-          same hover/focus/error/disabled states as text fields.</li>
-      <li><strong>Chevron</strong> — drawn via a background-image at the
-          right edge, replacing the platform arrow that
+      <li><strong>The field box</strong> — the select sits in a
+          <code>fl-field__box</code> exactly like a text field: 44px, 1px
+          border, 4px radius, the same hover/focus/error/disabled states.
+          The control inside is borderless.</li>
+      <li><strong>Chevron</strong> — drawn via a background-image on the
+          select, 12px from the border, replacing the platform arrow that
           <code>appearance:none</code> removes.</li>
       <li><strong>Helper text</strong> — same
-          <code>fl-field__help</code> slot; error and filled variants
-          compose like any field.</li>
+          <code>fl-field__footer</code>/<code>fl-field__help</code> slots;
+          error and filled variants compose like any field.</li>
     </ol>
   </div>
 </section>
@@ -276,12 +277,14 @@
 <section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
-    <li><strong>Same markup as fields:</strong> wrap the select in
-        <code>&lt;label class="fl-field"&gt;</code> with
-        <code>fl-field__label</code> and optional <code>fl-field__help</code>.
-        The class <code>fl-field__input</code> is the only select-specific
-        class needed — <code>select.fl-field__input</code> switches on the
-        chevron automatically.</li>
+    <li><strong>Same markup as fields:</strong> a
+        <code>fl-field</code> with a <code>fl-field__label</code>
+        (<code>&lt;label for&gt;</code>), a <code>fl-field__box</code>
+        wrapping the select, and an optional
+        <code>fl-field__footer</code>/<code>fl-field__help</code>. The class
+        <code>fl-field__input</code> is the only select-specific class
+        needed — <code>select.fl-field__input</code> switches on the chevron
+        automatically.</li>
     <li><strong>All field states compose:</strong> <code>fl-field--filled</code>
         (tint fill + bottom indicator), <code>fl-field--error</code> /
         <code>aria-invalid="true"</code> (red border + red helper), and the
@@ -302,9 +305,9 @@
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>The wrapping label names the control natively; no
-        <code>aria-label</code> needed when
-        <code>fl-field__label</code> is present.</li>
+    <li>The <code>&lt;label for&gt;</code> names the control natively; no
+        <code>aria-label</code> needed when <code>fl-field__label</code> is
+        present.</li>
     <li>The native select is one of the best-supported controls for
         assistive tech — announced name, role, value, and expanded state
         come from the platform.</li>
@@ -349,46 +352,58 @@
   
 <div class="docs-snippet">
   <pre><code>&lt;!-- Outlined (default) --&gt;
-&lt;label class=&quot;fl-field&quot;&gt;
-  &lt;span class=&quot;fl-field__label&quot;&gt;Workspace type&lt;/span&gt;
-  &lt;select class=&quot;fl-field__input&quot;&gt;
-    &lt;option&gt;Starter&lt;/option&gt;
-    &lt;option selected&gt;Team&lt;/option&gt;
-    &lt;option&gt;Business&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/label&gt;
+&lt;div class=&quot;fl-field&quot;&gt;
+  &lt;label class=&quot;fl-field__label&quot; for=&quot;type&quot;&gt;Workspace type&lt;/label&gt;
+  &lt;div class=&quot;fl-field__box&quot;&gt;
+    &lt;select class=&quot;fl-field__input&quot; id=&quot;type&quot;&gt;
+      &lt;option&gt;Starter&lt;/option&gt;
+      &lt;option selected&gt;Team&lt;/option&gt;
+      &lt;option&gt;Business&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
 &lt;!-- With helper text --&gt;
-&lt;label class=&quot;fl-field&quot;&gt;
-  &lt;span class=&quot;fl-field__label&quot;&gt;Region&lt;/span&gt;
-  &lt;select class=&quot;fl-field__input&quot;&gt;
-    &lt;option selected&gt;Europe (Frankfurt)&lt;/option&gt;
-    &lt;option&gt;North America (Iowa)&lt;/option&gt;
-  &lt;/select&gt;
-  &lt;span class=&quot;fl-field__help&quot;&gt;Choose the region closest to your users&lt;/span&gt;
-&lt;/label&gt;
+&lt;div class=&quot;fl-field&quot;&gt;
+  &lt;label class=&quot;fl-field__label&quot; for=&quot;region&quot;&gt;Region&lt;/label&gt;
+  &lt;div class=&quot;fl-field__box&quot;&gt;
+    &lt;select class=&quot;fl-field__input&quot; id=&quot;region&quot;&gt;
+      &lt;option selected&gt;Europe (Frankfurt)&lt;/option&gt;
+      &lt;option&gt;North America (Iowa)&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;fl-field__footer&quot;&gt;
+    &lt;span class=&quot;fl-field__help&quot;&gt;Choose the region closest to your users&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
 &lt;!-- Error / filled / disabled compose like any field --&gt;
-&lt;label class=&quot;fl-field fl-field--error&quot;&gt;
-  &lt;span class=&quot;fl-field__label&quot;&gt;Billing country&lt;/span&gt;
-  &lt;select class=&quot;fl-field__input&quot; aria-invalid=&quot;true&quot;&gt;
-    &lt;option selected&gt;Select a country&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/label&gt;
+&lt;div class=&quot;fl-field fl-field--error&quot;&gt;
+  &lt;label class=&quot;fl-field__label&quot; for=&quot;country&quot;&gt;Billing country&lt;/label&gt;
+  &lt;div class=&quot;fl-field__box&quot;&gt;
+    &lt;select class=&quot;fl-field__input&quot; id=&quot;country&quot; aria-invalid=&quot;true&quot;&gt;
+      &lt;option selected&gt;Select a country&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;label class=&quot;fl-field fl-field--filled&quot;&gt;
-  &lt;span class=&quot;fl-field__label&quot;&gt;Sort by&lt;/span&gt;
-  &lt;select class=&quot;fl-field__input&quot;&gt;
-    &lt;option selected&gt;Most recent&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/label&gt;
+&lt;div class=&quot;fl-field fl-field--filled&quot;&gt;
+  &lt;label class=&quot;fl-field__label&quot; for=&quot;sort&quot;&gt;Sort by&lt;/label&gt;
+  &lt;div class=&quot;fl-field__box&quot;&gt;
+    &lt;select class=&quot;fl-field__input&quot; id=&quot;sort&quot;&gt;
+      &lt;option selected&gt;Most recent&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;label class=&quot;fl-field&quot;&gt;
-  &lt;span class=&quot;fl-field__label&quot;&gt;Plan&lt;/span&gt;
-  &lt;select class=&quot;fl-field__input&quot; disabled&gt;
-    &lt;option&gt;Free — managed by your administrator&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/label&gt;</code></pre>
+&lt;div class=&quot;fl-field&quot;&gt;
+  &lt;label class=&quot;fl-field__label&quot; for=&quot;plan&quot;&gt;Plan&lt;/label&gt;
+  &lt;div class=&quot;fl-field__box&quot;&gt;
+    &lt;select class=&quot;fl-field__input&quot; id=&quot;plan&quot; disabled&gt;
+      &lt;option&gt;Free — managed by your administrator&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 

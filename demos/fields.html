@@ -5,56 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Flint UI — text fields demo</title>
 <link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
 </head>
 <body class="fl-reset">
 
 <main style="max-width:640px; margin:0 auto; padding:32px 20px;">
 
   <p class="fl-section-label">Outlined (default)</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Email</span>
-    <input class="fl-field__input" type="email" placeholder="you@example.com">
-  </label>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-email">Email</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-email" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+  </div>
 
-  <p class="fl-section-label">With helper text</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Password</span>
-    <input class="fl-field__input" type="password">
-    <span class="fl-field__help">At least 8 characters</span>
-  </label>
+  <p class="fl-section-label">Helper text + live counter (author JS counts)</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-bio">Bio</label>
+    <div class="fl-field__box">
+      <textarea class="fl-field__input" id="f-bio" rows="3" maxlength="100" aria-describedby="f-bio-help" placeholder="A line or two about you"></textarea>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help" id="f-bio-help">Markdown is fine</span>
+      <span class="fl-field__counter" id="f-bio-count" aria-hidden="true">0/100</span>
+    </div>
+  </div>
 
   <p class="fl-section-label">Error — class or aria-invalid, either works</p>
-  <label class="fl-field fl-field--error">
-    <span class="fl-field__label">Email</span>
-    <input class="fl-field__input" type="email" value="not-an-email" aria-invalid="true">
-    <span class="fl-field__help">Enter a valid email address</span>
-  </label>
+  <div class="fl-field fl-field--error">
+    <label class="fl-field__label" for="f-err">Email</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-err" type="email" value="not-an-email" aria-invalid="true" aria-describedby="f-err-help">
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help" id="f-err-help">Enter a valid email address</span>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Prefix and suffix — inside the border, any width</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-price">Price</label>
+    <div class="fl-field__box">
+      <span class="fl-field__prefix" aria-hidden="true">$</span>
+      <input class="fl-field__input" id="f-price" type="text" inputmode="decimal" value="1.43" aria-describedby="f-price-help">
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help" id="f-price-help">In your billing currency</span>
+    </div>
+  </div>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-weight">Weight</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-weight" type="text" inputmode="decimal" value="70">
+      <span class="fl-field__suffix">lbs</span>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Leading icon (search)</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-search">Search</label>
+    <div class="fl-field__box">
+      <span class="fl-field__icon fl-field__icon--leading" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/>
+        </svg>
+      </span>
+      <input class="fl-field__input" id="f-search" type="search" placeholder="Messages, people, files">
+    </div>
+  </div>
+
+  <p class="fl-section-label">Password with a working toggle (flint.js)</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-pass">Password</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-pass" type="password" autocomplete="current-password" aria-describedby="f-pass-help">
+      <button type="button" class="fl-field__icon fl-field__icon--trailing" data-fl-password-toggle
+              aria-controls="f-pass" aria-label="Show password">
+        <svg class="fl-pass-eye" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M12 6a9.77 9.77 0 0 1 8.88 5.5A9.77 9.77 0 0 1 12 17a9.77 9.77 0 0 1-8.88-5.5A9.77 9.77 0 0 1 12 6m0-2C7 4 2.73 7.11 1 11c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help" id="f-pass-help">At least 8 characters</span>
+    </div>
+  </div>
 
   <p class="fl-section-label">Filled variant</p>
-  <label class="fl-field fl-field--filled">
-    <span class="fl-field__label">Search</span>
-    <input class="fl-field__input" type="text">
-  </label>
-  <label class="fl-field fl-field--filled fl-field--error">
-    <span class="fl-field__label">Card number</span>
-    <input class="fl-field__input" type="text" value="1234" aria-invalid="true">
-    <span class="fl-field__help">Enter the full 16-digit number</span>
-  </label>
+  <div class="fl-field fl-field--filled">
+    <label class="fl-field__label" for="f-amount">Amount</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-amount" type="text" value="2400">
+    </div>
+  </div>
+  <div class="fl-field fl-field--filled fl-field--error">
+    <label class="fl-field__label" for="f-card">Card number</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-card" type="text" value="1234" aria-invalid="true" aria-describedby="f-card-help">
+      <span class="fl-field__icon fl-field__icon--trailing" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M12 2 1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"/>
+        </svg>
+      </span>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help" id="f-card-help">Enter the full 16-digit number</span>
+    </div>
+  </div>
 
-  <p class="fl-section-label">Textarea</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Notes</span>
-    <textarea class="fl-field__input" rows="3" placeholder="Resize from the bottom corner"></textarea>
-  </label>
+  <p class="fl-section-label">Textarea — grows with content, opt-in</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-notes">Notes</label>
+    <div class="fl-field__box">
+      <textarea class="fl-field__input fl-field__input--grow" id="f-notes" rows="2" placeholder="Type a few lines — the box grows"></textarea>
+    </div>
+  </div>
 
   <p class="fl-section-label">Disabled</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Workspace URL</span>
-    <input class="fl-field__input" type="text" value="acme.flint.app" disabled>
-    <span class="fl-field__help">Managed by your administrator</span>
-  </label>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-url">Workspace URL</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-url" type="text" value="acme.flint.app" disabled>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help">Managed by your administrator</span>
+    </div>
+  </div>
+  <div class="fl-field">
+    <label class="fl-field__label" for="f-plan">Plan</label>
+    <div class="fl-field__box">
+      <input class="fl-field__input" id="f-plan" type="text" value="Business" disabled>
+      <span class="fl-field__suffix">/ seat</span>
+    </div>
+  </div>
+
+  <p class="fl-section-label">No visible label — aria-label on the control</p>
+  <div class="fl-field">
+    <div class="fl-field__box">
+      <input class="fl-field__input" type="text" aria-label="Coupon code" placeholder="Coupon code">
+    </div>
+  </div>
 
 </main>
+
+<script>
+  /* The live-counter recipe from the docs — author JS, not library code. */
+  var bio = document.getElementById("f-bio");
+  var count = document.getElementById("f-bio-count");
+  if (bio && count) {
+    var update = function () { count.textContent = bio.value.length + "/100"; };
+    bio.addEventListener("input", update);
+    update();
+  }
+</script>
 
 </body>
 </html>

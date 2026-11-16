@@ -392,10 +392,12 @@
     &lt;div class=&quot;fl-sheet__handle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
     &lt;h2 class=&quot;fl-sheet__title&quot; id=&quot;sheet-label-t&quot;&gt;New label&lt;/h2&gt;
     &lt;form class=&quot;fl-sheet__body&quot; method=&quot;dialog&quot; id=&quot;label-form&quot;&gt;
-      &lt;label class=&quot;fl-field&quot;&gt;
-        &lt;span class=&quot;fl-field__label&quot;&gt;Label name&lt;/span&gt;
-        &lt;input class=&quot;fl-field__input&quot; placeholder=&quot;e.g. Finance&quot; autofocus&gt;
-      &lt;/label&gt;
+      &lt;div class=&quot;fl-field&quot;&gt;
+        &lt;label class=&quot;fl-field__label&quot; for=&quot;sheet-label-name&quot;&gt;Label name&lt;/label&gt;
+        &lt;div class=&quot;fl-field__box&quot;&gt;
+          &lt;input class=&quot;fl-field__input&quot; id=&quot;sheet-label-name&quot; placeholder=&quot;e.g. Finance&quot; autofocus&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
     &lt;/form&gt;
     &lt;div class=&quot;fl-sheet__actions&quot;&gt;
       &lt;button class=&quot;fl-btn fl-btn--text&quot; data-fl-close&gt;Cancel&lt;/button&gt;

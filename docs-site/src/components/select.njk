@@ -90,15 +90,16 @@ toc:
       </g>
     </svg>
     <ol>
-      <li><strong>The field box</strong> — exactly
-          <code>fl-field__input</code>: 44px, 1px border, 4px radius, the
-          same hover/focus/error/disabled states as text fields.</li>
-      <li><strong>Chevron</strong> — drawn via a background-image at the
-          right edge, replacing the platform arrow that
+      <li><strong>The field box</strong> — the select sits in a
+          <code>fl-field__box</code> exactly like a text field: 44px, 1px
+          border, 4px radius, the same hover/focus/error/disabled states.
+          The control inside is borderless.</li>
+      <li><strong>Chevron</strong> — drawn via a background-image on the
+          select, 12px from the border, replacing the platform arrow that
           <code>appearance:none</code> removes.</li>
       <li><strong>Helper text</strong> — same
-          <code>fl-field__help</code> slot; error and filled variants
-          compose like any field.</li>
+          <code>fl-field__footer</code>/<code>fl-field__help</code> slots;
+          error and filled variants compose like any field.</li>
     </ol>
   </div>
 </section>
@@ -106,12 +107,14 @@ toc:
 <section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
-    <li><strong>Same markup as fields:</strong> wrap the select in
-        <code>&lt;label class="fl-field"&gt;</code> with
-        <code>fl-field__label</code> and optional <code>fl-field__help</code>.
-        The class <code>fl-field__input</code> is the only select-specific
-        class needed — <code>select.fl-field__input</code> switches on the
-        chevron automatically.</li>
+    <li><strong>Same markup as fields:</strong> a
+        <code>fl-field</code> with a <code>fl-field__label</code>
+        (<code>&lt;label for&gt;</code>), a <code>fl-field__box</code>
+        wrapping the select, and an optional
+        <code>fl-field__footer</code>/<code>fl-field__help</code>. The class
+        <code>fl-field__input</code> is the only select-specific class
+        needed — <code>select.fl-field__input</code> switches on the chevron
+        automatically.</li>
     <li><strong>All field states compose:</strong> <code>fl-field--filled</code>
         (tint fill + bottom indicator), <code>fl-field--error</code> /
         <code>aria-invalid="true"</code> (red border + red helper), and the
@@ -132,9 +135,9 @@ toc:
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>The wrapping label names the control natively; no
-        <code>aria-label</code> needed when
-        <code>fl-field__label</code> is present.</li>
+    <li>The <code>&lt;label for&gt;</code> names the control natively; no
+        <code>aria-label</code> needed when <code>fl-field__label</code> is
+        present.</li>
     <li>The native select is one of the best-supported controls for
         assistive tech — announced name, role, value, and expanded state
         come from the platform.</li>
@@ -170,46 +173,58 @@ toc:
 {% endset %}
   {% set markup %}
 <!-- Outlined (default) -->
-<label class="fl-field">
-  <span class="fl-field__label">Workspace type</span>
-  <select class="fl-field__input">
-    <option>Starter</option>
-    <option selected>Team</option>
-    <option>Business</option>
-  </select>
-</label>
+<div class="fl-field">
+  <label class="fl-field__label" for="type">Workspace type</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="type">
+      <option>Starter</option>
+      <option selected>Team</option>
+      <option>Business</option>
+    </select>
+  </div>
+</div>
 
 <!-- With helper text -->
-<label class="fl-field">
-  <span class="fl-field__label">Region</span>
-  <select class="fl-field__input">
-    <option selected>Europe (Frankfurt)</option>
-    <option>North America (Iowa)</option>
-  </select>
-  <span class="fl-field__help">Choose the region closest to your users</span>
-</label>
+<div class="fl-field">
+  <label class="fl-field__label" for="region">Region</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="region">
+      <option selected>Europe (Frankfurt)</option>
+      <option>North America (Iowa)</option>
+    </select>
+  </div>
+  <div class="fl-field__footer">
+    <span class="fl-field__help">Choose the region closest to your users</span>
+  </div>
+</div>
 
 <!-- Error / filled / disabled compose like any field -->
-<label class="fl-field fl-field--error">
-  <span class="fl-field__label">Billing country</span>
-  <select class="fl-field__input" aria-invalid="true">
-    <option selected>Select a country</option>
-  </select>
-</label>
+<div class="fl-field fl-field--error">
+  <label class="fl-field__label" for="country">Billing country</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="country" aria-invalid="true">
+      <option selected>Select a country</option>
+    </select>
+  </div>
+</div>
 
-<label class="fl-field fl-field--filled">
-  <span class="fl-field__label">Sort by</span>
-  <select class="fl-field__input">
-    <option selected>Most recent</option>
-  </select>
-</label>
+<div class="fl-field fl-field--filled">
+  <label class="fl-field__label" for="sort">Sort by</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="sort">
+      <option selected>Most recent</option>
+    </select>
+  </div>
+</div>
 
-<label class="fl-field">
-  <span class="fl-field__label">Plan</span>
-  <select class="fl-field__input" disabled>
-    <option>Free — managed by your administrator</option>
-  </select>
-</label>
+<div class="fl-field">
+  <label class="fl-field__label" for="plan">Plan</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="plan" disabled>
+      <option>Free — managed by your administrator</option>
+    </select>
+  </div>
+</div>
 {% endset %}
   {{ snippet(quickStart) }}
   {{ snippet(markup) }}

@@ -63,10 +63,12 @@
     <div class="fl-sheet__handle" aria-hidden="true"></div>
     <h2 class="fl-sheet__title" id="sheet-label-t">New label</h2>
     <form class="fl-sheet__body" method="dialog" id="label-form">
-      <label class="fl-field">
-        <span class="fl-field__label">Label name</span>
-        <input class="fl-field__input" placeholder="e.g. Finance" autofocus>
-      </label>
+      <div class="fl-field">
+        <label class="fl-field__label" for="sh-label">Label name</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="sh-label" placeholder="e.g. Finance" autofocus>
+        </div>
+      </div>
       <div class="fl-dialog__list" style="margin:var(--fl-space-2) calc(-1 * var(--fl-space-4)) 0">
         <label class="fl-dialog__option">
           <input type="checkbox" class="fl-check" checked> Show in the nav rail

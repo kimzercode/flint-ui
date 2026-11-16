@@ -11,54 +11,68 @@
 <main style="max-width:640px; margin:0 auto; padding:32px 20px;">
 
   <p class="fl-section-label">Outlined (default)</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Workspace type</span>
-    <select class="fl-field__input">
-      <option>Starter</option>
-      <option selected>Team</option>
-      <option>Business</option>
-    </select>
-  </label>
+  <div class="fl-field">
+    <label class="fl-field__label" for="sel-type">Workspace type</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="sel-type">
+        <option>Starter</option>
+        <option selected>Team</option>
+        <option>Business</option>
+      </select>
+    </div>
+  </div>
 
   <p class="fl-section-label">With helper text</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Region</span>
-    <select class="fl-field__input">
-      <option selected>Europe (Frankfurt)</option>
-      <option>North America (Iowa)</option>
-      <option>Asia (Singapore)</option>
-    </select>
-    <span class="fl-field__help">Choose the region closest to your users</span>
-  </label>
+  <div class="fl-field">
+    <label class="fl-field__label" for="sel-region">Region</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="sel-region">
+        <option selected>Europe (Frankfurt)</option>
+        <option>North America (Iowa)</option>
+        <option>Asia (Singapore)</option>
+      </select>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help">Choose the region closest to your users</span>
+    </div>
+  </div>
 
   <p class="fl-section-label">Error</p>
-  <label class="fl-field fl-field--error">
-    <span class="fl-field__label">Billing country</span>
-    <select class="fl-field__input" aria-invalid="true">
-      <option selected>Select a country</option>
-      <option>Germany</option>
-      <option>United States</option>
-    </select>
-    <span class="fl-field__help">Pick the country on the payment card</span>
-  </label>
+  <div class="fl-field fl-field--error">
+    <label class="fl-field__label" for="sel-country">Billing country</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="sel-country" aria-invalid="true">
+        <option selected>Select a country</option>
+        <option>Germany</option>
+        <option>United States</option>
+      </select>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help">Pick the country on the payment card</span>
+    </div>
+  </div>
 
   <p class="fl-section-label">Filled variant</p>
-  <label class="fl-field fl-field--filled">
-    <span class="fl-field__label">Sort by</span>
-    <select class="fl-field__input">
-      <option selected>Most recent</option>
-      <option>Alphabetical</option>
-      <option>Unread first</option>
-    </select>
-  </label>
+  <div class="fl-field fl-field--filled">
+    <label class="fl-field__label" for="sel-sort">Sort by</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="sel-sort">
+        <option selected>Most recent</option>
+        <option>Alphabetical</option>
+        <option>Unread first</option>
+      </select>
+    </div>
+  </div>
 
   <p class="fl-section-label">Disabled</p>
-  <label class="fl-field">
-    <span class="fl-field__label">Plan</span>
-    <select class="fl-field__input" disabled>
-      <option>Free — managed by your administrator</option>
-    </select>
-  </label>
+  <div class="fl-field">
+    <label class="fl-field__label" for="sel-plan">Plan</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="sel-plan" disabled>
+        <option>Free — managed by your administrator</option>
+      </select>
+    </div>
+  </div>
 
 </main>
 

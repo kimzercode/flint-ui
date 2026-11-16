@@ -87,7 +87,11 @@ toc:
     <ol>
       <li><strong>Card</strong> — max 400px, centered on a plain page, 1px border, generous padding; the only surface. No top bar, no nav — auth is a pre-app screen.</li>
       <li><strong>Title + subtitle</strong> — "Sign in" plus one line of context; the card's <code>h1</code> doubles as the page heading.</li>
-      <li><strong>Fields</strong> — <code>fl-field</code>: label above, bordered input; the label wraps the input so clicking it focuses.</li>
+      <li><strong>Fields</strong> — <code>fl-field</code>: label above, the
+          field box draws the border; the label is linked with
+          <code>for</code> so clicking it focuses. The password field uses
+          the <code>data-fl-password-toggle</code> toggle (the page's only
+          JavaScript need).</li>
       <li><strong>Action row</strong> — secondary link ("Create account") left, filled button right.</li>
     </ol>
   </div>
@@ -108,7 +112,11 @@ toc:
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>Each field is a <code>&lt;label class="fl-field"&gt;</code> wrapping its input — the label association is structural, no <code>for</code>/<code>id</code> needed.</li>
+    <li>Each field is a <code>&lt;div class="fl-field"&gt;</code> holding a
+        <code>&lt;label class="fl-field__label" for&gt;</code> and a
+        <code>fl-field__box</code> around the control — the label is a
+        sibling linked with <code>for</code>, so clicking it focuses the
+        field.</li>
     <li>Use the right <code>autocomplete</code> tokens (<code>email</code>, <code>current-password</code>, <code>new-password</code>) — password managers and the HTML spec both expect them.</li>
     <li>The card is a <code>&lt;form&gt;</code> and its title is the page's <code>&lt;h1&gt;</code> — with no app chrome there is no other heading, so the hierarchy starts right at "Sign in".</li>
     <li>Errors: use native validation first (<code>required</code>, <code>type</code>); server errors should be announced with <code>role="alert"</code> text inside the card.</li>
@@ -132,9 +140,11 @@ toc:
 
 <section class="docs-section">
   <h2 id="i-code">Code</h2>
-  <p>Only the stylesheet is needed — the auth shell uses no JavaScript.</p>
+  <p>The stylesheet covers the whole shell; add flint.js if you use the
+     password toggle.</p>
   {% set quickStart %}
 <link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>   <!-- only for the password toggle -->
 {% endset %}
   {% set shell %}
 <body class="fl-reset">
@@ -145,17 +155,26 @@ toc:
       <h1 class="fl-auth-card__title">Sign in</h1>
       <p class="fl-auth-card__subtitle">Use your Flint account to continue.</p>
 
-      <label class="fl-field">
-        <span class="fl-field__label">Email</span>
-        <input class="fl-field__input" type="email" name="email"
-               autocomplete="email" required>
-      </label>
+      <div class="fl-field">
+        <label class="fl-field__label" for="email">Email</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="email" type="email" name="email"
+                 autocomplete="email" required>
+        </div>
+      </div>
 
-      <label class="fl-field">
-        <span class="fl-field__label">Password</span>
-        <input class="fl-field__input" type="password" name="password"
-               autocomplete="current-password" required>
-      </label>
+      <div class="fl-field">
+        <label class="fl-field__label" for="password">Password</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="password" type="password"
+                 name="password" autocomplete="current-password" required>
+          <button type="button" class="fl-field__icon fl-field__icon--trailing"
+                  data-fl-password-toggle aria-controls="password"
+                  aria-label="Show password">
+            <svg …></svg>
+          </button>
+        </div>
+      </div>
 
       <div style="margin-top:16px; text-align:right;">
         <a href="#">Forgot password?</a>

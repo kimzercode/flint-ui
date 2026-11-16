@@ -57,6 +57,7 @@
   --fl-topbar-h: 64px;         /* 56px under 600px */
   --fl-tabbar-h: 56px;         /* M2 bottom-nav height, every breakpoint */
   --fl-content-max: 960px;     /* desktop reading column */
+  --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
 
   /* Layers */
   --fl-z-fab: 10;
@@ -569,7 +570,25 @@ a { color: var(--fl-accent); text-decoration: none; }
   color: var(--fl-text-secondary);
 }
 
-/* Text field: Material 2019 outlined style, flat */
+/* ==========================================================================
+   Text fields — one structure, the wrapper owns the chrome.
+   The contract (see AGENTS.md "one owner per concern"):
+     • .fl-field           the root; carries only variant intent
+                           (fl-field--filled, fl-field--error)
+     • .fl-field__label    a real <label for>, a sibling — never wraps the box
+                           (a label may not contain buttons; helper text inside
+                           a label pollutes the accessible name)
+     • .fl-field__box      the visual chrome: border, fill, radius, height and
+                           every state. Flex row: prefix | input | suffix/icon
+     • .fl-field__input    a naked control — text, font, color and semantics
+                           only; never styled chrome
+     • .fl-field__footer   the helper line: help left, counter right
+   States flow through private tokens (--_ = internal, not public API):
+   --_border is the semantic border/indicator color (neutral → hover → focus/
+   error), and the filled variant only decides WHERE it is painted. Every
+   state is a one-line token assignment; adding one must never mean
+   re-declaring border/box-shadow/background.
+   ========================================================================== */
 .fl-field {
   display: block;
   margin-top: var(--fl-space-4);
@@ -577,103 +596,182 @@ a { color: var(--fl-accent); text-decoration: none; }
 
 .fl-field__label {
   display: block;
+  margin-bottom: var(--fl-space-1);
   font-size: var(--fl-fs-caption);
   font-weight: 500;
   color: var(--fl-text-secondary);
-  margin-bottom: var(--fl-space-1);
 }
 
+/* --- The box: every pixel of chrome ------------------------------------- */
+.fl-field__box {
+  --_border: var(--fl-border);
+  --_fill: var(--fl-surface);
+
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  height: var(--fl-field-h);
+  min-width: 0;
+  background: var(--_fill);
+  border: 1px solid var(--_border);
+  border-radius: var(--fl-radius);
+  transition: border-color var(--fl-dur) var(--fl-ease),
+              background-color var(--fl-dur) var(--fl-ease);
+}
+
+/* Variant defaults BEFORE the state rules, so states can override the token */
+.fl-field--filled .fl-field__box {
+  --_border: var(--fl-text-secondary);
+  --_fill: var(--fl-divider);
+  border-color: transparent;
+  border-bottom-color: var(--_border);
+  border-radius: var(--fl-radius) var(--fl-radius) 0 0;
+}
+
+/* States: one token each */
+.fl-field__box:hover { --_border: var(--fl-text); }
+
+.fl-field__box:focus-within {
+  --_border: var(--fl-accent);
+  outline: 2px solid var(--_border);   /* real outline — survives forced-colors */
+  outline-offset: -2px;
+}
+
+/* Filled focus: no full ring — the M2 2dp bottom indicator instead */
+.fl-field--filled .fl-field__box:focus-within {
+  outline: none;
+  box-shadow: inset 0 -2px 0 0 var(--_border);
+}
+
+/* Error: class on the root, or aria-invalid on the control — either alone.
+   --_ring follows --_border, so the focus ring is error-colored too. */
+.fl-field--error .fl-field__box,
+.fl-field__box:has([aria-invalid="true"]) {
+  --_border: var(--fl-error);
+}
+
+/* Disabled: native attribute on the control; the box mirrors it */
+.fl-field__box:has(:disabled) {
+  --_border: var(--fl-border);
+  --_fill: var(--fl-hover);
+  cursor: not-allowed;
+}
+
+/* --- The control: naked -------------------------------------------------- */
 .fl-field__input {
-  width: 100%;
-  height: 44px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
   padding: 0 var(--fl-space-3);
   font: inherit;
   color: var(--fl-text);
-  background: var(--fl-surface);
-  border: 1px solid var(--fl-border);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.fl-field__input:focus { outline: none; }   /* the box draws the ring */
+
+/* --- Affixes: inside the border, any width ------------------------------- *
+ * The box has no horizontal padding; each child owns its inset. That keeps
+ * the plain field byte-identical to a bare input (full 16px is clickable)
+ * and makes variable-width affixes ($, USD, @gmail.com) free. */
+.fl-field__prefix,
+.fl-field__suffix {
+  flex: 0 0 auto;
+  color: var(--fl-text);
+  white-space: nowrap;
+}
+.fl-field__prefix { padding-inline-start: var(--fl-space-3); }
+.fl-field__suffix { padding-inline-end: var(--fl-space-3); }
+
+/* Clear the input's padding on the side an affix/icon provides */
+.fl-field__prefix ~ .fl-field__input,
+.fl-field__icon--leading ~ .fl-field__input {
+  padding-inline-start: 0;
+}
+.fl-field__box:has(> .fl-field__suffix) .fl-field__input,
+.fl-field__box:has(> .fl-field__icon--trailing) .fl-field__input {
+  padding-inline-end: 0;
+}
+
+/* --- Icons: 44px-wide slot, full inner height ---------------------------- *
+ * A 44px target meets WCAG 2.5.8 and nearly 2.5.5; the glyph centers to the
+ * M2 12dp inset on its own. Decorative icons are <span>, interactive ones
+ * are <button type="button"> — same class, the button rules scope behavior. */
+.fl-field__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--fl-field-h);
+  height: 100%;
+  padding: 0;
+  border: 0;
   border-radius: var(--fl-radius);
-  transition: border-color var(--fl-dur) var(--fl-ease);
+  background: none;
+  color: var(--fl-icon);
+  font: inherit;
 }
-
-.fl-field__input:hover { border-color: var(--fl-text); }
-.fl-field__input:focus {
-  outline: none;
-  border-color: var(--fl-accent);
-  box-shadow: inset 0 0 0 1px var(--fl-accent); /* 2px-looking focus ring, still flat */
+button.fl-field__icon { cursor: pointer; }
+button.fl-field__icon:hover { background: var(--fl-hover); }
+button.fl-field__icon:active { background: var(--fl-divider); }
+button.fl-field__icon:focus-visible {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: -2px;
 }
+button.fl-field__icon:disabled { color: var(--fl-disabled); cursor: not-allowed; }
 
-/* Helper text: goes inside the label, under the input */
-.fl-field__help {
-  display: block;
+/* --- Helper line: help left, counter right ------------------------------- */
+.fl-field__footer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fl-space-2);
   margin-top: var(--fl-space-1);
   font-size: var(--fl-fs-caption);
   color: var(--fl-text-secondary);
 }
+.fl-field__help { margin: 0; }
+.fl-field__counter {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 
-/* Textarea: auto-height box, vertical resize only */
+/* Error text — class or aria-invalid, either alone */
+.fl-field--error .fl-field__help,
+.fl-field:has([aria-invalid="true"]) .fl-field__help { color: var(--fl-error); }
+.fl-field--error .fl-field__label,
+.fl-field:has([aria-invalid="true"]) .fl-field__label { color: var(--fl-error); }
+
+/* --- Disabled dimming: value, affixes, icons ----------------------------- */
+.fl-field__input:disabled { color: var(--fl-disabled); cursor: not-allowed; }
+.fl-field__box:has(:disabled) :is(.fl-field__input, .fl-field__prefix, .fl-field__suffix, .fl-field__icon) {
+  color: var(--fl-disabled);
+}
+
+/* --- Textarea: the box grows with it ------------------------------------- */
+.fl-field__box:has(textarea) {
+  height: auto;
+  align-items: stretch;
+}
 textarea.fl-field__input {
   height: auto;
-  min-height: 88px;
-  padding: var(--fl-space-2) var(--fl-space-3);
+  min-height: calc(var(--fl-field-h) * 2 - 2px);   /* 88px outer incl. the box border */
+  padding-block: var(--fl-space-2);
   line-height: 1.45;
   resize: vertical;
 }
 
-/* Filled variant (fl-field--filled): tinted fill, flat bottom indicator.
-   The accent "underline" is an inset box-shadow so it stays 1px-flat at rest
-   and reads 2px on focus — no pseudo-element, no real border growth. */
-.fl-field--filled .fl-field__input {
-  background-color: var(--fl-divider);
-  border-color: transparent;
-  border-bottom-color: var(--fl-text-secondary);
-}
-.fl-field--filled .fl-field__input:hover {
-  border-bottom-color: var(--fl-text);
-}
-.fl-field--filled .fl-field__input:focus {
-  border-bottom-color: var(--fl-accent);
-  box-shadow: inset 0 -2px 0 0 var(--fl-accent);
+/* Opt-in auto-grow: field-sizing where supported, rows as the fallback */
+.fl-field__input--grow {
+  field-sizing: content;
+  max-height: 240px;
+  resize: none;
+  overflow-y: auto;
 }
 
-/* Disabled: dimmed text on a flat fill; hover darkening is switched off */
-.fl-field__input:disabled {
-  color: var(--fl-disabled);
-  background-color: var(--fl-hover);
-  cursor: not-allowed;
-}
-.fl-field__input:disabled:hover { border-color: var(--fl-border); }
-
-/* Error state — add fl-field--error on the label, or just set
-   aria-invalid="true" on the input; either alone is enough. */
-.fl-field--error .fl-field__input,
-.fl-field__input[aria-invalid="true"] {
-  border-color: var(--fl-error);
-}
-.fl-field--error .fl-field__input:hover,
-.fl-field__input[aria-invalid="true"]:hover {
-  border-color: var(--fl-error);
-}
-.fl-field--error .fl-field__input:focus,
-.fl-field__input[aria-invalid="true"]:focus {
-  border-color: var(--fl-error);
-  box-shadow: inset 0 0 0 1px var(--fl-error);
-}
-.fl-field--error .fl-field__help { color: var(--fl-error); }
-
-/* Filled + error keeps the bottom-indicator shape, recolored */
-.fl-field--error.fl-field--filled .fl-field__input,
-.fl-field--filled .fl-field__input[aria-invalid="true"] {
-  border-color: transparent;
-  border-bottom-color: var(--fl-error);
-}
-.fl-field--error.fl-field--filled .fl-field__input:focus,
-.fl-field--filled .fl-field__input[aria-invalid="true"]:focus {
-  box-shadow: inset 0 -2px 0 0 var(--fl-error);
-}
-
-/* Select: the native control in the field family — same 44px box, chevron
-   drawn in CSS instead of the platform arrow. The dropdown popup itself
-   stays browser-styled; the CSS only shapes the closed control. */
+/* --- Select: same box, chevron drawn on the control ---------------------- *
+ * The dropdown popup stays browser-styled; the CSS shapes the closed control.
+ * Box padding is 0, so the chevron's right 12px is 12px from the border. */
 .fl-field select.fl-field__input {
   appearance: none;
   padding-right: 40px;
@@ -683,6 +781,7 @@ textarea.fl-field__input {
   background-size: 20px 20px;
   cursor: pointer;
 }
+.fl-field select.fl-field__input:disabled { cursor: not-allowed; }
 
 /* Full-width mobile for auth card */
 @media (max-width: 599px) {
