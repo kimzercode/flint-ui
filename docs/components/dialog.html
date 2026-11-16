@@ -255,7 +255,7 @@
       <tr>
         <td><strong>Simple</strong></td>
         <td>Title + vertical option list
-            (<code>fl-dialog__list</code> + <code>fl-dialog__option</code>);
+            (<code>fl-dialog__list</code> + <code>fl-option</code>);
             picking a row closes with that row's value</td>
         <td>Choosing from a small set without a form — "Apply label", pick an
             account</td>
@@ -308,8 +308,9 @@
       </g>
     </svg>
     <ol>
-      <li><strong>Surface</strong> — the card vocabulary: <code>--fl-radius-card</code>,
-          1px border, 24px padding. Flex column; long bodies scroll inside
+      <li><strong>Surface</strong> — the card vocabulary:
+          <code>--fl-radius-card</code>, 1px border. Flex column with no
+          padding — each slot owns its inset; long bodies scroll inside
           while title and actions stay pinned.</li>
       <li><strong>Title</strong> — the headline size (24px/400), wired with
           <code>aria-labelledby</code>.</li>
@@ -391,8 +392,8 @@
         <a href="bottom-sheet.html">bottom sheet</a> (or another dialog) —
         the top layer stacks them in DOM order and Escape peels only the top
         one.</li>
-    <li><strong>Scroll lock:</strong> the page locks while any overlay is
-        open, restored on close.</li>
+    <li><strong>Scroll lock:</strong> the page locks while any modal surface
+        is open, restored on close.</li>
     <li><strong>Animation:</strong> 150ms fade + scale in, slide/scale out,
         scrim fading on the same clock — all CSS,
         <code>prefers-reduced-motion</code> disables it entirely.</li>
@@ -400,8 +401,8 @@
         stays hidden and the page keeps working — the content is not lost,
         it just can't be opened. Call <code>showModal()</code> yourself with
         one line, or drive it from your own code; the CSS has no JS
-        dependencies. See the <a href="overlay.html">overlay infra
-        demo</a> for the raw lifecycle.</li>
+        dependencies. See <a href="../demos/dialog.html">demos/dialog.html</a>
+        for the raw lifecycle.</li>
   </ul>
 </section>
 
@@ -508,8 +509,9 @@
 
   <p>Simple dialog — one <code>method="dialog"</code> form wraps the option
      list; every row is a submit button, so picking one closes and records its
-     value. Rows are <code>fl-dialog__option</code> (48px, hover state layer,
-     optional leading icon — you supply the SVG):</p>
+     value. Rows are <code>fl-option</code> — the shared option row, 48px
+     here (sheets set 56px on their surface), hover state layer, optional
+     leading icon — you supply the SVG:</p>
   
   
 <div class="docs-snippet">
@@ -518,13 +520,13 @@
     &lt;h2 class=&quot;fl-dialog__title&quot; id=&quot;dlg-label-t&quot;&gt;Apply label&lt;/h2&gt;
     &lt;div class=&quot;fl-dialog__list&quot;&gt;
       &lt;form method=&quot;dialog&quot;&gt;
-        &lt;button class=&quot;fl-dialog__option&quot; value=&quot;finance&quot;&gt;
+        &lt;button class=&quot;fl-option&quot; value=&quot;finance&quot;&gt;
           &lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;!-- your icon --&gt;&lt;/svg&gt;
           Finance
         &lt;/button&gt;
       &lt;/form&gt;
       &lt;form method=&quot;dialog&quot;&gt;
-        &lt;button class=&quot;fl-dialog__option&quot; value=&quot;personal&quot;&gt;Personal&lt;/button&gt;
+        &lt;button class=&quot;fl-option&quot; value=&quot;personal&quot;&gt;Personal&lt;/button&gt;
       &lt;/form&gt;
     &lt;/div&gt;
     &lt;div class=&quot;fl-dialog__actions&quot;&gt;
@@ -543,15 +545,14 @@
   <pre><code>&lt;dialog class=&quot;fl-dialog&quot; id=&quot;dlg-filter&quot; aria-labelledby=&quot;dlg-filter-t&quot;&gt;
   &lt;div class=&quot;fl-dialog__surface&quot;&gt;
     &lt;h2 class=&quot;fl-dialog__title&quot; id=&quot;dlg-filter-t&quot;&gt;Filter by priority?&lt;/h2&gt;
-    &lt;form class=&quot;fl-dialog__body&quot; method=&quot;dialog&quot; id=&quot;filter-form&quot;&gt;
-      &lt;div class=&quot;fl-dialog__list&quot;&gt;
-        &lt;label class=&quot;fl-dialog__option&quot;&gt;
-          &lt;input type=&quot;radio&quot; name=&quot;prio&quot; class=&quot;fl-radio&quot; value=&quot;high&quot;&gt; High priority
-        &lt;/label&gt;
-        &lt;label class=&quot;fl-dialog__option&quot;&gt;
-          &lt;input type=&quot;radio&quot; name=&quot;prio&quot; class=&quot;fl-radio&quot; value=&quot;normal&quot;&gt; Normal
-        &lt;/label&gt;
-      &lt;/div&gt;
+    &lt;form class=&quot;fl-dialog__list&quot; method=&quot;dialog&quot; id=&quot;filter-form&quot;
+          role=&quot;radiogroup&quot; aria-labelledby=&quot;dlg-filter-t&quot;&gt;
+      &lt;label class=&quot;fl-option&quot;&gt;
+        &lt;input type=&quot;radio&quot; name=&quot;prio&quot; class=&quot;fl-radio&quot; value=&quot;high&quot;&gt; High priority
+      &lt;/label&gt;
+      &lt;label class=&quot;fl-option&quot;&gt;
+        &lt;input type=&quot;radio&quot; name=&quot;prio&quot; class=&quot;fl-radio&quot; value=&quot;normal&quot;&gt; Normal
+      &lt;/label&gt;
     &lt;/form&gt;
     &lt;div class=&quot;fl-dialog__actions&quot;&gt;
       &lt;button class=&quot;fl-btn fl-btn--text&quot; data-fl-close&gt;Cancel&lt;/button&gt;
@@ -617,9 +618,9 @@
   <p><a href="../demos/dialog.html">demos/dialog.html</a> covers all four
      types — destructive confirm, form dialog, simple option list, confirmation
      with a disabled-until-chosen confirm, full-screen compose — plus the
-     non-dismissible dialog with stacked actions. The raw overlay lifecycle
-     (stacking over the bottom sheet, Escape, scrim, focus return) is in
-     <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
+     non-dismissible dialog with stacked actions. The raw modal lifecycle
+     (stacking over the bottom sheet, Escape, scrim, focus return) is the
+     same everywhere — open one from the page and try it.</p>
 </section>
 
 <section class="docs-section">
@@ -643,7 +644,7 @@
   
 <div class="docs-snippet">
   <pre><code>:root {
-  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every overlay follows */
+  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every scrim follows */
   --fl-radius-card: 4px;          /* squarer dialogs */
 }</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>

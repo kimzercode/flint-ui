@@ -1,4 +1,4 @@
-# 0.4.0 execution plan — overlays + forms completion
+# 0.4.0 execution plan — containment + forms completion
 
 Working checklist for the remaining 0.4 steps (full design rationale in
 `~/.opencode/plan/flint-ui-0.4-overlays.md` — Addendum A is the M2 dialog
@@ -22,7 +22,7 @@ We do not follow the M2 docs to the letter. Concretely:
 
 | Step | Deliverable | Status |
 |---|---|---|
-| 1 | Infra: native `<dialog>` wiring, §13 CSS, `demos/overlay.html` | ✅ `bfccd5a` (24 Playwright checks pass) |
+| 1 | Infra: native `<dialog>` wiring, §13 CSS, `demos/overlay.html` (demo retired in step 8 — "overlay" is not a Material component) | ✅ `bfccd5a` (24 Playwright checks pass) |
 | 2 | **Dialog component**: pinned-actions surface, `fl-btn--danger`, `demos/dialog.html`, docs page (retire stub) | ✅ `dd9b4cf` (15 Playwright checks pass) |
 | 2b | **Dialog completion** (M2 audit): 560px height cap, `.fl-dialog__list`/`__option` (simple + confirmation choice rows), `.fl-dialog__actions--stacked`, `.fl-dialog--fullscreen` + `.fl-dialog__header`, `data-fl-dismissible="false"` (ignore scrim + Escape, keep `data-fl-close`), demos (pick-a-label, confirmation w/ disabled confirm, full-screen compose), docs Types/Actions/Dismissal sections | ✅ (30 Playwright checks pass) |
 | 3 | Bottom sheet: presentation (drag handle, desktop width), `demos/sheet.html`, docs page (retire stub) | ✅ (22 Playwright checks pass) |
@@ -30,8 +30,8 @@ We do not follow the M2 docs to the letter. Concretely:
 | 5 | Progress: `<progress>` + conic-gradient circle, CSS only, docs | ✅ (11 Playwright checks; audited against user's `progress-docs/` M2 refs: 48dp default, grow+shrink sweep, one-type-per-activity docs, tint-track deviation documented) |
 | 6 | Tooltip: CSS-only hover/focus, four directions, docs | ✅ (19 Playwright checks; audited against user's `tooltips-docs/` M2 refs: 24/32px heights + 8/16px gaps, grey-800 container, 300ms hover delay / 0 focus, no arrow no shadow, pointer-events:none, WCAG 1.4.13 + long-press gaps documented) |
 | 7 | **Forms completion** (Addendum B): `.fl-field__prefix`/`__suffix`, `__counter`, leading/trailing `__icon` slots, `data-fl-password-toggle`, `field-sizing: content` auto-grow, docs recipes (helper↔error swap, live counter) + decision notes | ✅ (28 Playwright checks; architecture upgraded beyond Addendum B: one structure — `.fl-field__box` owns the chrome for every field, input is a naked control, `<label for>` replaces label-wrapping (valid HTML + clean accessible name), `--_` state tokens, real outline focus ring, filled top-only radius, `aria-invalid` recolors label/help, `--fl-field-h` token; AGENTS.md added) |
-| 8 | Overlays guide page (shared layer, focus protocol, no-JS fallbacks) + trim repetition from component pages | |
-| 9 | Release: `?v=0.4.0` in `base.njk`, CSS/JS headers drop `-dev` (also fix footer "v0.1.0"), `components.js` (dialog/sheet → ready, + snackbar/progress/tooltip), CHANGELOG `[0.4.0]` ("overlays + forms completion"), ROADMAP ✅ (README + `roadmap.njk` synced), tag `v0.4.0`, GitHub release, live-site check | |
+| 8 | **Bottom sheets completion** (Addendum C, `bottom-sheets-docs/` audit): 50dvh cap, `--full`, standard sheet, `.fl-option` (56/48), scrim 32%, handle deleted, grid slot, surface-padding contract, safe-area/dvh/hover-guard web-native fixes; `bottom-sheet.njk` rewrite; overlay page replaced by per-component prose | ✅ (probe: 16 CSSOM + 20 behavior checks pass; screenshots at 390 + 1024) |
+| 9 | Release: `?v=0.4.0` in `base.njk`, CSS/JS headers drop `-dev` (also fix footer "v0.1.0"), `components.js` (dialog/sheet → ready, + snackbar/progress/tooltip), CHANGELOG `[0.4.0]` ("containment + forms completion"), ROADMAP ✅ (README + `roadmap.njk` synced), tag `v0.4.0`, GitHub release, live-site check | |
 
 ## Gates (every step)
 
@@ -74,7 +74,7 @@ Not yet decided — cheap ones may fold into step 7, the rest become 0.5+:
 3. **Form layout helpers** — vertical rhythm / two-column rows.
 4. **`:user-invalid` styling** — errors only after the user touched the field.
 
-Deferred (already logged): listbox menu (0.5, on this overlay infra).
+Deferred (already logged): listbox menu (0.5).
 
 ## After 0.4 (decided sequencing)
 

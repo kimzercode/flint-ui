@@ -91,7 +91,7 @@ toc:
       <tr>
         <td><strong>Simple</strong></td>
         <td>Title + vertical option list
-            (<code>fl-dialog__list</code> + <code>fl-dialog__option</code>);
+            (<code>fl-dialog__list</code> + <code>fl-option</code>);
             picking a row closes with that row's value</td>
         <td>Choosing from a small set without a form — "Apply label", pick an
             account</td>
@@ -144,8 +144,9 @@ toc:
       </g>
     </svg>
     <ol>
-      <li><strong>Surface</strong> — the card vocabulary: <code>--fl-radius-card</code>,
-          1px border, 24px padding. Flex column; long bodies scroll inside
+      <li><strong>Surface</strong> — the card vocabulary:
+          <code>--fl-radius-card</code>, 1px border. Flex column with no
+          padding — each slot owns its inset; long bodies scroll inside
           while title and actions stay pinned.</li>
       <li><strong>Title</strong> — the headline size (24px/400), wired with
           <code>aria-labelledby</code>.</li>
@@ -227,8 +228,8 @@ toc:
         <a href="bottom-sheet.html">bottom sheet</a> (or another dialog) —
         the top layer stacks them in DOM order and Escape peels only the top
         one.</li>
-    <li><strong>Scroll lock:</strong> the page locks while any overlay is
-        open, restored on close.</li>
+    <li><strong>Scroll lock:</strong> the page locks while any modal surface
+        is open, restored on close.</li>
     <li><strong>Animation:</strong> 150ms fade + scale in, slide/scale out,
         scrim fading on the same clock — all CSS,
         <code>prefers-reduced-motion</code> disables it entirely.</li>
@@ -236,8 +237,8 @@ toc:
         stays hidden and the page keeps working — the content is not lost,
         it just can't be opened. Call <code>showModal()</code> yourself with
         one line, or drive it from your own code; the CSS has no JS
-        dependencies. See the <a href="overlay.html">overlay infra
-        demo</a> for the raw lifecycle.</li>
+        dependencies. See <a href="../demos/dialog.html">demos/dialog.html</a>
+        for the raw lifecycle.</li>
   </ul>
 </section>
 
@@ -329,21 +330,22 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
   {{ snippet(resultMarkup) }}
   <p>Simple dialog — one <code>method="dialog"</code> form wraps the option
      list; every row is a submit button, so picking one closes and records its
-     value. Rows are <code>fl-dialog__option</code> (48px, hover state layer,
-     optional leading icon — you supply the SVG):</p>
+     value. Rows are <code>fl-option</code> — the shared option row, 48px
+     here (sheets set 56px on their surface), hover state layer, optional
+     leading icon — you supply the SVG:</p>
   {% set simpleMarkup %}
 <dialog class="fl-dialog" id="dlg-label" aria-labelledby="dlg-label-t">
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-label-t">Apply label</h2>
     <div class="fl-dialog__list">
       <form method="dialog">
-        <button class="fl-dialog__option" value="finance">
+        <button class="fl-option" value="finance">
           <svg width="18" height="18" viewBox="0 0 24 24"><!-- your icon --></svg>
           Finance
         </button>
       </form>
       <form method="dialog">
-        <button class="fl-dialog__option" value="personal">Personal</button>
+        <button class="fl-option" value="personal">Personal</button>
       </form>
     </div>
     <div class="fl-dialog__actions">
@@ -359,15 +361,14 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
 <dialog class="fl-dialog" id="dlg-filter" aria-labelledby="dlg-filter-t">
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-filter-t">Filter by priority?</h2>
-    <form class="fl-dialog__body" method="dialog" id="filter-form">
-      <div class="fl-dialog__list">
-        <label class="fl-dialog__option">
-          <input type="radio" name="prio" class="fl-radio" value="high"> High priority
-        </label>
-        <label class="fl-dialog__option">
-          <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
-        </label>
-      </div>
+    <form class="fl-dialog__list" method="dialog" id="filter-form"
+          role="radiogroup" aria-labelledby="dlg-filter-t">
+      <label class="fl-option">
+        <input type="radio" name="prio" class="fl-radio" value="high"> High priority
+      </label>
+      <label class="fl-option">
+        <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
+      </label>
     </form>
     <div class="fl-dialog__actions">
       <button class="fl-btn fl-btn--text" data-fl-close>Cancel</button>
@@ -426,9 +427,9 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
   <p><a href="../demos/dialog.html">demos/dialog.html</a> covers all four
      types — destructive confirm, form dialog, simple option list, confirmation
      with a disabled-until-chosen confirm, full-screen compose — plus the
-     non-dismissible dialog with stacked actions. The raw overlay lifecycle
-     (stacking over the bottom sheet, Escape, scrim, focus return) is in
-     <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
+     non-dismissible dialog with stacked actions. The raw modal lifecycle
+     (stacking over the bottom sheet, Escape, scrim, focus return) is the
+     same everywhere — open one from the page and try it.</p>
 </section>
 
 <section class="docs-section">
@@ -450,7 +451,7 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
   </table>
   {% set themeExample %}
 :root {
-  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every overlay follows */
+  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every scrim follows */
   --fl-radius-card: 4px;          /* squarer dialogs */
 }
 {% endset %}

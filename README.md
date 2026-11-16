@@ -218,7 +218,7 @@ Key tokens: `--fl-surface`, `--fl-text`, `--fl-text-secondary`, `--fl-icon`,
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for the full path from component library to
-mini design system: forms (0.3, ✅), overlays (0.4), data display (0.5),
+mini design system: forms (0.3, ✅), containment (0.4), data display (0.5),
 theming (0.6), quality (0.7), API freeze (1.0). The docs site lives at
 [flint-ui docs](https://kimzercode.github.io/flint-ui/) and is built with
 Flint itself.

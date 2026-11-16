@@ -1,11 +1,11 @@
 /*!
  * Flint UI — flint.js v0.4.0-dev
- * The entire JS surface: nav selected-state, drawer toggling, and the overlay
- * wiring (dialog / bottom sheet triggers, focus return, non-dismissible
- * opt-out), the snackbar (one at a time, 4s auto-dismiss) and the password
- * field toggle. The CSS and the platform do the rest (aria-current/body
- * classes, the <dialog> focus trap, the inert background), so the library
- * still renders correctly with JS off.
+ * The entire JS surface: nav selected-state, drawer toggling, and the dialog
+ * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
+ * snackbar (one at a time, 4s auto-dismiss) and the password field toggle.
+ * The CSS and the platform do the rest (aria-current/body classes, the
+ * <dialog> focus trap, the inert background), so the library still renders
+ * correctly with JS off.
  */
 (function () {
   "use strict";
@@ -47,8 +47,8 @@
     }
   }
 
-  /* --- Overlays: dialog / bottom sheet ----------------------------------- *
-   * Modal overlays are native <dialog> elements: showModal() provides the
+  /* --- Dialog & bottom sheet --------------------------------------------- *
+   * Modal surfaces are native <dialog> elements: showModal() provides the
    * focus trap, the inert background, Escape-to-close and top-layer stacking,
    * so flint.js only wires triggers and focus return. Delegation means
    * dynamically added dialogs work without a rescan. The "close" event does

@@ -26,7 +26,7 @@
   --fl-hover: #f8f9fa;         /* hover fill */
   --fl-border: #dadce0;        /* replaces every shadow */
   --fl-divider: #e8eaed;
-  --fl-scrim: rgb(32 33 36 / 0.45);   /* overlay backdrops — shared with the drawer */
+  --fl-scrim: rgb(0 0 0 / 0.32);   /* scrims — dialog, sheet and drawer (M2 32% black) */
   --fl-tooltip-bg: #3c4043;    /* tooltip container — Google grey 800 (2020) */
 
   /* Disabled */
@@ -58,12 +58,15 @@
   --fl-tabbar-h: 56px;         /* M2 bottom-nav height, every breakpoint */
   --fl-content-max: 960px;     /* desktop reading column */
   --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
+  --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
+  --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
 
   /* Layers */
   --fl-z-fab: 10;
-  --fl-z-tooltip: 15;    /* above FABs, below topbar/snackbar/overlays */
+  --fl-z-sheet: 18;      /* standard (non-modal) sheet — below the snackbar (M2) */
+  --fl-z-tooltip: 15;    /* above FABs, below topbar/snackbar/modal surfaces */
   --fl-z-topbar: 20;
-  --fl-z-snackbar: 25;   /* above FABs (M2), below modal overlays */
+  --fl-z-snackbar: 25;   /* above FABs (M2), below modal surfaces */
   --fl-z-focus: 30;
 
   /* Motion */
@@ -83,6 +86,7 @@
 
 * {
   margin: 0;
+  -webkit-tap-highlight-color: transparent;   /* :active fills give the feedback */
 }
 
 html {
@@ -202,7 +206,9 @@ a { color: var(--fl-accent); text-decoration: none; }
   transition: background-color var(--fl-dur) var(--fl-ease);
 }
 
-.fl-icon-btn:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  .fl-icon-btn:hover { background: var(--fl-hover); }
+}
 .fl-icon-btn:active { background: var(--fl-divider); }
 
 /* Content ---------------------------------------------------------------- */
@@ -272,9 +278,13 @@ a { color: var(--fl-accent); text-decoration: none; }
   color: var(--fl-accent);
 }
 
-.fl-tab:hover { color: var(--fl-text-secondary); }
-.fl-tab[aria-current="page"]:hover,
-.fl-tab.is-active:hover { color: var(--fl-accent); }
+@media (hover: hover) {
+  .fl-tab:hover { color: var(--fl-text-secondary); }
+}
+@media (hover: hover) {
+  .fl-tab[aria-current="page"]:hover,
+  .fl-tab.is-active:hover { color: var(--fl-accent); }
+}
 
 /* Desktop: labels inline beside icons in the same 56px bar. Selection takes
    the tint pill around the whole destination — the Gmail-2020 side-nav
@@ -289,7 +299,9 @@ a { color: var(--fl-accent); text-decoration: none; }
     padding: 0 var(--fl-space-3);
     border-radius: 20px;
   }
-  .fl-tab:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+    .fl-tab:hover { background: var(--fl-hover); }
+  }
   .fl-tab[aria-current="page"],
   .fl-tab.is-active { background: var(--fl-tint); }
   .fl-tab .fl-badge { position: static; }
@@ -315,7 +327,9 @@ a { color: var(--fl-accent); text-decoration: none; }
   transition: background-color var(--fl-dur) var(--fl-ease);
 }
 
-.fl-fab:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  .fl-fab:hover { background: var(--fl-hover); }
+}
 .fl-fab:active { background: var(--fl-divider); }
 .fl-fab .fl-icon { width: 24px; height: 24px; background: currentColor; }
 
@@ -396,19 +410,25 @@ a { color: var(--fl-accent); text-decoration: none; }
 }
 
 .fl-btn--filled { background: var(--fl-accent); color: var(--fl-surface); }
-.fl-btn--filled:hover { background: var(--fl-accent-hover); }
+@media (hover: hover) {
+  .fl-btn--filled:hover { background: var(--fl-accent-hover); }
+}
 .fl-btn--filled:active { background: var(--fl-accent-pressed); }
 
 .fl-btn--outline {
   border: 1px solid var(--fl-border);
   color: var(--fl-accent);
 }
-.fl-btn--outline:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  .fl-btn--outline:hover { background: var(--fl-hover); }
+}
 
 .fl-btn--text { color: var(--fl-accent); }
 .fl-btn--danger { color: var(--fl-error); }   /* destructive dialogs: delete/confirm */
-.fl-btn--text:hover,
-.fl-btn--danger:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  .fl-btn--text:hover,
+  .fl-btn--danger:hover { background: var(--fl-hover); }
+}
 
 /* :active for the lighter variants — --fl-divider is the darker flat fill
    the icon button already uses, so all variants share one pressed depth. */
@@ -453,7 +473,9 @@ a { color: var(--fl-accent); text-decoration: none; }
   transition: border-color var(--fl-dur) var(--fl-ease),
               background-color var(--fl-dur) var(--fl-ease);
 }
-.fl-check:hover { border-color: var(--fl-text); }
+@media (hover: hover) {
+  .fl-check:hover { border-color: var(--fl-text); }
+}
 .fl-check:checked {
   border-color: var(--fl-accent);
   background-color: var(--fl-accent);
@@ -475,7 +497,9 @@ a { color: var(--fl-accent); text-decoration: none; }
   cursor: pointer;
   transition: border-color var(--fl-dur) var(--fl-ease);
 }
-.fl-radio:hover { border-color: var(--fl-text); }
+@media (hover: hover) {
+  .fl-radio:hover { border-color: var(--fl-text); }
+}
 .fl-radio:checked {
   border-color: var(--fl-accent);
   background: radial-gradient(circle, var(--fl-accent) 0 5px, transparent 5.5px) no-repeat center / 18px;
@@ -516,8 +540,10 @@ a { color: var(--fl-accent); text-decoration: none; }
   border-color: var(--fl-divider);
   cursor: not-allowed;
 }
-.fl-check:disabled:hover,
-.fl-radio:disabled:hover { border-color: var(--fl-divider); }
+@media (hover: hover) {
+  .fl-check:disabled:hover,
+  .fl-radio:disabled:hover { border-color: var(--fl-divider); }
+}
 .fl-check:disabled:checked {
   border-color: var(--fl-disabled);
   background-color: var(--fl-disabled);
@@ -629,7 +655,9 @@ a { color: var(--fl-accent); text-decoration: none; }
 }
 
 /* States: one token each */
-.fl-field__box:hover { --_border: var(--fl-text); }
+@media (hover: hover) {
+  .fl-field__box:hover { --_border: var(--fl-text); }
+}
 
 .fl-field__box:focus-within {
   --_border: var(--fl-accent);
@@ -712,7 +740,9 @@ a { color: var(--fl-accent); text-decoration: none; }
   font: inherit;
 }
 button.fl-field__icon { cursor: pointer; }
-button.fl-field__icon:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  button.fl-field__icon:hover { background: var(--fl-hover); }
+}
 button.fl-field__icon:active { background: var(--fl-divider); }
 button.fl-field__icon:focus-visible {
   outline: 2px solid var(--fl-accent);
@@ -822,7 +852,9 @@ textarea.fl-field__input {
 
 .fl-nav-item .fl-icon { width: 20px; height: 20px; }
 
-.fl-nav-item:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  .fl-nav-item:hover { background: var(--fl-hover); }
+}
 
 .fl-nav-item[aria-current="page"],
 .fl-nav-item.is-active {
@@ -967,7 +999,9 @@ body.fl-drawer-open .fl-scrim { opacity: 1; pointer-events: auto; }
     padding: 8px 4px 10px;
     border-radius: 0;
   }
-  .fl-shell-rail .fl-tab:hover { background: none; }
+@media (hover: hover) {
+    .fl-shell-rail .fl-tab:hover { background: none; }
+  }
   .fl-shell-rail .fl-tab[aria-current="page"],
   .fl-shell-rail .fl-tab.is-active { background: none; }
   .fl-shell-rail .fl-tab .fl-badge { position: absolute; }
@@ -1006,8 +1040,10 @@ button.fl-list-item {
   text-decoration: none;
   cursor: pointer;
 }
-a.fl-list-item:hover,
-button.fl-list-item:hover { background: var(--fl-hover); }
+@media (hover: hover) {
+  a.fl-list-item:hover,
+  button.fl-list-item:hover { background: var(--fl-hover); }
+}
 a.fl-list-item:active,
 button.fl-list-item:active { background: var(--fl-divider); }
 
@@ -1110,24 +1146,25 @@ button.fl-list-item:active { background: var(--fl-divider); }
 }
 
 /* --------------------------------------------------------------------------
-   13. Overlays — dialog & bottom sheet on the native <dialog> element
-   showModal() provides the focus trap, the inert background, Escape-to-close
-   and top-layer stacking; this CSS draws the shared scrim (::backdrop), the
-   surface card and the open/close transitions (CSS-only, both directions).
+   13. Dialog & bottom sheet — the shared modal layer
+   Both live on the native <dialog> element: showModal() provides the focus
+   trap, the inert background, Escape-to-close and top-layer stacking; this
+   CSS draws the shared scrim (::backdrop), the surface cards and the
+   open/close transitions (CSS-only, both directions).
    flint.js only wires data-fl-open / data-fl-close and focus return.
    -------------------------------------------------------------------------- */
 
-/* Scroll lock while any overlay is open. Deliberately without
+/* Scroll lock while any modal surface is open. Deliberately without
    scrollbar-gutter: stable — reserving the gutter shrinks the fixed-position
-   containing block even where no scrollbar was visible, leaving overlays
-   off-center. Overlay scrollbars (the default everywhere today) make the
-   shift moot; classic-scrollbar engines get the usual 15px shift on lock. */
+   containing block even where no scrollbar was visible, leaving modal
+   surfaces off-center. Overlay scrollbars (the default everywhere today)
+   make the shift moot; classic-scrollbar engines get the usual 15px shift. */
 html:has(dialog.fl-dialog[open]),
 html:has(dialog.fl-sheet[open]) {
   overflow: hidden;
 }
 
-/* The shared scrim — one rule for every overlay type. It fades in and out
+/* The shared scrim — one rule for both modal surfaces. It fades in and out
    with the surface; allow-discrete keeps the backdrop alive during the exit
    transition so the fade actually runs. */
 dialog.fl-dialog::backdrop,
@@ -1200,30 +1237,47 @@ dialog.fl-dialog[open] {
   margin: auto;
 }
 
+/* The one scroll region per surface — __body, __list or __grid — shrinks
+   and scrolls while title and actions stay pinned. overscroll-behavior
+   keeps the page behind from rubber-banding when the region hits its end. */
+.fl-dialog__body,
+.fl-dialog__list,
+.fl-sheet__body,
+.fl-sheet__list,
+.fl-sheet__grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Surface padding is 0: each slot owns its inset (the field-box lesson),
+   so list rows can run full-bleed without negative-margin compensation. */
 .fl-dialog__surface {
   display: flex;
   flex-direction: column;
   background: var(--fl-surface);
   border: 1px solid var(--fl-border);
   border-radius: var(--fl-radius-card);
-  padding: var(--fl-space-4);
-  max-height: min(88vh, 560px);   /* M2 dialog cap: 560dp wide and tall */
-  overflow: hidden;   /* the body scrolls; title and actions stay pinned */
+  padding: 0;
+  max-height: min(88vh, 560px);   /* fallback for engines without dvh */
+  max-height: min(88dvh, 560px);  /* M2 dialog cap: 560dp wide and tall */
+  overflow: hidden;   /* the content slot scrolls; title and actions stay pinned */
 }
 
 .fl-dialog__title {
   flex: none;
   font-size: var(--fl-fs-headline);
   font-weight: 400;
-  margin: 0 0 var(--fl-space-2);
+  padding: var(--fl-space-4) var(--fl-space-4) var(--fl-space-2);
 }
 
 .fl-dialog__body {
-  flex: 1 1 auto;
-  min-height: 0;      /* lets the body shrink so IT scrolls, not the surface */
-  overflow-y: auto;
   color: var(--fl-text-secondary);
-  margin: 0 0 var(--fl-space-4);
+  padding: 0 var(--fl-space-4);
+  /* margin (not padding) is the gap to the actions row: it stays visible
+     while the body scrolls, so content never touches the actions. */
+  margin-bottom: var(--fl-space-4);
 }
 
 /* Fields inside dialogs start flush under the title (fl-field's own
@@ -1235,29 +1289,30 @@ dialog.fl-dialog[open] {
   display: flex;
   justify-content: flex-end;
   gap: var(--fl-space-2);
+  padding: 0 var(--fl-space-4) var(--fl-space-4);
 }
 
 .fl-dialog__actions form { margin: 0; }
 
 /* Simple & confirmation dialogs: vertical option rows (M2's list dialogs).
-   Rows bleed to the surface edges so the state layer reads like a list-item
-   hover; the list itself scrolls when long (same flex contract as __body). */
+   The list runs full-bleed to the surface edges so the state layer reads
+   like a list-item hover. */
 .fl-dialog__list {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  margin: 0 calc(-1 * var(--fl-space-4)) var(--fl-space-4);
   padding: 0;
   list-style: none;
+  margin-bottom: var(--fl-space-4);
 }
 
-.fl-dialog__option {
+/* Option row — shared by dialogs and sheets: one row, one owner. Height
+   comes from --fl-option-h: 48px here (M2 dialog rows); sheets set 56px on
+   their surface. */
+.fl-option {
   display: flex;
   align-items: center;
   gap: var(--fl-space-3);
   width: 100%;
-  min-height: 48px;
-  padding: var(--fl-space-2) var(--fl-space-4);
+  min-height: var(--fl-option-h);
+  padding: 0 var(--fl-space-4);
   font: inherit;
   text-align: left;
   color: var(--fl-text);
@@ -1266,11 +1321,19 @@ dialog.fl-dialog[open] {
   cursor: pointer;
   transition: background-color var(--fl-dur) var(--fl-ease);
 }
-.fl-dialog__option:hover { background: var(--fl-hover); }
-.fl-dialog__option:active { background: var(--fl-divider); }
-.fl-dialog__option > svg,
-.fl-dialog__option > .fl-radio,
-.fl-dialog__option > .fl-check { flex: 0 0 auto; }
+@media (hover: hover) {
+  .fl-option:hover { background: var(--fl-hover); }
+}
+.fl-option:active { background: var(--fl-divider); }
+/* Full-bleed rows: the global ring (offset 2px) lands outside the surface
+   and gets clipped — draw it inside the row instead. */
+.fl-option:focus-visible {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: -2px;
+}
+.fl-option > svg,
+.fl-option > .fl-radio,
+.fl-option > .fl-check { flex: 0 0 auto; }
 
 /* Narrow surfaces / long labels: actions stack full-width. DOM order stays
    dismiss-then-confirm (matching the horizontal left-to-right rule);
@@ -1306,25 +1369,29 @@ dialog.fl-dialog--fullscreen .fl-dialog__surface {
 }
 
 /* Top bar of the full-screen dialog: close on the left, confirming action
-   pinned right (M2 full-screen dialog header). */
+   pinned right (M2 full-screen dialog header). The header owns the top
+   inset now that the surface padding is 0. */
 .fl-dialog__header {
   flex: none;
   display: flex;
   align-items: center;
   gap: var(--fl-space-2);
+  padding: var(--fl-space-4) var(--fl-space-4) 0;
   margin: 0 0 var(--fl-space-3);
 }
 .fl-dialog__header .fl-dialog__title {
   flex: 1 1 auto;
   margin: 0;
+  padding: 0;
   font-size: var(--fl-fs-title);
   line-height: 1;
 }
 
 /* Bottom sheet: same lifecycle, different presentation — docked to the
-   bottom edge, top radius, static drag handle (honest: a glyph, not a
-   gesture — drag-to-dismiss is not supported and not claimed), slide-up
-   entry. Desktop gets a 560px sheet instead of a full-bleed tray. */
+   bottom edge, top radius only, slide-up entry. M2 caps the initial height
+   at 50% of the screen; taller content scrolls inside (there is no drag
+   gesture — the docs list the dismissal paths). Desktop gets a 560px sheet
+   instead of a full-bleed tray. */
 dialog.fl-sheet {
   transform: translateY(16px);
 }
@@ -1357,49 +1424,118 @@ dialog.fl-sheet[open] {
   border: 1px solid var(--fl-border);
   border-bottom: none;
   border-radius: var(--fl-radius-lg) var(--fl-radius-lg) 0 0;
-  padding: var(--fl-space-2) var(--fl-space-4) var(--fl-space-4);
-  max-height: min(86vh, 640px);
-  overflow: hidden;   /* the body scrolls; handle, title and actions stay pinned */
+  padding: 0;   /* each slot owns its inset; list rows run full-bleed */
+  --fl-option-h: 56px;   /* M2 bottom-sheet rows: 56dp (dialogs stay 48) */
+  max-height: 50vh;   /* pre-dvh engines get the M2 50% cap in vh */
+  overflow: hidden;   /* the content slot scrolls; title and actions stay pinned */
 }
 
-/* Static drag handle — the M2 glyph. It signals "this is a sheet"; it does
-   nothing, and the docs say so. */
-.fl-sheet__handle {
-  flex: none;
-  width: 32px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--fl-divider);
-  margin: var(--fl-space-2) auto var(--fl-space-3);
+/* The cap as a token (theming API). The two-line fallback doesn't work with
+   var(): a substituted value that an engine can't parse is invalid at
+   computed-value time — the property goes unset, it does not fall back to
+   the earlier declaration — so the token line is feature-gated instead. */
+@supports (height: 100dvh) {
+  .fl-sheet__surface { max-height: var(--fl-sheet-max-h); }
+}
+
+/* Full-screen sheet (--full): for content that needs the whole screen —
+   M2's 100% case. A close action is REQUIRED in this state; the docs check
+   for it. */
+dialog.fl-sheet--full[open] {
+  height: 100vh;   /* fallback for engines without dvh */
+  height: 100dvh;
+}
+.fl-sheet--full .fl-sheet__surface {
+  height: 100%;
+  max-height: none;
+  border: none;
+  border-radius: 0;
 }
 
 .fl-sheet__title {
   flex: none;
   font-size: var(--fl-fs-title);
   font-weight: 500;
-  margin: 0 0 var(--fl-space-3);
+  padding: var(--fl-space-4) var(--fl-space-4) var(--fl-space-2);
 }
 
 .fl-sheet__body {
-  flex: 1 1 auto;
-  min-height: 0;      /* the body shrinks so IT scrolls, not the surface */
-  overflow-y: auto;
   color: var(--fl-text-secondary);
+  padding: 0 var(--fl-space-4);
+  /* margin (not padding) is the gap to the actions row: it stays visible
+     while the body scrolls, so content never touches the actions. */
+  margin-bottom: var(--fl-space-4);
 }
 
 /* Fields inside sheets start flush (fl-field's margin-top is for stacked
    fields on a page). */
 .fl-sheet__body > .fl-field:first-child { margin-top: 0; }
 
+.fl-sheet__list {
+  padding: 0;
+  list-style: none;
+  margin-bottom: var(--fl-space-4);
+}
+
+/* Grid contents ("Open in…"): a fixed 3-column grid of icon+label tiles.
+   The tiles are .fl-option re-oriented vertically — one row component. */
+.fl-sheet__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--fl-space-2);
+  padding: var(--fl-space-2) var(--fl-space-3);
+  margin-bottom: var(--fl-space-4);
+}
+.fl-sheet__grid .fl-option {
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--fl-space-2);
+  text-align: center;
+  padding: var(--fl-space-2);
+}
+
 .fl-sheet__actions {
   flex: none;
   display: flex;
   justify-content: flex-end;
   gap: var(--fl-space-2);
-  margin-top: var(--fl-space-4);
+  padding: 0 var(--fl-space-4)
+    calc(var(--fl-space-4) + env(safe-area-inset-bottom, 0px));
 }
 
 .fl-sheet__actions form { margin: 0; }
+
+/* Standard bottom sheet (non-modal): persistent — no scrim, no <dialog>, no
+   JS; the page behind stays interactive and scrollable (M2 standard sheet).
+   Any block element carries the class. Sits below the snackbar so status
+   messages always win the bottom edge. */
+.fl-sheet--standard {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--fl-z-sheet);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.fl-sheet--standard .fl-sheet__surface {
+  max-height: none;
+  border: none;
+  border-top: 1px solid var(--fl-border);
+  border-radius: 0;
+}
+/* Standard sheets are titleless content bars: the body owns the full
+   inset (the surface has none of its own). */
+.fl-sheet--standard .fl-sheet__body {
+  padding: var(--fl-space-3) var(--fl-space-4);
+  margin-bottom: 0;
+}
+
+/* Desktop: a 560px card instead of a full-bleed tray, and a taller cap —
+   placed after the @supports token rule so it wins the cascade there. */
+@media (min-width: 600px) {
+  .fl-sheet__surface {
+    max-height: min(86vh, 640px);   /* fallback for engines without dvh */
+    max-height: min(86dvh, 640px);
+  }
+}
 
 /* Reduced motion: transitions off entirely (closes go instant — fine). */
 @media (prefers-reduced-motion: reduce) {
@@ -1422,7 +1558,8 @@ dialog.fl-sheet[open] {
 
 .fl-snackbar {
   position: fixed;
-  inset: auto var(--fl-space-2) var(--fl-space-2);  /* 8dp from the edges */
+  inset: auto var(--fl-space-2)
+    calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
   gap: var(--fl-space-3);
@@ -1449,7 +1586,9 @@ dialog.fl-sheet[open] {
    Keep it consistent — M2 forbids mixing alignments. */
 @media (min-width: 600px) {
   .fl-snackbar {
-    inset: auto auto var(--fl-space-2) var(--fl-space-2);
+    inset: auto auto
+      calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px))
+      var(--fl-space-2);
     max-width: 560px;
   }
 }
@@ -1468,7 +1607,9 @@ dialog.fl-sheet[open] {
   cursor: pointer;
   transition: background-color var(--fl-dur) var(--fl-ease);
 }
-.fl-snackbar__action:hover { background: rgb(255 255 255 / 0.08); }
+@media (hover: hover) {
+  .fl-snackbar__action:hover { background: rgb(255 255 255 / 0.08); }
+}
 .fl-snackbar__action:active { background: rgb(255 255 255 / 0.12); }
 
 /* Persistent bottom navigation raises the sheet line, not the snackbar —
@@ -1602,17 +1743,21 @@ dialog.fl-sheet[open] {
   transform: translateX(-50%);
 }
 
-.fl-tip:hover .fl-tip__bubble,
+@media (hover: hover) {
+  .fl-tip:hover .fl-tip__bubble {
+    opacity: 1;
+    visibility: visible;
+    /* Hover waits (--fl-tip-delay) so sweeping a toolbar doesn't fire every
+       tooltip. */
+    transition-delay: var(--fl-tip-delay), 0s;
+  }
+}
+
+/* Focus shows it immediately — keyboard and touch get no delay, and focus
+   is the touch path (hover is guarded away above). */
 .fl-tip:focus-within .fl-tip__bubble {
   opacity: 1;
   visibility: visible;
-  /* Hover waits (--fl-tip-delay) so sweeping a toolbar doesn't fire every
-     tooltip; focus waits for nobody. */
-  transition-delay: var(--fl-tip-delay), 0s;
-}
-
-/* Focus overrides the shared rule: keyboard users get it immediately */
-.fl-tip:focus-within .fl-tip__bubble {
   transition-delay: 0s, 0s;
 }
 
@@ -1650,8 +1795,7 @@ dialog.fl-sheet[open] {
 
 @media (prefers-reduced-motion: reduce) {
   .fl-tip__bubble,
-  .fl-tip:hover .fl-tip__bubble,
   .fl-tip:focus-within .fl-tip__bubble {
-    transition: none;
+    transition: none;   /* covers hover too: no property, nothing animates */
   }
 }

@@ -168,7 +168,7 @@
 <article class="docs-article">
   <header class="docs-art-head">
     <h1>Bottom sheet</h1>
-    <p class="docs-art-lead">A sheet docked to the bottom edge on the native &lt;dialog&gt; — same overlay layer as the dialog, different presentation.</p>
+    <p class="docs-art-lead">A sheet docked to the bottom edge — modal on the native &lt;dialog&gt;, standard as a persistent plain element. Same interior contract, two platform roots.</p>
   </header>
 
   <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
@@ -200,9 +200,11 @@
 <section class="docs-section">
   <h2 id="d-usage">Usage</h2>
   <p>A bottom sheet presents choices or a compact task in the context the user
-     is already in — it rises from the bottom edge, keeps that context visible
-     behind a scrim, and returns as soon as the choice is made.</p>
-  <h3>Do use it for</h3>
+     is already in. Material 2 defines three types; Flint ships two — the two
+     that earn their keep on the web.</p>
+  <h3>Modal sheet</h3>
+  <p>Blocks the screen behind a scrim and dismisses as soon as the choice is
+     made. Use it for:</p>
   <ul>
     <li><strong>Choosing from a set</strong> — sort order, account picker,
         "add to" destinations. The canonical sheet is a vertical option
@@ -212,22 +214,33 @@
     <li><strong>Details that shouldn't navigate</strong> — long metadata or an
         "about" panel that belongs to the current screen.</li>
   </ul>
-  <h3>Don't use it for</h3>
+  <h3>Standard sheet</h3>
+  <p>Persistent and non-modal: no scrim, the page stays interactive and
+     scrolls behind it. Use it for a state the app keeps — a mini-player, a
+     cart summary, a "3 items selected" bar. It is plain CSS (a fixed block
+     element); there is nothing to open and nothing to dismiss.</p>
+  <h3>Don't use a sheet for</h3>
   <ul>
     <li><strong>Destructive or blocking decisions</strong> — "delete
-        everything?" is a <a href="dialog.html">dialog</a> territory; a sheet
+        everything?" is <a href="dialog.html">dialog</a> territory; a sheet
         implies "this is still the same task".</li>
     <li><strong>Full-screen forms</strong> — real compose and settings
         sub-pages are the dialog's <code>--fullscreen</code> type.</li>
     <li><strong>Feedback</strong> — "Message sent" is a snackbar, never a
         sheet.</li>
+    <li><strong>An "expanded" state of a collapsed pill</strong> — that is
+        M2's expanding sheet, which Flint deliberately does not implement:
+        on the web its collapsed state is a FAB or a sticky action bar and
+        its expanded state is the dialog's <code>--fullscreen</code>. The
+        only thing left would be the morph between them — a gesture
+        state machine this library doesn't need.</li>
   </ul>
   
 <div class="docs-callout docs-callout--info">
   <span class="docs-callout__dot" aria-hidden="true"></span>
   <div>
-    <h3 class="docs-callout__title">The handle is a glyph, not a gesture</h3>
-    <p class="docs-callout__text">The drag handle is drawn (32×4px, static). Drag-to-dismiss is not supported and not claimed — sheets close on scrim tap, Escape or their own actions, like every other overlay here. On desktop (≥600px) the sheet becomes a 560px card docked to the bottom edge instead of a full-bleed tray.</p>
+    <h3 class="docs-callout__title">No drag gesture</h3>
+    <p class="docs-callout__text">M2 sheets have no drag handle, and Flint doesn&#39;t fake one — there is no swipe-to-dismiss either: a vertical drag fights the sheet&#39;s own scroll. Sheets close on scrim tap, Escape, their own rows or a close action.</p>
     <a class="docs-callout__link" href="dialog.html">Dialog component</a>
   </div>
 </div>
@@ -242,34 +255,36 @@
       <rect x="1" y="1" width="598" height="258" fill="#5f6368" opacity="0.12"/>
       <!-- sheet docked to bottom -->
       <rect x="40" y="110" width="520" height="150" rx="8" fill="#ffffff" stroke="#dadce0"/>
-      <!-- handle -->
-      <rect x="280" y="120" width="40" height="4" rx="2" fill="#5f6368"/>
       <!-- title -->
-      <rect x="60" y="136" width="110" height="10" rx="5" fill="#1f1f1f"/>
+      <rect x="60" y="130" width="110" height="10" rx="5" fill="#1f1f1f"/>
       <!-- option rows -->
-      <rect x="60" y="158" width="200" height="8" rx="4" fill="#9aa0a6"/>
-      <rect x="60" y="178" width="170" height="8" rx="4" fill="#9aa0a6"/>
-      <rect x="60" y="198" width="190" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="60" y="156" width="200" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="60" y="184" width="170" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="60" y="212" width="190" height="8" rx="4" fill="#9aa0a6"/>
       <!-- action -->
-      <rect x="480" y="222" width="60" height="20" rx="4" fill="#1a73e8"/>
+      <rect x="480" y="230" width="60" height="20" rx="4" fill="#1a73e8"/>
+      <!-- scrim edge -->
+      <rect x="40" y="104" width="520" height="6" fill="#000000" opacity="0.32"/>
       <!-- callouts -->
       <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
-        <g><circle cx="300" cy="100" r="11" fill="#1a73e8"/><text x="300" y="104" fill="#ffffff" text-anchor="middle">1</text></g>
-        <g><circle cx="30" cy="140" r="11" fill="#1a73e8"/><text x="30" y="144" fill="#ffffff" text-anchor="middle">2</text></g>
-        <g><circle cx="300" cy="180" r="11" fill="#1a73e8"/><text x="300" y="184" fill="#ffffff" text-anchor="middle">3</text></g>
-        <g><circle cx="300" cy="232" r="11" fill="#1a73e8"/><text x="300" y="236" fill="#ffffff" text-anchor="middle">4</text></g>
+        <g><circle cx="30" cy="134" r="11" fill="#1a73e8"/><text x="30" y="138" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="300" cy="180" r="11" fill="#1a73e8"/><text x="300" y="184" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="300" cy="240" r="11" fill="#1a73e8"/><text x="300" y="244" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="565" cy="115" r="11" fill="#1a73e8"/><text x="565" y="119" fill="#ffffff" text-anchor="middle">4</text></g>
       </g>
     </svg>
     <ol>
-      <li><strong>Handle</strong> — the static 32×4 glyph; decorative
-          (<code>aria-hidden</code>), no drag behavior.</li>
       <li><strong>Title</strong> — short, 16px/500; optional for pure option
           lists where the rows are self-describing.</li>
-      <li><strong>Body</strong> — option rows, fields or long content;
-          scrolls while the title stays pinned. Option rows reuse the dialog
-          family's <code>fl-dialog__option</code> (48px, state layer).</li>
+      <li><strong>Content slot</strong> — exactly one of <code>__list</code>,
+          <code>__body</code> or <code>__grid</code>; it scrolls while title
+          and actions stay pinned. The surface has no padding — each slot
+          owns its inset.</li>
       <li><strong>Actions</strong> — right-aligned, same button idiom as the
-          dialog; often unnecessary for pure pick-one lists.</li>
+          dialog; often unnecessary for pure pick-one lists. They carry the
+          safe-area inset.</li>
+      <li><strong>Scrim</strong> — modal only, 32% black, shared with the
+          dialog and drawer. A standard sheet has none.</li>
     </ol>
   </div>
 </section>
@@ -277,33 +292,83 @@
 <section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
-    <li><strong>Same overlay contract as the dialog:</strong>
+    <li><strong>Two roots, one contract:</strong> the modal sheet is a
+        <code>&lt;dialog&gt;</code> (only dialogs can be modal); the standard
+        sheet is any block element with <code>fl-sheet--standard</code>. The
+        interior — surface, title, one content slot, actions — is identical,
+        so the CSS is written once.</li>
+    <li><strong>Modal lifecycle:</strong>
         <code>data-fl-open="sheet-id"</code> opens it,
         <code>data-fl-close</code> inside closes it, and
         <code>&lt;form method="dialog"&gt;</code> records the pressed row or
         button in <code>dialog.returnValue</code> — picking "Unread first"
-        from the sort sheet returns <code>"unread"</code> with zero
-        JavaScript.</li>
-    <li><strong>Dismissal:</strong> Escape and scrim clicks close it (native
-        <code>&lt;dialog&gt;</code>); focus returns to the invoker on every
-        close path. As with the dialog: if the body scrolls, Chromium may
-        focus the scroll region first — set <code>autofocus</code> on the
-        control that should receive initial focus (the demos do).</li>
-    <li><strong>Scroll:</strong> the body scrolls inside the surface (capped
-        at <code>min(86vh, 640px)</code>); handle and title stay pinned.</li>
-    <li><strong>Responsive width:</strong> full-bleed below 600px; a 560px
-        bottom-docked card above.</li>
+        returns <code>"unread"</code> with zero JavaScript.</li>
+    <li><strong>Height:</strong> the initial height is capped at
+        <code>50dvh</code> — M2's "initial position at 50% of the screen".
+        Shorter content sizes the sheet; taller content scrolls inside it.
+        Content that needs the whole screen gets <code>fl-sheet--full</code>
+        (100dvh, internal scroll) — and a close action is <em>required</em>
+        in that state, because the scrim can't be the only way out of a
+        full-screen surface.</li>
+    <li><strong>Dismissal (modal):</strong> Escape, scrim tap, the rows and
+        the actions all close it; focus returns to the invoker on every
+        path. There is no swipe-to-dismiss — a vertical drag has to
+        arbitrate against the sheet's own scroll, and a gesture that
+        sometimes scrolls and sometimes closes is worse than none.</li>
+    <li><strong>Scroll:</strong> the content slot scrolls inside the surface
+        (<code>overscroll-behavior: contain</code> keeps the page behind
+        from rubber-banding); the page itself is scroll-locked while a
+        modal sheet is open — one CSS rule shared across dialog, sheet and
+        drawer.</li>
     <li><strong>Stacking:</strong> a <a href="dialog.html">dialog</a> can open
         over the sheet — the top layer stacks in DOM order and Escape peels
         only the top one.</li>
-    <li><strong>Scroll lock:</strong> the page locks while any overlay is
-        open — one CSS rule shared across dialog, sheet and drawer.</li>
     <li><strong>Animation:</strong> slides up on open, fades out on close —
         CSS only, <code>prefers-reduced-motion</code> disables it.</li>
-    <li><strong>No-JS fallback (honest):</strong> without flint.js the sheet
-        stays hidden and the page keeps working. Call <code>showModal()</code>
-        yourself with one line, or drive it from your own code. See the
-        <a href="overlay.html">overlay infra demo</a> for the raw lifecycle.</li>
+    <li><strong>No-JS fallback (honest):</strong> the standard sheet is plain
+        CSS and works without JavaScript. The modal sheet stays hidden —
+        call <code>showModal()</code> yourself with one line, or drive it
+        from your own code. See <a href="../demos/dialog.html">demos/dialog.html</a>
+        for the raw lifecycle.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-placement">Placement</h2>
+  <ul>
+    <li><strong>Mobile (&lt;600px):</strong> full-bleed to the bottom edge,
+        8px top radius. On the web the browser owns the edges, so the
+        sheet docks to the layout viewport, not behind the URL bar.</li>
+    <li><strong>Desktop (≥600px):</strong> a 560px card docked to the bottom
+        edge, with a taller cap (<code>min(86dvh, 640px)</code>). Never
+        full-width on large screens — an edge-to-edge tray at desktop width
+        is a layout, not a sheet.</li>
+    <li><strong>Safe areas:</strong> the actions row and the standard sheet
+        add <code>env(safe-area-inset-bottom)</code>, so the home indicator
+        never covers a button.</li>
+    <li><strong>Don't inset a sheet on all sides</strong> — that's a card or
+        (small and inverse) a snackbar, not a sheet.</li>
+    <li><strong>Standard sheet layering:</strong> it sits below the snackbar
+        (<code>--fl-z-sheet: 18</code> vs <code>--fl-z-snackbar: 25</code>)
+        so status messages always win the bottom edge. The page needs
+        <code>padding-bottom</code> clearance at least as tall as the
+        sheet.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-contents">Contents</h2>
+  <p>One content slot per sheet — no nesting, no negative margins:</p>
+  <ul>
+    <li><strong><code>__list</code></strong> — option rows, full-bleed.
+        Rows are <code>fl-option</code> at <strong>56px</strong> here (the
+        surface sets <code>--fl-option-h</code>; dialogs keep 48px — both
+        are spec numbers, one row component).</li>
+    <li><strong><code>__grid</code></strong> — the "Open in…" idiom: a fixed
+        3-column grid of icon+label tiles. The tiles are the same
+        <code>fl-option</code> re-oriented vertically.</li>
+    <li><strong><code>__body</code></strong> — fields and prose; owns the
+        side insets and scrolls.</li>
   </ul>
 </section>
 
@@ -313,16 +378,21 @@
     <li>Give the sheet <code>aria-labelledby</code> pointing at its title
         (skip this only when there is deliberately no title and the rows are
         self-describing).</li>
-    <li>The handle is decorative — mark it <code>aria-hidden="true"</code> so
-        screen readers don't announce a "drag" affordance that doesn't
-        exist.</li>
     <li>Option rows are real <code>&lt;button&gt;</code>s or
         <code>&lt;label&gt;</code>+input pairs — native focus, native
-        activation, no <code>tabindex</code> games.</li>
-    <li>The inert background is native: nothing behind the sheet is focusable
-        or announced while it's open.</li>
-    <li>Don't remove the focus ring; the global <code>:focus-visible</code>
-        ring is what makes the modal boundary visible to keyboard users.</li>
+        activation, no <code>tabindex</code> games. 56px rows exceed the
+        48px touch-target minimum.</li>
+    <li>The inert background is native: nothing behind a modal sheet is
+        focusable or announced while it's open. The standard sheet is
+        <em>not</em> inert — keep its controls few and its content a state,
+        not a task.</li>
+    <li>Full-bleed rows draw the focus ring inside the row (the global ring
+        would land outside the surface and get clipped) — don't remove it;
+        it's what makes keyboard position visible.</li>
+    <li><strong>Known gap:</strong> no swipe-to-dismiss (see Behavior) and
+        no Android back-gesture integration — on Android the system back
+        navigates away instead of closing the sheet. All four web dismissal
+        paths work; a history-based fix is planned for 0.5.</li>
   </ul>
 </section>
 
@@ -354,7 +424,8 @@
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 
-  <p>Option-list sheet — one <code>method="dialog"</code> form wraps the rows;
+  <p>Menu sheet — the canonical M2 option list. Rows are 56px
+     <code>fl-option</code>; one <code>method="dialog"</code> form per row,
      picking one closes and records its value:</p>
   
   
@@ -363,21 +434,42 @@
 
 &lt;dialog class=&quot;fl-sheet&quot; id=&quot;sheet-sort&quot; aria-labelledby=&quot;sheet-sort-t&quot;&gt;
   &lt;div class=&quot;fl-sheet__surface&quot;&gt;
-    &lt;div class=&quot;fl-sheet__handle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
     &lt;h2 class=&quot;fl-sheet__title&quot; id=&quot;sheet-sort-t&quot;&gt;Sort conversations&lt;/h2&gt;
-    &lt;div class=&quot;fl-sheet__body&quot;&gt;
-      &lt;div class=&quot;fl-dialog__list&quot;&gt;
-        &lt;form method=&quot;dialog&quot;&gt;
-          &lt;button class=&quot;fl-dialog__option&quot; value=&quot;date&quot; autofocus&gt;Date received&lt;/button&gt;
-        &lt;/form&gt;
-        &lt;form method=&quot;dialog&quot;&gt;
-          &lt;button class=&quot;fl-dialog__option&quot; value=&quot;unread&quot;&gt;Unread first&lt;/button&gt;
-        &lt;/form&gt;
-      &lt;/div&gt;
+    &lt;div class=&quot;fl-sheet__list&quot;&gt;
+      &lt;form method=&quot;dialog&quot;&gt;
+        &lt;button class=&quot;fl-option&quot; value=&quot;date&quot; autofocus&gt;Date received&lt;/button&gt;
+      &lt;/form&gt;
+      &lt;form method=&quot;dialog&quot;&gt;
+        &lt;button class=&quot;fl-option&quot; value=&quot;unread&quot;&gt;Unread first&lt;/button&gt;
+      &lt;/form&gt;
     &lt;/div&gt;
     &lt;div class=&quot;fl-sheet__actions&quot;&gt;
       &lt;button class=&quot;fl-btn fl-btn--text&quot; data-fl-close&gt;Cancel&lt;/button&gt;
     &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Grid sheet ("Open in…") — the grid slot <em>is</em> the form, so every
+     tile submits and closes with its value:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;dialog class=&quot;fl-sheet&quot; id=&quot;sheet-open&quot; aria-labelledby=&quot;sheet-open-t&quot;&gt;
+  &lt;div class=&quot;fl-sheet__surface&quot;&gt;
+    &lt;h2 class=&quot;fl-sheet__title&quot; id=&quot;sheet-open-t&quot;&gt;Open in…&lt;/h2&gt;
+    &lt;form class=&quot;fl-sheet__grid&quot; method=&quot;dialog&quot;&gt;
+      &lt;button class=&quot;fl-option&quot; value=&quot;drive&quot; autofocus&gt;
+        &lt;svg …&gt;…&lt;/svg&gt; Drive
+      &lt;/button&gt;
+      &lt;button class=&quot;fl-option&quot; value=&quot;mail&quot;&gt;
+        &lt;svg …&gt;…&lt;/svg&gt; Mail
+      &lt;/button&gt;
+      &lt;button class=&quot;fl-option&quot; value=&quot;photos&quot;&gt;
+        &lt;svg …&gt;…&lt;/svg&gt; Photos
+      &lt;/button&gt;
+    &lt;/form&gt;
   &lt;/div&gt;
 &lt;/dialog&gt;</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
@@ -389,7 +481,6 @@
 <div class="docs-snippet">
   <pre><code>&lt;dialog class=&quot;fl-sheet&quot; id=&quot;sheet-label&quot; aria-labelledby=&quot;sheet-label-t&quot;&gt;
   &lt;div class=&quot;fl-sheet__surface&quot;&gt;
-    &lt;div class=&quot;fl-sheet__handle&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
     &lt;h2 class=&quot;fl-sheet__title&quot; id=&quot;sheet-label-t&quot;&gt;New label&lt;/h2&gt;
     &lt;form class=&quot;fl-sheet__body&quot; method=&quot;dialog&quot; id=&quot;label-form&quot;&gt;
       &lt;div class=&quot;fl-field&quot;&gt;
@@ -408,14 +499,55 @@
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
 
+  <p>Full-screen sheet — for content that needs the whole screen. A close
+     action is required in this state:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;dialog class=&quot;fl-sheet fl-sheet--full&quot; id=&quot;sheet-about&quot; aria-labelledby=&quot;sheet-about-t&quot;&gt;
+  &lt;div class=&quot;fl-sheet__surface&quot;&gt;
+    &lt;h2 class=&quot;fl-sheet__title&quot; id=&quot;sheet-about-t&quot;&gt;About&lt;/h2&gt;
+    &lt;div class=&quot;fl-sheet__body&quot;&gt;
+      &lt;p&gt;Long content scrolls inside the body while the title and the
+         close action stay pinned.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;fl-sheet__actions&quot;&gt;
+      &lt;form method=&quot;dialog&quot;&gt;&lt;button class=&quot;fl-btn fl-btn--filled&quot; value=&quot;ok&quot; autofocus&gt;Close&lt;/button&gt;&lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Standard sheet — persistent, non-modal, zero JS. Not a
+     <code>&lt;dialog&gt;</code>: any block element carries the class. The
+     page's scroll container needs <code>padding-bottom</code> clearance at
+     least as tall as the sheet:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;aside class=&quot;fl-sheet fl-sheet--standard&quot; aria-label=&quot;Now playing&quot;&gt;
+  &lt;div class=&quot;fl-sheet__surface&quot;&gt;
+    &lt;div class=&quot;fl-sheet__body&quot;&gt;
+      &lt;div style=&quot;display:flex; align-items:center; gap:16px&quot;&gt;
+        &lt;!-- track info + play/next icon buttons --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/aside&gt;
+
+&lt;!-- the page clears the sheet --&gt;
+&lt;main style=&quot;padding-bottom: 88px&quot;&gt;…&lt;/main&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
 </section>
 
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
-  <p><a href="../demos/sheet.html">demos/sheet.html</a> covers the option
-     list, a form sheet and long scrollable content. The raw overlay
-     lifecycle — including a dialog stacked over a sheet — is in
-     <a href="../demos/overlay.html">demos/overlay.html</a>.</p>
+  <p><a href="../demos/sheet.html">demos/sheet.html</a> covers all of it —
+     the standard player bar, the menu sheet, the grid sheet, a form sheet
+     and <code>fl-sheet--full</code> with long scrollable content.</p>
 </section>
 
 <section class="docs-section">
@@ -431,7 +563,9 @@
       <tr><td><code>--fl-surface</code></td><td>The sheet fill</td></tr>
       <tr><td><code>--fl-border</code></td><td>The 1px border</td></tr>
       <tr><td><code>--fl-radius-lg</code></td><td>The top corner radius (8px)</td></tr>
-      <tr><td><code>--fl-divider</code></td><td>The drag-handle glyph</td></tr>
+      <tr><td><code>--fl-sheet-max-h</code></td><td>The initial height cap (50dvh)</td></tr>
+      <tr><td><code>--fl-option-h</code></td><td>Row height (56px inside sheets, 48px dialogs)</td></tr>
+      <tr><td><code>--fl-z-sheet</code></td><td>Standard sheet layer (below the snackbar)</td></tr>
       <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Open/close animation timing</td></tr>
     </tbody>
   </table>
@@ -440,7 +574,8 @@
 <div class="docs-snippet">
   <pre><code>:root {
   --fl-radius-lg: 16px;           /* rounder sheet top corners */
-  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every overlay follows */
+  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every scrim follows */
+  --fl-sheet-max-h: 60dvh;        /* taller initial cap */
 }</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
@@ -459,6 +594,10 @@
         <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-placement">Placement</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-contents">Contents</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
         

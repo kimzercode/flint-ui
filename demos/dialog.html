@@ -72,25 +72,26 @@
 
 <!-- Simple dialog: an option list — picking a row closes with that row's
      value as returnValue. One form wraps the list; every row is a submit
-     button. Rows are fl-dialog__option (48px, state layer on hover). -->
+     button. Rows are fl-option — the shared option row (48px in dialogs;
+     sheets set 56px on their surface). State layer on hover. -->
 <dialog class="fl-dialog" id="dlg-label" aria-labelledby="dlg-label-t">
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-label-t">Apply label</h2>
     <div class="fl-dialog__list">
       <form method="dialog">
-        <button class="fl-dialog__option" value="finance" autofocus>
+        <button class="fl-option" value="finance" autofocus>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20.59 13.41l-8.17 8.17a2 2 0 0 1-2.83 0L2 14V2h12l7.41 7.41a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>
           Finance
         </button>
       </form>
       <form method="dialog">
-        <button class="fl-dialog__option" value="personal">
+        <button class="fl-option" value="personal">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Personal
         </button>
       </form>
       <form method="dialog">
-        <button class="fl-dialog__option" value="work">
+        <button class="fl-option" value="work">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
           Work
         </button>
@@ -108,20 +109,21 @@
 <dialog class="fl-dialog" id="dlg-filter" aria-labelledby="dlg-filter-t">
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-filter-t">Filter by priority?</h2>
-    <form class="fl-dialog__body" method="dialog" id="filter-form" style="margin-bottom:0">
-      <div class="fl-dialog__list" style="margin-bottom:0">
-        <label class="fl-dialog__option">
-          <input type="radio" name="prio" class="fl-radio" value="high"> High priority
-        </label>
-        <label class="fl-dialog__option">
-          <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
-        </label>
-        <label class="fl-dialog__option">
-          <input type="radio" name="prio" class="fl-radio" value="low"> Low priority
-        </label>
-      </div>
+    <!-- The list slot IS the form here: one element, no wrapper — the rows
+         stay full-bleed and the confirm button (outside, form=) submits it. -->
+    <form class="fl-dialog__list" method="dialog" id="filter-form"
+          role="radiogroup" aria-labelledby="dlg-filter-t">
+      <label class="fl-option">
+        <input type="radio" name="prio" class="fl-radio" value="high"> High priority
+      </label>
+      <label class="fl-option">
+        <input type="radio" name="prio" class="fl-radio" value="normal"> Normal
+      </label>
+      <label class="fl-option">
+        <input type="radio" name="prio" class="fl-radio" value="low"> Low priority
+      </label>
     </form>
-    <div class="fl-dialog__actions" style="margin-top:var(--fl-space-4)">
+    <div class="fl-dialog__actions">
       <button class="fl-btn fl-btn--text" data-fl-close autofocus>Cancel</button>
       <button class="fl-btn fl-btn--filled" id="filter-confirm" form="filter-form" value="filter" disabled>Filter</button>
     </div>
@@ -141,7 +143,7 @@
       <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>
     </div>
     <form class="fl-dialog__body" method="dialog" id="compose-form">
-      <div class="fl-field" style="margin-top:0">
+      <div class="fl-field">
         <label class="fl-field__label" for="cp-to">To</label>
         <div class="fl-field__box">
           <input class="fl-field__input" id="cp-to" value="ada@example.com" autofocus>
@@ -195,9 +197,9 @@ document.getElementById("dlg-filter").addEventListener("change", function () {
   <div class="fl-dialog__surface">
     <h2 class="fl-dialog__title" id="dlg-notes-t">What's new in 0.4</h2>
     <div class="fl-dialog__body">
-      <p style="margin:0 0 12px">Dialogs and bottom sheets land on a shared overlay layer built on the native <code>&lt;dialog&gt;</code> element.</p>
+      <p style="margin:0 0 12px">Dialogs and bottom sheets land on a shared modal layer built on the native <code>&lt;dialog&gt;</code> element.</p>
       <p style="margin:0 0 12px">The focus trap, the inert background, Escape-to-close and top-layer stacking are platform work — the library ships none of them.</p>
-      <p style="margin:0 0 12px">The scrim is one token, <code>--fl-scrim</code>, shared by every overlay type including the drawer.</p>
+      <p style="margin:0 0 12px">The scrim is one token, <code>--fl-scrim</code>, shared by every modal surface including the drawer.</p>
       <p style="margin:0 0 12px">Open and close are both animated in CSS: entry via <code>@starting-style</code>, exit via <code>allow-discrete</code> on <code>display</code> and <code>overlay</code>.</p>
       <p style="margin:0 0 12px">Scroll lock is one rule: <code>html:has(dialog[open])</code>. No body-class bookkeeping in flint.js.</p>
       <p style="margin:0 0 12px">Long dialog content scrolls in the body while the title and action row stay pinned — flexbox, not JavaScript.</p>
