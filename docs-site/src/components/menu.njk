@@ -1,0 +1,332 @@
+---
+layout: layouts/base.njk
+permalink: components/menu.html
+assetRoot: ../
+title: Menu
+section: components
+current: menu
+depth: 1
+lead: A dropdown of choices anchored to a button (the ⋮) — anchored, flipped and keyboard-navigated on the native Popover API; flint.js only positions it.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: types
+      title: Types
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+    - id: gaps
+      title: Known gaps
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A menu displays a list of choices on a temporary surface. It appears when
+     the user interacts with a button, action or other control — the classic
+     trigger is the ⋮ overflow icon on a top bar or a list row.</p>
+  <h3>Do use it for</h3>
+  <ul>
+    <li><strong>Overflow actions</strong> — the secondary actions that don't
+        fit on a bar or row (most-used actions stay visible, the rest go in
+        the menu).</li>
+    <li><strong>Compact choices</strong> — picking one of a few options
+        without committing a form row to it.</li>
+    <li><strong>Contextual commands</strong> — actions for the item the
+        trigger belongs to (duplicate, share, remove).</li>
+  </ul>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Blocking decisions</strong> — that is a
+        <a href="dialog.html">dialog</a>; menus never demand an answer.</li>
+    <li><strong>Long or grouped content</strong> — settings panes, filters
+        with many fields. That is a <a href="bottom-sheet.html">bottom
+        sheet</a> — M2 itself names it the mobile replacement for inline
+        menus.</li>
+    <li><strong>Selection inside a form</strong> — a form-bound choice is a
+        <a href="select.html">select</a>; that covers M2's <em>exposed
+        dropdown menu</em> (the variation that shows the current selection
+        above the list).</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "The hard parts are platform work — by design",
+    text: "The menu is a native popover: tap-outside dismiss, Escape, one-menu-at-a-time and top-layer stacking come from the browser. No scrim (M2 menus aren't modal — they simply render above everything), no z-index juggling. flint.js adds only anchoring, aria-expanded sync and the arrow-key pattern.",
+    href: "dialog.html",
+    linkText: "Dialog"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-types">Types</h2>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Type</th><th>Shape</th><th>Use it for</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Dropdown menu</strong></td>
+        <td>Anchor + <code>popover</code> panel; rows are
+            <code>fl-option</code> buttons with <code>role="menuitem"</code>
+        </td>
+        <td>The ⋮ overflow — secondary actions on bars, cards and list rows</td>
+      </tr>
+      <tr>
+        <td><strong>Text + icon list</strong></td>
+        <td>Rows with a leading icon slot; optional
+            <code>fl-option__meta</code> for keyboard commands (⌘X)</td>
+        <td>Row and card menus where icons aid scanning (M2 anatomy)</td>
+      </tr>
+      <tr>
+        <td><strong>Selection-state list</strong></td>
+        <td>Rows as <code>role="menuitemradio"</code> with
+            <code>aria-checked</code>; the check glyph draws in CSS, all
+            radio rows share a leading gutter</td>
+        <td>Single-choice menus (line spacing, sort order)</td>
+      </tr>
+      <tr>
+        <td><strong>Exposed dropdown</strong></td>
+        <td colspan="2"><em>Not this component</em> — M2's variation that
+            displays the current selection above the list is the
+            <a href="select.html">select</a> in Flint.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>Deliberately not in Flint:</strong> cascading (sub)menus —
+     desktop-only in M2 and a nesting depth apps rarely need; a second level
+     is better modeled as an item that opens a dialog or navigates. Dense
+     menus follow the same rule as the top bar's dense variants.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <p>M2's text list, text-and-icon list, and text-with-selection-state list
+     are all one structure — the panel plus the shared
+     <a href="dialog.html">option row</a>:</p>
+  <ol>
+    <li><strong>Panel</strong> — <code>fl-menu[popover]</code>: surface, 1px
+        border, 4px radius, 180–280px width. Scrollable menus cap at the
+        viewport height and keep their scrollbar.</li>
+    <li><strong>Rows</strong> — <code>fl-option</code> buttons (48px, hover
+        state layer, full-bleed focus ring) with
+        <code>role="menuitem"</code>.</li>
+    <li><strong>Leading icon</strong> — your SVG or a
+        <code>fl-icon</code> placeholder inside the row.</li>
+    <li><strong>Meta column</strong> — <code>fl-option__meta</code>:
+        right-aligned keyboard commands, secondary color.</li>
+    <li><strong>Divider</strong> — a plain <code>&lt;hr&gt;</code> between
+        unrelated groups.</li>
+    <li><strong>Selection check</strong> — drawn by CSS on
+        <code>[aria-checked="true"]</code>; radio rows reserve the leading
+        gutter so checked text keeps the column of its unchecked siblings.</li>
+  </ol>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Markup contract:</strong> the trigger is a
+        <code>&lt;button type="button" popovertarget="menu-id"
+        aria-haspopup="menu"&gt;</code>; the panel is
+        <code>&lt;div class="fl-menu" id="menu-id" popover&gt;</code>.
+        Opening is a platform attribute — no <code>data-fl-*</code>
+        hook.</li>
+    <li><strong>Positioning:</strong> the panel anchors below the trigger's
+        left edge and flips when it would clip — right edge first, then
+        above the trigger (M2: menus open downward at the top of the
+        screen, adapt to the edges elsewhere). flint.js repositions on
+        scroll and resize while open. Without flint.js the panel opens
+        centered — usable, just unanchored.</li>
+    <li><strong>Dismissal:</strong> click outside (light dismiss), Escape,
+        selecting an item (author closes with
+        <code>menu.hidePopover()</code> in the row's handler), or Tab.
+        Focus returns to the trigger on every path.</li>
+    <li><strong>Keyboard:</strong> ↑/↓ cycle rows, Home/End jump, Enter/Space
+        activate (native button semantics), Escape closes, Tab closes —
+        menus are not tab stops (WAI-ARIA).</li>
+    <li><strong>Disabled rows:</strong> shown with
+        <code>disabled</code>, not removed — M2: display actions as disabled
+        when they can only be used sometimes. flint.js skips them in the
+        arrow cycle.</li>
+    <li><strong>One at a time:</strong> opening a menu closes any other
+        open one — native <code>popover</code> light-dismiss
+        semantics.</li>
+    <li><strong>Animation:</strong> a 150ms fade (M2's transition for menus)
+        via <code>@starting-style</code>;
+        <code>prefers-reduced-motion</code> disables it.</li>
+    <li><strong>No-JS fallback (honest):</strong> <code>popovertarget</code>
+        opens the panel without flint.js (centered, unanchored). Browsers
+        without the Popover API keep menus closed — dialogs and sheets
+        (native <code>&lt;dialog&gt;</code>) cover the critical flows.
+        <code>aria-expanded</code> needs flint.js or author code; set it
+        yourself in server-rendered apps that skip flint.js.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Trigger: <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>
+        (synced by flint.js) and a real <code>aria-label</code> when
+        icon-only ("More options"), never the bare ⋮.</li>
+    <li>Panel: <code>role</code> stays native popover — give the panel an
+        <code>aria-label</code> ("Note actions") instead of
+        <code>role="menu"</code> on the popover element itself; rows carry
+        the menu semantics.</li>
+    <li>Rows are real <code>&lt;button&gt;s</code>: name, state and disabled
+        are announced natively; selection rows use
+        <code>aria-checked</code> (<code>menuitemradio</code>), not visual
+        state alone.</li>
+    <li>Keep row labels short — a menu is scanned, not read (M2:
+        scannable).</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-gaps">Known gaps</h2>
+  <ul>
+    <li><strong>Contextual menu (long-press / right-click at tap point):</strong>
+        CSS can't gesture and a long-press timer isn't in the JS budget — the
+        same honest gap as the mobile tooltip trigger. Right-click menus are
+        the browser's own; Flint menus are for consistent triggers.</li>
+    <li><strong>Cascading menus:</strong> deliberately not shipped (see
+        Types).</li>
+    <li><strong>Popover API support:</strong> evergreen browsers only
+        (Chrome/Edge 114+, Safari 17+, Firefox 125+); older engines get
+        closed menus. This is the one Flint component whose no-JS fallback
+        depends on the platform feature, not just on flint.js.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/menu.html — rendered live</span>
+      <a href="../demos/menu.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/menu.html" title="Menu live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>The ⋮ overflow menu — text rows, a group divider, instant dismiss on
+     selection (author code closes the panel):</p>
+  {% set moreMarkup %}
+<button class="fl-icon-btn" type="button" popovertarget="m-more"
+        aria-haspopup="menu" aria-expanded="false" aria-label="More options">
+  <span class="fl-icon" aria-hidden="true"></span>  <!-- your ⋮ icon -->
+</button>
+
+<div class="fl-menu" id="m-more" popover aria-label="More options">
+  <button class="fl-option" role="menuitem" type="button">Refresh</button>
+  <button class="fl-option" role="menuitem" type="button">Settings</button>
+  <hr>
+  <button class="fl-option" role="menuitem" type="button">Sign out</button>
+</div>
+
+<script>
+  // author code — menus dismiss instantly when an option is chosen (M2)
+  document.getElementById("m-more").addEventListener("click", (e) => {
+    const item = e.target.closest("[role='menuitem']");
+    if (item) e.currentTarget.hidePopover();
+  });
+</script>
+{% endset %}
+  {{ snippet(moreMarkup) }}
+  <p>Text + icon rows and keyboard commands:</p>
+  {% set iconsMarkup %}
+<div class="fl-menu" id="m-actions" popover aria-label="Note actions">
+  <button class="fl-option" role="menuitem" type="button">
+    <svg width="18" height="18" viewBox="0 0 24 24"><!-- your icon --></svg>
+    Preview
+  </button>
+  <button class="fl-option" role="menuitem" type="button" disabled>
+    Copy <span class="fl-option__meta">⌘C</span>
+  </button>
+</div>
+{% endset %}
+  {{ snippet(iconsMarkup) }}
+  <p>Selection state — the check draws from <code>aria-checked</code>; the
+     update is author logic:</p>
+  {% set selectionMarkup %}
+<div class="fl-menu" id="m-spacing" popover aria-label="Line spacing">
+  <button class="fl-option" role="menuitemradio" type="button"
+          aria-checked="false">Single</button>
+  <button class="fl-option" role="menuitemradio" type="button"
+          aria-checked="true">1.15</button>
+</div>
+
+<script>
+  const menu = document.getElementById("m-spacing");
+  menu.addEventListener("click", (e) => {
+    const row = e.target.closest("[role='menuitemradio']");
+    if (!row) return;
+    menu.querySelectorAll("[aria-checked]").forEach(r =>
+      r.setAttribute("aria-checked", r === row ? "true" : "false"));
+    menu.hidePopover();
+  });
+</script>
+{% endset %}
+  {{ snippet(selectionMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/menu.html">demos/menu.html</a> covers the text menu
+     (bar ⋮, edge flips), the text-and-icon anatomy, disabled rows with
+     commands, and the selection-state list. Try the keyboard too: open,
+     ↑/↓, Enter, Escape, Tab.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>The panel consumes the shared tokens — no menu-specific custom
+     properties (internal <code>--_</code> values are not theming API):</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-surface</code></td><td>The panel fill</td></tr>
+      <tr><td><code>--fl-border</code></td><td>The 1px panel border and group dividers</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-text</code> / <code>--fl-text-secondary</code></td><td>Row labels and the meta column</td></tr>
+      <tr><td><code>--fl-hover</code> / <code>--fl-divider</code></td><td>Row hover and pressed fills (shared with all state layers)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Open/close fade timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-radius: 8px;   /* rounder menus */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

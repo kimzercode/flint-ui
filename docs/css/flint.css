@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.4.0 · no dependencies · no shadows · 1px borders instead
+   v0.5.0-dev · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -1798,4 +1798,80 @@ dialog.fl-sheet--full[open] {
   .fl-tip:focus-within .fl-tip__bubble {
     transition: none;   /* covers hover too: no property, nothing animates */
   }
+}
+
+/* --------------------------------------------------------------------------
+   17. Menu — dropdown anchored to a trigger (⋮), native Popover API.
+   The platform provides light-dismiss (tap outside), Escape, one-at-a-time
+   and top-layer stacking; flint.js only anchors the panel to its trigger
+   (CSS cannot measure the trigger's position), flips it at the viewport
+   edges and adds the arrow-key pattern. No scrim: M2 menus aren't modal —
+   they simply render above everything else, which the top layer is.
+   Rows are .fl-option (48px, one row component shared with dialogs).
+   Fallback: browsers without the Popover API keep menus closed — honest
+   gap; dialogs and sheets (native <dialog>) cover the critical flows.
+   -------------------------------------------------------------------------- */
+.fl-menu[popover] {
+  margin: 0;
+  border: 1px solid var(--fl-border);   /* M2 gives menus the highest elevation; our border language stands in */
+  border-radius: var(--fl-radius);
+  background: var(--fl-surface);
+  color: var(--fl-text);
+  padding: var(--fl-space-2) 0;
+  min-width: 180px;
+  max-width: 280px;
+  /* Scrollable menus (M2): cap at the viewport and keep a scrollbar —
+     top-layer fixed elements would otherwise grow past the screen. */
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  transition:
+    opacity var(--fl-dur) var(--fl-ease),
+    display var(--fl-dur) allow-discrete,
+    overlay var(--fl-dur) allow-discrete;
+}
+.fl-menu:popover-open { opacity: 1; }
+@starting-style {
+  .fl-menu:popover-open { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-menu[popover] { transition: none; }
+}
+
+/* Group divider (M2 anatomy: related options grouped, unrelated divided) */
+.fl-menu hr {
+  border: 0;
+  border-top: 1px solid var(--fl-border);
+  margin: var(--fl-space-2) 0;
+}
+
+/* Right-aligned meta column: keyboard commands (⌘X), cascading-free
+   supplements. menuitemradio rows own a leading gutter (M2 selection-state
+   list: the check lives outside the text column, so checked text keeps
+   the column of its unchecked siblings). */
+.fl-option__meta {
+  margin-left: auto;
+  color: var(--fl-text-secondary);
+  font-size: var(--fl-fs-caption);
+  letter-spacing: 0.01785714em;
+}
+
+.fl-menu .fl-option { width: auto; }   /* popover width: fit-content basis */
+
+.fl-menu .fl-option[role="menuitemradio"],
+.fl-menu .fl-option[role="menuitemcheckbox"] {
+  position: relative;
+  padding-left: 46px;
+}
+.fl-menu .fl-option[aria-checked="true"]::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;   /* themable glyph — see the checkbox */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
 }

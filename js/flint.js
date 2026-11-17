@@ -1,8 +1,9 @@
 /*!
- * Flint UI — flint.js v0.4.0
+ * Flint UI — flint.js v0.5.0-dev
  * The entire JS surface: nav selected-state, drawer toggling, and the dialog
  * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
- * snackbar (one at a time, 4s auto-dismiss) and the password field toggle.
+ * snackbar (one at a time, 4s auto-dismiss), the password field toggle and
+ * the menu anchoring (the Popover API does the rest).
  * The CSS and the platform do the rest (aria-current/body classes, the
  * <dialog> focus trap, the inert background), so the library still renders
  * correctly with JS off.
@@ -129,6 +130,88 @@
     el.classList.remove("is-visible");
   }
 
+  /* --- Menu (dropdown) ----------------------------------------------------- *
+   * Native Popover API does light-dismiss (tap outside), Escape, one-menu-
+   * at-a-time and top-layer stacking. flint.js adds only what the platform
+   * cannot: anchoring the panel to its trigger with viewport flips (CSS
+   * cannot measure the trigger), aria-expanded sync, focus-in on open and
+   * the WAI-ARIA arrow-key pattern. Menu items are .fl-option buttons, so
+   * Enter/Space are native and disabled rows are skipped. */
+  var MENU_ITEMS = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
+
+  function menuInvoker(menu) {
+    return document.querySelector('[popovertarget="' + menu.id + '"]');
+  }
+
+  function positionMenu(menu) {
+    var btn = menuInvoker(menu);
+    if (!btn) return;
+    var r = btn.getBoundingClientRect();
+    var w = menu.offsetWidth;
+    var h = menu.offsetHeight;
+    var vw = document.documentElement.clientWidth;
+    var vh = document.documentElement.clientHeight;
+    var left = r.left;
+    var top = r.bottom;
+    if (left + w > vw - 8) left = r.right - w;   /* flip: align right edges */
+    if (left < 8) left = 8;
+    if (top + h > vh - 8) top = r.top - h;       /* flip: open upwards */
+    if (top < 8) top = 8;
+    menu.style.margin = "0";
+    menu.style.left = Math.round(left) + "px";
+    menu.style.top = Math.round(top) + "px";
+  }
+
+  document.addEventListener("toggle", function (e) {   /* toggle doesn't bubble */
+    var menu = e.target;
+    if (!menu.classList || !menu.classList.contains("fl-menu")) return;
+    var btn = menuInvoker(menu);
+    if (e.newState === "open") {
+      positionMenu(menu);
+      if (btn) btn.setAttribute("aria-expanded", "true");
+      var first = menu.querySelector(MENU_ITEMS + ":not(:disabled)");
+      if (first) first.focus();
+    } else if (btn) {
+      btn.setAttribute("aria-expanded", "false");
+      /* Focus return to the invoker is the platform's job on Esc and
+         light dismiss; only restore it when focus was inside the panel. */
+      if (menu.contains(document.activeElement)) btn.focus();
+    }
+  }, true);
+
+  document.addEventListener("keydown", function (e) {
+    var menu = e.target.closest && e.target.closest(".fl-menu");
+    if (!menu || !menu.matches(":popover-open")) return;
+    if (e.key === "Tab") {           /* menus are not tab stops (WAI-ARIA) */
+      e.preventDefault();
+      menu.hidePopover();
+      return;
+    }
+    var dir = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+    if (!dir && e.key !== "Home" && e.key !== "End") return;
+    e.preventDefault();
+    var items = Array.prototype.filter.call(
+      menu.querySelectorAll(MENU_ITEMS),
+      function (el) { return !el.disabled; });
+    if (!items.length) return;
+    var i = items.indexOf(document.activeElement);
+    var next = e.key === "Home" ? 0
+             : e.key === "End" ? items.length - 1
+             : (i + dir + items.length) % items.length;
+    items[next].focus();
+  });
+
+  /* An open menu follows its trigger (scroll, resize) — M2: menus stay
+     next to the element that generates them. Capture: scroll rarely
+     bubbles. */
+  function repositionOpenMenus() {
+    var open = document.querySelectorAll(".fl-menu:popover-open");
+    for (var i = 0; i < open.length; i++) positionMenu(open[i]);
+  }
+  document.addEventListener("scroll", repositionOpenMenus, true);
+  window.addEventListener("resize", repositionOpenMenus);
+
+
   /* --- Wiring ------------------------------------------------------------- */
   document.addEventListener("click", function (e) {
     if (e.target.closest("[data-fl-drawer-open]")) {
@@ -201,6 +284,7 @@
     scan: scan,
     drawer: setDrawer,
     dialog: { open: openDialog, close: closeDialog },
-    snackbar: { show: showSnackbar, hide: hideSnackbar }
+    snackbar: { show: showSnackbar, hide: hideSnackbar },
+    menu: { position: positionMenu }
   };
 })();

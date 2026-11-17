@@ -54,6 +54,12 @@ const real = [
     summary: "Single/two/three-line content rows in the Gmail-2020 style.",
   },
   {
+    name: "Menu",
+    slug: "menu",
+    status: "ready",
+    summary: "Dropdown anchored to a trigger (⋮) on the native Popover API — edge flips, keyboard pattern, no scrim.",
+  },
+  {
     name: "Rail shell",
     slug: "rail",
     status: "ready",

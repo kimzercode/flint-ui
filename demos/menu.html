@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — menu demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Text menu — a top-bar ⋮ (anchored, flips at the edges)</p>
+  <div style="display:flex; justify-content:flex-end;">
+    <button class="fl-icon-btn" type="button" popovertarget="m-more"
+            aria-haspopup="menu" aria-expanded="false" aria-label="More options">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="fl-menu" id="m-more" popover aria-label="More options">
+    <button class="fl-option" role="menuitem" type="button">Refresh</button>
+    <button class="fl-option" role="menuitem" type="button">Settings</button>
+    <button class="fl-option" role="menuitem" type="button">Send feedback</button>
+    <hr>
+    <button class="fl-option" role="menuitem" type="button">Sign out</button>
+  </div>
+
+  <p class="fl-section-label">Text + icon menu — a list-row ⋮ (M2 anatomy)</p>
+  <button class="fl-icon-btn" type="button" popovertarget="m-actions"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Note actions">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+  <div class="fl-menu" id="m-actions" popover aria-label="Note actions">
+    <button class="fl-option" role="menuitem" type="button">
+      <span class="fl-icon" aria-hidden="true"></span> Preview
+    </button>
+    <button class="fl-option" role="menuitem" type="button">
+      <span class="fl-icon" aria-hidden="true"></span> Share
+    </button>
+    <button class="fl-option" role="menuitem" type="button">
+      <span class="fl-icon" aria-hidden="true"></span> Get link
+    </button>
+    <hr>
+    <button class="fl-option" role="menuitem" type="button">
+      <span class="fl-icon" aria-hidden="true"></span> Remove
+    </button>
+  </div>
+
+  <p class="fl-section-label">Disabled actions (shown, not removed — M2) + commands</p>
+  <button class="fl-icon-btn" type="button" popovertarget="m-edit"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Edit">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+  <div class="fl-menu" id="m-edit" popover aria-label="Edit">
+    <button class="fl-option" role="menuitem" type="button">Undo</button>
+    <button class="fl-option" role="menuitem" type="button" disabled>Redo</button>
+    <hr>
+    <button class="fl-option" role="menuitem" type="button" disabled>
+      Cut <span class="fl-option__meta">⌘X</span>
+    </button>
+    <button class="fl-option" role="menuitem" type="button" disabled>
+      Copy <span class="fl-option__meta">⌘C</span>
+    </button>
+    <button class="fl-option" role="menuitem" type="button">
+      Paste <span class="fl-option__meta">⌘V</span>
+    </button>
+  </div>
+
+  <p class="fl-section-label">Selection state (single choice — menuitemradio)</p>
+  <button class="fl-icon-btn" type="button" popovertarget="m-spacing"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Line spacing">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+  <div class="fl-menu" id="m-spacing" popover aria-label="Line spacing">
+    <button class="fl-option" role="menuitemradio" type="button"
+            aria-checked="false">Single</button>
+    <button class="fl-option" role="menuitemradio" type="button"
+            aria-checked="true">1.15</button>
+    <button class="fl-option" role="menuitemradio" type="button"
+            aria-checked="false">Double</button>
+  </div>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    The author updates <code>aria-checked</code> on selection — app logic, not
+    the library's (same contract as snackbar actions).
+  </p>
+
+</main>
+
+</body>
+</html>
