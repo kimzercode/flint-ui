@@ -90,6 +90,12 @@ const real = [
     summary: "Checkboxes, radios and switches — native inputs drawn flat, zero JS.",
   },
   {
+    name: "Side sheet",
+    slug: "side-sheet",
+    status: "ready",
+    summary: "Trailing-edge supplementary surface — standard panel on desktop, modal on the native <dialog> with mobile insets.",
+  },
+  {
     name: "Text fields",
     slug: "text-fields",
     status: "ready",

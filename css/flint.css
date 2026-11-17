@@ -58,6 +58,7 @@
   --fl-tabbar-h: 56px;         /* M2 bottom-nav height, every breakpoint */
   --fl-content-max: 960px;     /* desktop reading column */
   --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
+  --fl-sidesheet-w: 320px;     /* side sheet width (M2 desktop standard: 320dp) */
   --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
   --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
 
@@ -1248,7 +1249,8 @@ button.fl-list-item:active { --_row-bg: var(--fl-divider); }
    surfaces off-center. Overlay scrollbars (the default everywhere today)
    make the shift moot; classic-scrollbar engines get the usual 15px shift. */
 html:has(dialog.fl-dialog[open]),
-html:has(dialog.fl-sheet[open]) {
+html:has(dialog.fl-sheet[open]),
+html:has(dialog.fl-sidesheet[open]) {
   overflow: hidden;
 }
 
@@ -1256,7 +1258,8 @@ html:has(dialog.fl-sheet[open]) {
    with the surface; allow-discrete keeps the backdrop alive during the exit
    transition so the fade actually runs. */
 dialog.fl-dialog::backdrop,
-dialog.fl-sheet::backdrop {
+dialog.fl-sheet::backdrop,
+dialog.fl-sidesheet::backdrop {
   background-color: transparent;
   transition:
     background-color var(--fl-dur) var(--fl-ease),
@@ -1265,13 +1268,15 @@ dialog.fl-sheet::backdrop {
 }
 
 dialog.fl-dialog[open]::backdrop,
-dialog.fl-sheet[open]::backdrop {
+dialog.fl-sheet[open]::backdrop,
+dialog.fl-sidesheet[open]::backdrop {
   background-color: var(--fl-scrim);
 }
 
 @starting-style {
   dialog.fl-dialog[open]::backdrop,
-  dialog.fl-sheet[open]::backdrop {
+  dialog.fl-sheet[open]::backdrop,
+  dialog.fl-sidesheet[open]::backdrop {
     background-color: transparent;
   }
 }
@@ -1280,7 +1285,8 @@ dialog.fl-sheet[open]::backdrop {
    padding live on the inner surface, so a click landing on the element is a
    scrim click (flint.js closes it). */
 dialog.fl-dialog,
-dialog.fl-sheet {
+dialog.fl-sheet,
+dialog.fl-sidesheet {
   border: none;
   padding: 0;
   background: transparent;
@@ -1295,14 +1301,16 @@ dialog.fl-sheet {
 }
 
 dialog.fl-dialog[open],
-dialog.fl-sheet[open] {
+dialog.fl-sheet[open],
+dialog.fl-sidesheet[open] {
   opacity: 1;
   transform: none;
 }
 
 @starting-style {
   dialog.fl-dialog[open],
-  dialog.fl-sheet[open] {
+  dialog.fl-sheet[open],
+  dialog.fl-sidesheet[open] {
     opacity: 0;
     transform: scale(0.96);
   }
@@ -1629,8 +1637,10 @@ dialog.fl-sheet--full[open] {
 @media (prefers-reduced-motion: reduce) {
   dialog.fl-dialog,
   dialog.fl-sheet,
+  dialog.fl-sidesheet,
   dialog.fl-dialog::backdrop,
-  dialog.fl-sheet::backdrop {
+  dialog.fl-sheet::backdrop,
+  dialog.fl-sidesheet::backdrop {
     transition: none;
   }
 }
@@ -1962,4 +1972,116 @@ dialog.fl-sheet--full[open] {
   height: 20px;
   background-color: currentColor;   /* themable glyph — see the checkbox */
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* --------------------------------------------------------------------------
+   18. Side sheet — supplementary surface anchored to the trailing edge
+   (M2 sheets: side). Two variants, one structure:
+     • Standard — a plain <aside>, non-modal: no scrim, no <dialog>, no JS;
+       the page stays interactive. Desktop/tablet only (M2: on mobile the
+       modal variant takes over) — hidden below 600px.
+     • Modal — a native <dialog>: full-height on desktop, inset 48/16 top/
+       bottom on mobile (M2 modal specs), visible scrim, Escape, focus trap
+       and scrim-tap dismissal from the platform; flint.js adds nothing new.
+   Flat separation: the 1px border on the leading edge stands in for M2's
+   8dp/16dp elevation (the standard "above content" case is the same
+   fixed panel — the grid-coplanar layout is author CSS). Content reuses
+   the shared .fl-option row (48px) plus .fl-check/.fl-radio; fields ride
+   their own wrapper (.fl-sidesheet__group) so rows stay full-bleed.
+   -------------------------------------------------------------------------- */
+
+/* Shared slots — one structure for both variants (the dialog lesson:
+   root transparent, the surface owns every pixel of chrome) */
+.fl-sidesheet__surface {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--fl-surface);
+  border-left: 1px solid var(--fl-border);
+  padding: 0;
+  overflow: hidden;   /* the body slot scrolls; header stays pinned */
+}
+
+.fl-sidesheet__header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  min-height: 64px;   /* M2 desktop header row */
+  padding: 0 var(--fl-space-2) 0 var(--fl-space-4);
+}
+
+.fl-sidesheet__title {
+  flex: 1 1 auto;
+  font-size: var(--fl-fs-title);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--fl-text);
+}
+
+/* The one scroll region per surface — vertical only (M2 forbids
+   horizontal side-sheet scrolling). overflow-x is pinned to hidden: when
+   overflow-y goes auto, the spec computes the other axis to auto too, and
+   a horizontal scrollbar is exactly what must not exist here. */
+.fl-sidesheet__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-bottom: var(--fl-space-4);
+  color: var(--fl-text-secondary);
+}
+
+/* Group wrapper for labels and fields: rows stay full-bleed, inset content
+   lives here (the sheet__body lesson, per group). */
+.fl-sidesheet__group { padding: 0 var(--fl-space-4); }
+
+.fl-sidesheet__list {
+  padding: 0;
+  list-style: none;
+}
+
+/* Standard side sheet (non-modal): fixed to the trailing edge, full height,
+   320px (M2 desktop standard). No scrim, no JS; the page behind stays
+   interactive — clearance is author layout, as for the standard bottom
+   sheet. Desktop/tablet only: below 600px M2 replaces it with the modal. */
+.fl-sidesheet--standard {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(var(--fl-sidesheet-w), 100vw);
+  z-index: var(--fl-z-sheet);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+@media (max-width: 599px) {
+  .fl-sidesheet--standard { display: none; }
+}
+
+/* Modal side sheet: right-anchored, full height on desktop; slides in from
+   the anchor edge (a transform swap, no new animation budget). */
+dialog.fl-sidesheet {
+  transform: translateX(16px);
+}
+dialog.fl-sidesheet[open] {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  height: 100%;   /* the UA's height:fit-content for top-layer dialogs defeats inset stretching */
+  width: min(var(--fl-sidesheet-w), 100vw);
+  max-width: none;
+  max-height: none;
+}
+@starting-style {
+  dialog.fl-sidesheet[open] { transform: translateX(16px); }
+}
+
+/* M2 modal specs (mobile): vertically inset 48dp top / 16dp bottom,
+   still flush to the anchor edge. */
+@media (max-width: 599px) {
+  dialog.fl-sidesheet[open] {
+    inset: 48px 0 16px auto;
+    height: auto;
+    width: min(var(--fl-sidesheet-w), calc(100vw - 48px));
+  }
+  dialog.fl-sidesheet .fl-sidesheet__header { min-height: 56px; }
 }

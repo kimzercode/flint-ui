@@ -256,7 +256,7 @@
        the card look and all padding live on the inner surface, so clicks on
        the card never reach the dialog element. Non-dismissible dialogs
        ignore it. */
-    if (e.target.matches && e.target.matches("dialog.fl-dialog[open], dialog.fl-sheet[open]")) {
+    if (e.target.matches && e.target.matches("dialog.fl-dialog[open], dialog.fl-sheet[open], dialog.fl-sidesheet[open]")) {
       if (e.target.getAttribute("data-fl-dismissible") === "false") return;
       closeDialog(e.target);
     }

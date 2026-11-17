@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — side sheet demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Modal side sheet — filters (M2's flagship use)</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="ss-filters">Filter files</button>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    Full height, right-anchored, 320px on desktop; on mobile it insets 48px
+    from the top and 16px from the bottom (M2 modal specs) behind a visible
+    scrim. Escape, scrim tap and the header ✕ all dismiss it.
+  </p>
+
+  <p class="fl-section-label">Standard side sheet — persistent details panel</p>
+  <p style="margin:0 0 12px">
+    <button class="fl-btn fl-btn--outline" type="button" id="ss-toggle"
+            aria-expanded="false" aria-controls="ss-details">Toggle details panel</button>
+  </p>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    A plain <code>&lt;aside&gt;</code> — no scrim, no <code>&lt;dialog&gt;</code>, no library
+    JS; the button just toggles the <code>hidden</code> attribute. Desktop/tablet
+    only: below 600px M2 replaces it with the modal side sheet.
+  </p>
+
+  <p class="fl-section-label">Filler — so the page has height to scroll</p>
+  <p style="margin:0 0 12px">The standard sheet is fixed to the trailing edge, so content needs its own clearance — give the scroll container padding-right as wide as the sheet (this demo pads the footer when the panel is open).</p>
+  <p style="margin:0 0 12px">Rows are the shared 48px <code>.fl-option</code> row — checkboxes and radios compose exactly as in dialogs, and whole-row checkbox toggles are <code>&lt;label class="fl-option"&gt;</code>.</p>
+  <p style="margin:0 0 12px">Fields and section labels ride <code>.fl-sidesheet__group</code> so the option rows can run full-bleed without negative margins.</p>
+  <p style="margin:0 0 12px">Only vertical scrolling exists inside a side sheet (M2); the body slot scrolls while the header stays pinned.</p>
+  <p style="margin:0 0 12px">The sheet pairs on the opposite edge from the nav drawer or rail (M2's placement rule) — left rail, right sheet.</p>
+  <p style="margin:0 0 12px">The scrim is the shared 32% black (<code>--fl-scrim</code>) — visibly dimming the page behind a modal side sheet is M2's own Do/Don't rule.</p>
+  <p style="margin:0 0 96px">Swipe-to-dismiss is a documented gap: scrim tap, the ✕ and Escape cover dismissal on every input.</p>
+
+</main>
+
+<!-- Modal side sheet: a native <dialog> — showModal() provides the focus
+     trap, inert background, Escape and top layer; ::backdrop is the scrim.
+     The element is transparent: the surface owns the chrome, so a click on
+     the element itself is a scrim click (flint.js closes it). -->
+<dialog class="fl-sidesheet" id="ss-filters" aria-label="Filters">
+  <div class="fl-sidesheet__surface">
+    <header class="fl-sidesheet__header">
+      <h2 class="fl-sidesheet__title">Filters</h2>
+      <button class="fl-icon-btn" type="button" data-fl-close aria-label="Close filters">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+    <div class="fl-sidesheet__body">
+
+      <p class="fl-sidesheet__group fl-section-label">Labels</p>
+      <ul class="fl-sidesheet__list">
+        <li><label class="fl-option"><input type="checkbox" class="fl-check"> Events</label></li>
+        <li><label class="fl-option"><input type="checkbox" class="fl-check" checked> Personal</label></li>
+        <li><label class="fl-option"><input type="checkbox" class="fl-check" checked> Projects</label></li>
+        <li><label class="fl-option"><input type="checkbox" class="fl-check"> Reminders</label></li>
+        <li><label class="fl-option"><input type="checkbox" class="fl-check"> Work</label></li>
+      </ul>
+
+      <div class="fl-sidesheet__group">
+        <p class="fl-section-label" style="margin-top:var(--fl-space-4)">Format</p>
+        <div class="fl-field">
+          <label class="fl-field__label" for="ss-format">File format</label>
+          <div class="fl-field__box">
+            <select class="fl-field__input" id="ss-format">
+              <option selected>All</option>
+              <option>Documents</option>
+              <option>Spreadsheets</option>
+              <option>Images</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <p class="fl-sidesheet__group fl-section-label">Order by</p>
+      <ul class="fl-sidesheet__list">
+        <li><label class="fl-option"><input type="radio" name="ss-order" class="fl-radio"> Date created</label></li>
+        <li><label class="fl-option"><input type="radio" name="ss-order" class="fl-radio" checked> Last opened</label></li>
+        <li><label class="fl-option"><input type="radio" name="ss-order" class="fl-radio"> Last modified</label></li>
+      </ul>
+
+    </div>
+  </div>
+</dialog>
+
+<!-- Standard side sheet: persistent, non-modal — not a <dialog>. Any block
+     element carries the class; visibility is author logic (here: hidden). -->
+<aside class="fl-sidesheet fl-sidesheet--standard" id="ss-details" aria-label="Details" hidden>
+  <div class="fl-sidesheet__surface">
+    <header class="fl-sidesheet__header">
+      <h2 class="fl-sidesheet__title">Details</h2>
+      <button class="fl-icon-btn" type="button" id="ss-close" aria-label="Close details">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+    <div class="fl-sidesheet__body">
+
+      <div class="fl-sidesheet__group">
+        <div class="fl-field">
+          <div class="fl-field__box">
+            <input class="fl-field__input" type="text" aria-label="Add a description"
+                   placeholder="Add a description">
+          </div>
+        </div>
+      </div>
+
+      <p class="fl-sidesheet__group fl-section-label">Information</p>
+      <ul class="fl-list">
+        <li class="fl-list-item">
+          <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+          <span class="fl-list-item__text"><span class="fl-list-item__title">Buenos Aires, AR</span></span>
+        </li>
+        <li class="fl-list-item">
+          <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+          <span class="fl-list-item__text">
+            <span class="fl-list-item__title">Mar 3</span>
+            <span class="fl-list-item__sub">Tues, 3:05 PM</span>
+          </span>
+        </li>
+        <li class="fl-list-item">
+          <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+          <span class="fl-list-item__text">
+            <span class="fl-list-item__title">Google Pixel 2</span>
+            <span class="fl-list-item__sub">f/1.8 · 1/60 · 4.44mm · ISO239</span>
+          </span>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</aside>
+
+<script>
+  /* Author logic: the standard sheet is not a dialog — visibility is a
+     class-free hidden toggle. */
+  var details = document.getElementById("ss-details");
+  var toggle = document.getElementById("ss-toggle");
+  function setDetails(open) {
+    details.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.textContent = open ? "Hide details panel" : "Toggle details panel";
+  }
+  toggle.addEventListener("click", function () { setDetails(details.hidden); });
+  document.getElementById("ss-close").addEventListener("click", function () { setDetails(false); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+---
+layout: layouts/base.njk
+permalink: components/side-sheet.html
+assetRoot: ../
+title: Side sheet
+section: components
+current: side-sheet
+depth: 1
+lead: A supplementary surface anchored to the trailing edge — filters, metadata, focus flows. Standard as a persistent plain element on desktop, modal on the native <dialog> for mobile.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: placement
+      title: Placement
+    - id: contents
+      title: Contents
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>Side sheets are supplementary surfaces anchored to the left or right edge
+     of the screen — M2's answer to "this content supports the screen, but
+     isn't worth navigating to". Flint ships both M2 types:</p>
+  <h3>Standard side sheet</h3>
+  <p>Persistent and non-modal: no scrim, the page stays interactive. Use it
+     for <strong>filters that control the primary content</strong>, supporting
+     <strong>metadata panels</strong> (photo details, file info), or
+     <strong>short configurations</strong> that stay on screen while the user
+     works. Desktop and tablet only — M2 replaces it with the modal on
+     mobile, and so does Flint (it is hidden below 600px).</p>
+  <h3>Modal side sheet</h3>
+  <p>Blocks the page behind a visible scrim and must be dismissed before the
+     user can interact with the content again. On mobile it is <em>the</em>
+     side sheet (M2's own rule); on larger screens it can focus attention on
+     a key flow, such as a purchase or a filter-the-list moment.</p>
+  <h3>Don't use it for</h3>
+  <ul>
+    <li><strong>Blocking decisions</strong> — confirmation and alerts are
+        <a href="dialog.html">dialog</a> territory.</li>
+    <li><strong>Primary navigation</strong> — that's the drawer or rail, and
+        M2 explicitly pairs the side sheet on the <em>opposite</em> edge
+        from the nav drawer so the two are never confused.</li>
+    <li><strong>Feedback</strong> — snackbars, never sheets.</li>
+    <li><strong>An inset floating panel</strong> — M2's Don't: fully insetting
+        a side sheet from the edges makes its position and scroll behavior
+        unclear while obscuring content. If it doesn't hug an edge, it's a
+        card.</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "Bottom sheets become side sheets",
+    text: "When adapting for larger screens, M2 swaps bottom sheets for side sheets — same content contract, different edge. Both Flint variants share the same interior vocabulary, so the swap is a class change.",
+    href: "bottom-sheet.html",
+    linkText: "Bottom sheet component"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="docs-anatomy">
+    <svg viewBox="0 0 600 260" role="img" aria-label="Side sheet anatomy diagram">
+      <!-- screen behind -->
+      <rect x="1" y="1" width="598" height="258" fill="#5f6368" opacity="0.12"/>
+      <!-- primary content hint -->
+      <rect x="40" y="40" width="300" height="180" rx="4" fill="#dadce0"/>
+      <!-- sheet anchored to the right edge -->
+      <rect x="360" y="1" width="239" height="258" fill="#ffffff" stroke="#dadce0"/>
+      <!-- header: title + close -->
+      <rect x="384" y="28" width="90" height="10" rx="5" fill="#1f1f1f"/>
+      <rect x="560" y="22" width="18" height="18" rx="4" fill="#e8eaed" stroke="#dadce0"/>
+      <!-- section label -->
+      <rect x="384" y="66" width="60" height="7" rx="3.5" fill="#9aa0a6"/>
+      <!-- checkbox rows -->
+      <rect x="384" y="88" width="16" height="16" rx="2" fill="#ffffff" stroke="#5f6368" stroke-width="2"/>
+      <rect x="412" y="92" width="120" height="8" rx="4" fill="#444746"/>
+      <rect x="384" y="120" width="16" height="16" rx="2" fill="#1a73e8"/>
+      <rect x="412" y="124" width="100" height="8" rx="4" fill="#444746"/>
+      <rect x="384" y="152" width="16" height="16" rx="2" fill="#ffffff" stroke="#5f6368" stroke-width="2"/>
+      <rect x="412" y="156" width="130" height="8" rx="4" fill="#444746"/>
+      <!-- leading-edge border (the elevation stand-in) -->
+      <rect x="360" y="1" width="1" height="258" fill="#dadce0"/>
+      <!-- callouts -->
+      <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
+        <g><circle cx="350" cy="34" r="11" fill="#1a73e8"/><text x="350" y="38" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="430" cy="128" r="11" fill="#1a73e8"/><text x="430" y="132" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="570" cy="240" r="11" fill="#1a73e8"/><text x="570" y="244" fill="#ffffff" text-anchor="middle">3</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><strong>Header</strong> — title (16px/500) plus a close affordance.
+          M2 recommends a separate close affordance <em>inside</em> the sheet
+          even when the top bar toggles it.</li>
+      <li><strong>Content</strong> — one scroll region, vertical only.
+          Option rows run full-bleed; labels and fields ride
+          <code>fl-sidesheet__group</code> insets.</li>
+      <li><strong>Leading edge</strong> — the 1px border that stands in for
+          M2's elevation. The surface hugs the trailing screen edge, square
+          corners, full height (desktop).</li>
+    </ol>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <ul>
+    <li><strong>Two variants, one structure:</strong> the modal side sheet is
+        a <code>&lt;dialog&gt;</code> (same platform roots as the dialog and
+        bottom sheet: focus trap, inert background, Escape, top layer); the
+        standard is any block element with <code>fl-sidesheet--standard</code>.
+        Both share surface/header/body slots, so content moves between them
+        unchanged.</li>
+    <li><strong>Modal lifecycle:</strong> <code>data-fl-open="id"</code>
+        opens it, <code>data-fl-close</code> in the header closes it, scrim
+        tap closes it (a click on the transparent dialog element <em>is</em>
+        the scrim click), Escape closes it, focus returns to the invoker on
+        every path. The page is scroll-locked while open.</li>
+    <li><strong>Standard lifecycle:</strong> visibility is author logic —
+        toggle the <code>hidden</code> attribute (the demo does exactly
+        that). No library JS is involved.</li>
+    <li><strong>Scroll:</strong> vertical only — M2 explicitly forbids
+        horizontal side-sheet scrolling, and the body slot scrolls while the
+        header stays pinned (<code>overscroll-behavior: contain</code> keeps
+        the page behind from rubber-banding).</li>
+    <li><strong>Animation:</strong> slides in from the anchor edge on open —
+        a transform swap, no new animation budget;
+        <code>prefers-reduced-motion</code> disables it.</li>
+    <li><strong>No-JS fallback (honest):</strong> the standard side sheet is
+        plain CSS and works without JavaScript. The modal stays hidden
+        without JS — call <code>showModal()</code> yourself or drive it from
+        your own code, exactly like the dialog and bottom sheet.</li>
+  </ul>
+  {{ callout({
+    variant: "info",
+    title: "Known gap: swipe-to-dismiss",
+    text: "M2 dismisses modal side sheets by swiping toward the anchor edge. Flint doesn't implement touch gestures (library contract): scrim tap, the header ✕ and Escape cover dismissal on every input.",
+    href: "bottom-sheet.html",
+    linkText: "Same gap on the bottom sheet"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-placement">Placement</h2>
+  <ul>
+    <li><strong>Trailing edge (right, in LTR):</strong> M2 pairs the side
+        sheet on the <em>opposite</em> edge from the navigation drawer or
+        rail — left nav, right sheet. Never both on the same edge.</li>
+    <li><strong>Width:</strong> 320px, M2's desktop standard width — the
+        <code>--fl-sidesheet-w</code> token.</li>
+    <li><strong>Desktop modal:</strong> full height, flush to the edge,
+        square corners.</li>
+    <li><strong>Mobile modal (&lt;600px):</strong> M2's modal specs — inset
+        48px from the top and 16px from the bottom, still flush to the
+        anchor edge, width capped at <code>100vw - 48px</code> so the page
+        stays visible behind the scrim.</li>
+    <li><strong>Standard sheet is desktop-only:</strong> below 600px it
+        disappears (<code>display: none</code>) — on phones M2 swaps it for
+        the modal variant. Give it a modal twin in your app logic.</li>
+    <li><strong>Layering:</strong> the standard sheet sits at
+        <code>--fl-z-sheet</code>, below the snackbar. The page needs
+        <code>padding-right</code> clearance as wide as the sheet while it's
+        open (the standard bottom sheet's padding-bottom lesson, mirrored).</li>
+    <li><strong>Elevation, honestly:</strong> M2 gives standard sheets 8dp
+        above content and modal sheets 16dp. Flint has no shadows: the
+        leading-edge 1px border is the separation, and the modal's scrim is
+        the blocking cue. The "above content" standard case is the same
+        fixed panel; a truly grid-coplanar sheet (body shrinks to fit) is
+        author layout — place it as a flex sibling instead of using the
+        fixed class.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-contents">Contents</h2>
+  <p>The interior mirrors the bottom sheet and dialog:</p>
+  <ul>
+    <li><strong><code>__header</code> / <code>__title</code></strong> —
+        64px header row (56px on mobile modal), title 16px/500, trailing
+        close icon button.</li>
+    <li><strong><code>__list</code></strong> — option rows, full-bleed, the
+        shared 48px <code>fl-option</code> row. Checkboxes and radios compose
+        exactly as in dialogs; whole-row checkbox toggles are
+        <code>&lt;label class="fl-option"&gt;</code>.</li>
+    <li><strong><code>__group</code></strong> — inset wrapper for section
+        labels (<code>fl-section-label</code>) and fields, so the rows can
+        stay full-bleed without negative margins.</li>
+    <li><strong><code>__body</code></strong> — the scroll region; everything
+        above lives inside it.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>Label the sheet: <code>aria-label</code> or
+        <code>aria-labelledby</code> its title.</li>
+    <li>The modal is natively inert behind — nothing outside is focusable
+        while it's open. The standard sheet is <em>not</em> inert; keep its
+        content a state, not a task.</li>
+    <li>Option rows are real inputs — native focus and activation. The
+        full-bleed rows draw the focus ring inside the row; don't remove
+        it.</li>
+    <li>Checkbox state is announced natively (the tint would be presentation
+        only — here rows stay untinted, M2's filter sheets don't tint).</li>
+    <li><strong>Known gap:</strong> no swipe-to-dismiss and no back-gesture
+        integration (see Behavior). All web dismissal paths work.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/sidesheet.html — rendered live</span>
+      <a href="../demos/sidesheet.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/sidesheet.html" title="Side sheet live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>Modal side sheet — the M2 filter panel: checkbox rows as
+     <code>&lt;label class="fl-option"&gt;</code>, fields in
+     <code>__group</code> wrappers:</p>
+  {% set modalMarkup %}
+<button class="fl-btn" data-fl-open="ss-filters">Filter files</button>
+
+<dialog class="fl-sidesheet" id="ss-filters" aria-label="Filters">
+  <div class="fl-sidesheet__surface">
+    <header class="fl-sidesheet__header">
+      <h2 class="fl-sidesheet__title">Filters</h2>
+      <button class="fl-icon-btn" type="button" data-fl-close
+              aria-label="Close filters">…</button>
+    </header>
+    <div class="fl-sidesheet__body">
+      <p class="fl-sidesheet__group fl-section-label">Labels</p>
+      <ul class="fl-sidesheet__list">
+        <li><label class="fl-option">
+          <input type="checkbox" class="fl-check"> Events
+        </label></li>
+        <li><label class="fl-option">
+          <input type="checkbox" class="fl-check" checked> Personal
+        </label></li>
+      </ul>
+      <div class="fl-sidesheet__group">
+        <p class="fl-section-label">Format</p>
+        <div class="fl-field">
+          <div class="fl-field__box">
+            <select class="fl-field__input" aria-label="File format">…</select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+{% endset %}
+  {{ snippet(modalMarkup) }}
+  <p>Standard side sheet — persistent, non-modal, zero library JS. Visibility
+     is author logic (toggle <code>hidden</code>); the page clears the panel
+     with <code>padding-right</code>:</p>
+  {% set standardMarkup %}
+<aside class="fl-sidesheet fl-sidesheet--standard" id="ss-details" hidden>
+  <div class="fl-sidesheet__surface">
+    <header class="fl-sidesheet__header">
+      <h2 class="fl-sidesheet__title">Details</h2>
+      <button class="fl-icon-btn" type="button" aria-label="Close details">…</button>
+    </header>
+    <div class="fl-sidesheet__body">
+      <div class="fl-sidesheet__group">
+        <div class="fl-field">
+          <div class="fl-field__box">
+            <input class="fl-field__input" aria-label="Add a description"
+                   placeholder="Add a description">
+          </div>
+        </div>
+      </div>
+      <ul class="fl-list">
+        <li class="fl-list-item">…icon + metadata rows…</li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<!-- the page clears the sheet while it's open -->
+<main style="padding-right: var(--fl-sidesheet-w)">…</main>
+{% endset %}
+  {{ snippet(standardMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/sidesheet.html">demos/sidesheet.html</a> covers both
+     variants — the modal filter panel (open it at desktop and mobile widths)
+     and the standard details panel with its author-side toggle.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property on <code>:root</code> — override
+     inline or in your own stylesheet, no rebuild:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-sidesheet-w</code></td><td>Sheet width (320px, M2's desktop standard)</td></tr>
+      <tr><td><code>--fl-scrim</code></td><td>The modal backdrop, shared with dialog/sheet/drawer</td></tr>
+      <tr><td><code>--fl-surface</code> / <code>--fl-border</code></td><td>Sheet fill and leading-edge border</td></tr>
+      <tr><td><code>--fl-option-h</code></td><td>Row height (48px)</td></tr>
+      <tr><td><code>--fl-z-sheet</code></td><td>Standard sheet layer (below the snackbar)</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Open/close animation timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-sidesheet-w: 400px;        /* wider sheet on a wide layout */
+  --fl-scrim: rgb(0 0 0 / 0.4);   /* darker scrim, every scrim follows */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}
