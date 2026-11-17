@@ -15,6 +15,8 @@ toc:
       title: Anatomy
     - id: actions
       title: Actions
+    - id: transparent
+      title: Transparent bar
     - id: scrolling
       title: Scrolling
     - id: contextual
@@ -88,6 +90,36 @@ toc:
         the bare icon). The ⋮ is "More options".</li>
     <li><strong>Badges</strong> (unread counts) sit on the icon button — see
         the <a href="bottom-nav.html">shell demo</a>.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-transparent">Transparent bar</h2>
+  <p>Google's actual web apps (Keep, Drive) don't draw the bar as a filled
+     strip: it sits on the page surface with no fill and no border, and the
+     controls — the big rounded search pill — are the visual anchor.
+     <code>fl-top-bar--transparent</code> is that pattern:</p>
+  <ul>
+    <li><strong>What changes:</strong> the fill and the 1px border go
+        transparent (private tokens — two lines of CSS). Height, safe-area
+        inset, layout and focus behavior are unchanged.</li>
+    <li><strong>Deviation, recorded:</strong> M2 gives the top app bar its
+        own surface. Flint follows Google's web apps instead — when
+        everything is one surface, a bar border would fake separation the
+        content doesn't have. This is <em>not</em> iOS translucency: nothing
+        scrolls under the bar and nothing is blurred.</li>
+    <li><strong>Search in the bar:</strong> the pill is a real
+        <code>fl-field</code> wrapped in <code>fl-top-bar__search</code> —
+        label-less input with an <code>aria-label</code>, 48px tall (M2's
+        search bar height, via the scoped <code>--fl-field-h</code> token),
+        fully rounded. The pill's own border is what anchors a transparent
+        bar; without it the bar reads as a floating toolbar.</li>
+    <li><strong>Contextual action bar still fills:</strong> even on a
+        transparent bar, <code>fl-top-bar--contextual</code> takes the
+        inverse-surface fill — a state change you can't see isn't a state
+        change. The transparent variant only mutes the resting state.</li>
+    <li><strong>Scroll-hide:</strong> works unchanged, and arguably looks
+        better — a borderless bar slides away and leaves nothing behind.</li>
   </ul>
 </section>
 
@@ -185,7 +217,9 @@ toc:
       <tr><td><strong>iOS translucency</strong></td><td>M2 expresses bar
           separation with elevation; Flint's border is the separation.
           Translucency over scrolling content also fights the opaque
-          surface contract.</td></tr>
+          surface contract. (The web-app need this covered — a bar that
+          doesn't draw its own strip — is the
+          <a href="#d-transparent">transparent variant</a>.)</td></tr>
       <tr><td><strong>Center-aligned titles</strong></td><td>iOS platform
           convention — M2 itself says use the platform's default; the web
           default is left-aligned.</td></tr>
@@ -246,6 +280,23 @@ toc:
 </div>
 {% endset %}
   {{ snippet(scrollMarkup) }}
+  <p>Transparent bar (Keep web) with the search pill:</p>
+  {% set transparentMarkup %}
+<header class="fl-top-bar fl-top-bar--transparent">
+  <button class="fl-icon-btn" type="button" aria-label="Open menu">…</button>
+  <h1 class="fl-top-bar__title">Keep</h1>
+  <div class="fl-field fl-top-bar__search">
+    <div class="fl-field__box">
+      <span class="fl-field__icon--leading fl-icon" aria-hidden="true"></span>
+      <input class="fl-field__input" type="search"
+             aria-label="Search your notes" placeholder="Search your notes">
+    </div>
+  </div>
+  <button class="fl-icon-btn" type="button" popovertarget="bar-more"
+          aria-haspopup="menu" aria-expanded="false" aria-label="More options">…</button>
+</header>
+{% endset %}
+  {{ snippet(transparentMarkup) }}
   <p>Contextual action bar — two slot groups, one swap:</p>
   {% set contextualMarkup %}
 <header class="fl-top-bar" id="bar">
@@ -275,9 +326,9 @@ toc:
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
   <p><a href="../demos/top-bar.html">demos/top-bar.html</a> covers the
-     regular bar (with the overflow menu), the contextual action bar swap,
-     and a working scroll-hide shell. Scroll the third pane down and
-     up.</p>
+     regular bar (with the overflow menu), the transparent bar with the
+     search pill (and its contextual takeover), and a working scroll-hide
+     shell. Scroll the last pane down and up.</p>
 </section>
 
 <section class="docs-section">
@@ -290,7 +341,8 @@ toc:
     </thead>
     <tbody>
       <tr><td><code>--fl-topbar-h</code></td><td>Bar height (64px, 56px under 600px)</td></tr>
-      <tr><td><code>--fl-surface</code> / <code>--fl-border</code></td><td>Bar fill and 1px bottom border</td></tr>
+      <tr><td><code>--fl-surface</code> / <code>--fl-border</code></td><td>Bar fill and 1px bottom border (muted by the transparent variant)</td></tr>
+      <tr><td><code>--fl-field-h</code></td><td>Search pill height (scoped to 48px inside <code>fl-top-bar__search</code>)</td></tr>
       <tr><td><code>--fl-text</code> / <code>--fl-surface</code></td><td>Contextual bar: inverse fill and its text color</td></tr>
       <tr><td><code>--fl-fs-title</code></td><td>Title size/weight</td></tr>
       <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Scroll-hide slide timing</td></tr>

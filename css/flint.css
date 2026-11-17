@@ -189,10 +189,36 @@ a { color: var(--fl-accent); text-decoration: none; }
   z-index: var(--fl-z-topbar);
 }
 
+/* Transparent variant (Google's actual web apps — Keep, Drive): the bar
+   sits on the page surface; no fill, no border. The controls (the search
+   pill) are the visual anchor, not a filled strip. Deviation from M2's
+   surfaced bar, recorded. Declared BEFORE the contextual state so the
+   state wins the cascade (variant defaults first, states last). */
+
+/* Search in the bar (the web idiom): a rounded pill field. The bar's
+   flex lays it out; the field keeps its own chrome. Height rides the
+   public --fl-field-h token, scoped here to 48px (M2 search bar); the
+   field's label rhythm is zeroed — the pill owns no inset of its own. */
+.fl-top-bar--transparent {
+  --_bar-bg: transparent;
+  --_bar-border: transparent;
+}
+
+.fl-top-bar .fl-top-bar__search {
+  --fl-field-h: 48px;
+  margin-top: 0;   /* the .fl-field label rhythm (declared later) must not push the pill out of the bar */
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 720px;
+}
+.fl-top-bar .fl-top-bar__search .fl-field__box { border-radius: 999px; }
+
 /* Contextual action bar (M2): the bar recolors to the inverse surface —
    the same mapping as the snackbar — while selection is active. Close
    replaces the navigation icon, the title reads "N selected", the
-   actions are the contextual ones; toggling is author logic. */
+   actions are the contextual ones; toggling is author logic. Declared
+   after the transparent variant: even a transparent bar fills here —
+   a state change you can't see isn't a state change. */
 .fl-top-bar--contextual {
   --_bar-bg: var(--fl-text);
   --_bar-border: var(--fl-text);

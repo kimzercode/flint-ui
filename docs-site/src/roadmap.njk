@@ -5,7 +5,7 @@ title: Roadmap
 section: roadmap
 depth: 0
 ---
-{# Rendered from ROADMAP.md (2026-11-10). Edit the source file; keep this in sync. #}
+{# Rendered from ROADMAP.md (2026-11-17). Edit the source file; keep this in sync. #}
 <div class="docs-hero">
   <h1>Roadmap</h1>
   <p>Flint UI's goal: a mini design system in the spirit of Material Design 2 —
@@ -75,23 +75,30 @@ depth: 0
         <td>Data display + app chrome</td>
         <td>Data table, standalone tabs, pagination, avatar, chips (split
             from badges) — plus the app-chrome set that enables a
-            Gmail/Keep-style master-detail app build: <strong>menu</strong>
-            (dropdown with scrim, Escape, instant dismiss — deferred here
-            from 0.4), <strong>side sheet</strong> (standard + modal,
-            completes the sheet family; audit against a
-            <code>sheets-side-docs/</code> reference folder before
-            building), <strong>top app bar</strong> promoted to a component
+            Keep-style app build: <strong>menu</strong>
+            (dropdown on the native Popover API — light-dismiss, Escape,
+            instant dismiss — deferred here from 0.4),
+            <strong>top app bar</strong> promoted to a component
             (own docs page, safe-area top inset, action ordering,
-            scroll-hide, contextual action bar state;
-            extended/prominent/dense/images-in-bar/translucency deliberately
-            discarded — mobile-first native feel), <strong>split shell</strong>
-            (list pane + detail pane ≥600px), <strong>checkbox-driven
-            selection state</strong> on list rows, docs recipes (empty
-            state, card grid). <strong>Acceptance: the notes prototype
-            (<code>prototype/test-mdl2.html</code>) rebuilt entirely on
-            Flint components as the first <code>samples/</code> entry —
-            zero hand-rolled chrome; only the app logic (data, undo) is
-            author code.</strong></td>
+            scroll-hide, contextual action bar state,
+            <strong>transparent variant</strong> with search-in-bar —
+            Google's actual web pattern;
+            extended/prominent/dense/images-in-bar deliberately
+            discarded — mobile-first native feel), <strong>checkbox-driven
+            selection state</strong> on list rows, <strong>side
+            sheet</strong> (standard + modal, completes the sheet family;
+            audit against a <code>sheets-side-docs/</code> reference
+            folder before building), docs recipes (empty state, card
+            grid). Master-detail split: <strong>not in 0.5</strong> — M2
+            has no spec, Google's own web apps are inconsistent (Gmail =
+            split, Keep/Drive = overlay); returns in a later release as
+            an "App shells" guide composed from existing primitives,
+            sequenced after the side sheet. <strong>Acceptance: the notes
+            prototype (<code>prototype/test-mdl2.html</code>) rebuilt
+            entirely on Flint components in the Keep-web form factor
+            (rail on desktop, editor as centered dialog) as the first
+            <code>samples/</code> entry — zero hand-rolled chrome; only
+            the app logic (data, undo) is author code.</strong></td>
       </tr>
       <tr>
         <td><strong>0.6.0</strong></td>
