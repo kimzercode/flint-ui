@@ -167,6 +167,63 @@
       </li>
     </ul>
 
+    <!-- Checkbox-driven selection: the checkbox owns the state, the row
+         reads it (:has(.fl-check:checked) → tint). Whole-row rows are
+         <label class="fl-list-item"> — valid HTML, and no other
+         interactive element may live in such a row. Rows that carry a
+         trailing control keep the checkbox as the only toggle target. -->
+    <p class="fl-section-label">Selectable · the checkbox owns the state</p>
+    <ul class="fl-list" aria-label="Select teammates">
+      <li>
+        <label class="fl-list-item">
+          <input type="checkbox" class="fl-check" checked>
+          <span class="fl-list-item__text"><span class="fl-list-item__title">Aisha Karim</span></span>
+        </label>
+      </li>
+      <li>
+        <label class="fl-list-item">
+          <input type="checkbox" class="fl-check">
+          <span class="fl-list-item__text"><span class="fl-list-item__title">Marcus Lee</span></span>
+        </label>
+      </li>
+      <li>
+        <label class="fl-list-item">
+          <input type="checkbox" class="fl-check">
+          <span class="fl-list-item__text"><span class="fl-list-item__title">Priya Patel</span></span>
+        </label>
+      </li>
+    </ul>
+
+    <p class="fl-section-label">Selectable · two-line, with a trailing action</p>
+    <ul class="fl-list" aria-label="Select files">
+      <li class="fl-list-item fl-list-item--two-line">
+        <input type="checkbox" class="fl-check" checked aria-label="Select Q3 roadmap.doc">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Q3 roadmap.doc</span>
+          <span class="fl-list-item__sub">Edited 2h ago</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="More options for Q3 roadmap.doc">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <input type="checkbox" class="fl-check" aria-label="Select Sprint 14 retro notes">
+        <span class="fl-list-item__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Sprint 14 retro notes</span>
+          <span class="fl-list-item__sub">Edited yesterday</span>
+        </span>
+        <span class="fl-list-item__meta">
+          <button class="fl-icon-btn" aria-label="More options for Sprint 14 retro notes">
+            <span class="fl-icon" aria-hidden="true"></span>
+          </button>
+        </span>
+      </li>
+    </ul>
+
     <!-- Dense: 40px single-line rows for data-heavy screens -->
     <p class="fl-section-label">Dense · 40px rows</p>
     <ul class="fl-list fl-list--dense">

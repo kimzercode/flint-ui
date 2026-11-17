@@ -15,6 +15,8 @@ toc:
       title: Anatomy
     - id: row-types
       title: Row types
+    - id: selection
+      title: Selection
     - id: accessibility
       title: Accessibility
   impl:
@@ -48,8 +50,9 @@ toc:
   <ul>
     <li>Items are heterogeneous content blocks — use cards.</li>
     <li>Rows need to expand/collapse (accordions) — not in the library yet.</li>
-    <li>You need multi-select checkboxes — planned; the current meta zone holds
-        one control, but selection is single via <code>aria-current</code>.</li>
+    <li>You need a single highlighted "current" row in a nav sense — that's
+        <code>aria-current</code> on a row (see below); checkbox selection
+        covers multi-select.</li>
   </ul>
 </section>
 
@@ -131,11 +134,40 @@ toc:
 </section>
 
 <section class="docs-section">
+  <h2 id="d-selection">Selection</h2>
+  <p>Multi-select is the M2 "selected list item" pattern driven by a real
+     checkbox: the <code>fl-check</code> owns the state, and the row reads it
+     with <code>:has(.fl-check:checked)</code> and takes the tint fill. Pure
+     CSS — zero JS, works with <code>flint.js</code> off.</p>
+  <ul>
+    <li><strong>Whole-row toggle:</strong> make the row a
+        <code>&lt;label class="fl-list-item"&gt;</code> (wrapped in an
+        <code>&lt;li&gt;</code>, like link rows). Tapping anywhere toggles the
+        checkbox. Valid HTML contract: a label may not contain another
+        labelable element, so a whole-row toggle row must not also carry
+        buttons or links — use the next pattern instead.</li>
+    <li><strong>Row with a trailing action:</strong> keep the row a plain
+        <code>&lt;li class="fl-list-item"&gt;</code> with a leading
+        <code>&lt;input type="checkbox" class="fl-check"&gt;</code> (named via
+        <code>aria-label</code>, since there is no label element) — only the
+        checkbox toggles; the meta-zone button stays its own target.</li>
+    <li><strong>Without <code>:has()</code></strong> (old browsers) the check
+        still works — only the tint fill is absent. Selection state is never
+        conveyed by fill alone, so nothing is lost functionally.</li>
+    <li><strong>Selection mode chrome:</strong> when rows are selected and you
+        need bar-level actions (delete, share), the top app bar's
+        <a href="top-app-bar.html#d-contextual">contextual action bar</a> is
+        the M2 answer — the list stays as-is.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
     <li>The list is a real <code>&lt;ul class="fl-list"&gt;</code> — screen readers get item counts for free.</li>
     <li><strong>Rows with nested controls:</strong> make the row a plain <code>&lt;li class="fl-list-item"&gt;</code> and put the action in the meta zone — only the control is the target. <strong>Rows that navigate:</strong> make the row itself an <code>&lt;a class="fl-list-item"&gt;</code> — then hover/active/selected all work on the row, and don't nest controls in its meta zone.</li>
     <li>Selected rows carry <code>aria-current="page"</code>; disabled rows carry <code>aria-disabled="true"</code> (pointer events are also suppressed).</li>
+    <li><strong>Checkbox selection needs no ARIA:</strong> the state is a real <code>&lt;input type="checkbox"&gt;</code>, so checked/unchecked is announced natively — the tint is presentation only. Give standalone checkboxes an <code>aria-label</code> ("Select Q3 roadmap.doc"); whole-row <code>&lt;label&gt;</code> rows are named by their text.</li>
     <li>Icons and badges are <code>aria-hidden</code>; icon buttons in the meta zone need specific labels ("More options for Q3 roadmap", not "More").</li>
     <li>Timestamps and counts in the meta zone are visible text — no SR-only duplication needed.</li>
   </ul>
@@ -206,6 +238,31 @@ toc:
     </a>
   </li>
 </ul>
+
+<!-- Selectable rows: the checkbox owns the state, the row reads it via
+     :has(.fl-check:checked) → tint. Whole-row toggle = <label> row (no other
+     interactive element may live in it). With a trailing action, keep the
+     row a plain li and name the checkbox via aria-label. -->
+<ul class="fl-list" aria-label="Select files">
+  <li>
+    <label class="fl-list-item">
+      <input type="checkbox" class="fl-check" checked>
+      <span class="fl-list-item__text"><span class="fl-list-item__title">Aisha Karim</span></span>
+    </label>
+  </li>
+  <li class="fl-list-item fl-list-item--two-line">
+    <input type="checkbox" class="fl-check" aria-label="Select Q3 roadmap.doc">
+    <span class="fl-list-item__text">
+      <span class="fl-list-item__title">Q3 roadmap.doc</span>
+      <span class="fl-list-item__sub">Edited 2h ago</span>
+    </span>
+    <span class="fl-list-item__meta">
+      <button class="fl-icon-btn" aria-label="More options for Q3 roadmap.doc">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </span>
+  </li>
+</ul>
 {% endset %}
   {{ snippet(quickStart) }}
   {{ snippet(rows) }}
@@ -214,8 +271,9 @@ toc:
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
   <p>The embedded example above is the actual demo page, unchanged — open
-     <a href="../demos/lists.html">demos/lists.html</a> for all six row
-     variants at full height. Its source is a copy-paste-ready starting point.</p>
+     <a href="../demos/lists.html">demos/lists.html</a> for all row variants
+     (including the selectable ones) at full height. Its source is a
+     copy-paste-ready starting point.</p>
 </section>
 
 <section class="docs-section">

@@ -1097,11 +1097,13 @@ body.fl-drawer-open .fl-scrim { opacity: 1; pointer-events: auto; }
 }
 
 .fl-list-item {
+  --_row-bg: transparent;   /* state layer: hover/active/selected assign the token, never re-declare */
   display: flex;
   align-items: center;
   gap: var(--fl-space-3); /* 16px: avatar rows land on the 72dp text keyline */
   min-height: 48px;
   padding: var(--fl-space-2) var(--fl-space-3);
+  background: var(--_row-bg);
   color: var(--fl-text);
   font-size: var(--fl-fs-body);
   transition: background-color var(--fl-dur) var(--fl-ease);
@@ -1120,15 +1122,23 @@ button.fl-list-item {
 }
 @media (hover: hover) {
   a.fl-list-item:hover,
-  button.fl-list-item:hover { background: var(--fl-hover); }
+  button.fl-list-item:hover { --_row-bg: var(--fl-hover); }
 }
 a.fl-list-item:active,
-button.fl-list-item:active { background: var(--fl-divider); }
+button.fl-list-item:active { --_row-bg: var(--fl-divider); }
 
 /* Selected = tint fill only (Gmail mail rows): content rows keep neutral text,
    unlike .fl-nav-item where selection also takes the accent */
 .fl-list-item[aria-current="page"],
-.fl-list-item.is-active { background: var(--fl-tint); }
+.fl-list-item.is-active { --_row-bg: var(--fl-tint); }
+
+/* Checkbox-driven selection (M2 "selected list item"): the row hosts a
+   leading .fl-check and reads its checked state — the checkbox owns the
+   state (announced natively), the tint is presentation. Pure CSS: works
+   with JS off; without :has() the tint is simply absent. Make the whole
+   row toggle by using a <label class="fl-list-item"> — valid HTML, no
+   other interactive element may live in that row. */
+.fl-list-item:has(.fl-check:checked) { --_row-bg: var(--fl-tint); }
 
 .fl-list-item[aria-disabled="true"] {
   color: var(--fl-disabled);

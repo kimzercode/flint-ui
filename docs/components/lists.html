@@ -225,8 +225,9 @@
   <ul>
     <li>Items are heterogeneous content blocks — use cards.</li>
     <li>Rows need to expand/collapse (accordions) — not in the library yet.</li>
-    <li>You need multi-select checkboxes — planned; the current meta zone holds
-        one control, but selection is single via <code>aria-current</code>.</li>
+    <li>You need a single highlighted "current" row in a nav sense — that's
+        <code>aria-current</code> on a row (see below); checkbox selection
+        covers multi-select.</li>
   </ul>
 </section>
 
@@ -308,11 +309,40 @@
 </section>
 
 <section class="docs-section">
+  <h2 id="d-selection">Selection</h2>
+  <p>Multi-select is the M2 "selected list item" pattern driven by a real
+     checkbox: the <code>fl-check</code> owns the state, and the row reads it
+     with <code>:has(.fl-check:checked)</code> and takes the tint fill. Pure
+     CSS — zero JS, works with <code>flint.js</code> off.</p>
+  <ul>
+    <li><strong>Whole-row toggle:</strong> make the row a
+        <code>&lt;label class="fl-list-item"&gt;</code> (wrapped in an
+        <code>&lt;li&gt;</code>, like link rows). Tapping anywhere toggles the
+        checkbox. Valid HTML contract: a label may not contain another
+        labelable element, so a whole-row toggle row must not also carry
+        buttons or links — use the next pattern instead.</li>
+    <li><strong>Row with a trailing action:</strong> keep the row a plain
+        <code>&lt;li class="fl-list-item"&gt;</code> with a leading
+        <code>&lt;input type="checkbox" class="fl-check"&gt;</code> (named via
+        <code>aria-label</code>, since there is no label element) — only the
+        checkbox toggles; the meta-zone button stays its own target.</li>
+    <li><strong>Without <code>:has()</code></strong> (old browsers) the check
+        still works — only the tint fill is absent. Selection state is never
+        conveyed by fill alone, so nothing is lost functionally.</li>
+    <li><strong>Selection mode chrome:</strong> when rows are selected and you
+        need bar-level actions (delete, share), the top app bar's
+        <a href="top-app-bar.html#d-contextual">contextual action bar</a> is
+        the M2 answer — the list stays as-is.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
     <li>The list is a real <code>&lt;ul class="fl-list"&gt;</code> — screen readers get item counts for free.</li>
     <li><strong>Rows with nested controls:</strong> make the row a plain <code>&lt;li class="fl-list-item"&gt;</code> and put the action in the meta zone — only the control is the target. <strong>Rows that navigate:</strong> make the row itself an <code>&lt;a class="fl-list-item"&gt;</code> — then hover/active/selected all work on the row, and don't nest controls in its meta zone.</li>
     <li>Selected rows carry <code>aria-current="page"</code>; disabled rows carry <code>aria-disabled="true"</code> (pointer events are also suppressed).</li>
+    <li><strong>Checkbox selection needs no ARIA:</strong> the state is a real <code>&lt;input type="checkbox"&gt;</code>, so checked/unchecked is announced natively — the tint is presentation only. Give standalone checkboxes an <code>aria-label</code> ("Select Q3 roadmap.doc"); whole-row <code>&lt;label&gt;</code> rows are named by their text.</li>
     <li>Icons and badges are <code>aria-hidden</code>; icon buttons in the meta zone need specific labels ("More options for Q3 roadmap", not "More").</li>
     <li>Timestamps and counts in the meta zone are visible text — no SR-only duplication needed.</li>
   </ul>
@@ -391,6 +421,31 @@
       &lt;span class=&quot;fl-list-item__meta&quot;&gt;Current&lt;/span&gt;
     &lt;/a&gt;
   &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Selectable rows: the checkbox owns the state, the row reads it via
+     :has(.fl-check:checked) → tint. Whole-row toggle = &lt;label&gt; row (no other
+     interactive element may live in it). With a trailing action, keep the
+     row a plain li and name the checkbox via aria-label. --&gt;
+&lt;ul class=&quot;fl-list&quot; aria-label=&quot;Select files&quot;&gt;
+  &lt;li&gt;
+    &lt;label class=&quot;fl-list-item&quot;&gt;
+      &lt;input type=&quot;checkbox&quot; class=&quot;fl-check&quot; checked&gt;
+      &lt;span class=&quot;fl-list-item__text&quot;&gt;&lt;span class=&quot;fl-list-item__title&quot;&gt;Aisha Karim&lt;/span&gt;&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;fl-list-item fl-list-item--two-line&quot;&gt;
+    &lt;input type=&quot;checkbox&quot; class=&quot;fl-check&quot; aria-label=&quot;Select Q3 roadmap.doc&quot;&gt;
+    &lt;span class=&quot;fl-list-item__text&quot;&gt;
+      &lt;span class=&quot;fl-list-item__title&quot;&gt;Q3 roadmap.doc&lt;/span&gt;
+      &lt;span class=&quot;fl-list-item__sub&quot;&gt;Edited 2h ago&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span class=&quot;fl-list-item__meta&quot;&gt;
+      &lt;button class=&quot;fl-icon-btn&quot; aria-label=&quot;More options for Q3 roadmap.doc&quot;&gt;
+        &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/span&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
   <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
 </div>
@@ -400,8 +455,9 @@
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
   <p>The embedded example above is the actual demo page, unchanged — open
-     <a href="../demos/lists.html">demos/lists.html</a> for all six row
-     variants at full height. Its source is a copy-paste-ready starting point.</p>
+     <a href="../demos/lists.html">demos/lists.html</a> for all row variants
+     (including the selectable ones) at full height. Its source is a
+     copy-paste-ready starting point.</p>
 </section>
 
 <section class="docs-section">
@@ -444,6 +500,8 @@
         <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-row-types">Row types</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-selection">Selection</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
         
