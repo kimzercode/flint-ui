@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — top app bar demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+</head>
+<body class="fl-reset">
+
+<main style="max-width:720px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Regular bar — anatomy: nav · title · actions (most-used first) · overflow</p>
+  <header class="fl-top-bar" style="border:1px solid var(--fl-border); border-radius:var(--fl-radius);">
+    <button class="fl-icon-btn" type="button" aria-label="Open menu">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <h1 class="fl-top-bar__title">Flint Mail</h1>
+    <button class="fl-icon-btn" type="button" aria-label="Search">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" type="button" aria-label="Compose">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <button class="fl-icon-btn" type="button" popovertarget="bar-more"
+            aria-haspopup="menu" aria-expanded="false" aria-label="More options">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+  <div class="fl-menu" id="bar-more" popover aria-label="More options">
+    <button class="fl-option" role="menuitem" type="button">Refresh</button>
+    <button class="fl-option" role="menuitem" type="button">Settings</button>
+    <hr>
+    <button class="fl-option" role="menuitem" type="button">Sign out</button>
+  </div>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    Long titles never wrap in a regular bar — they truncate. The ⋮ opens a real
+    <a href="menu.html">menu</a>.
+  </p>
+
+  <p class="fl-section-label">Contextual action bar — selection recolors the bar (inverse surface)</p>
+  <header class="fl-top-bar" id="ctx-bar" style="border:1px solid var(--fl-border); border-radius:var(--fl-radius);">
+    <div class="fl-top-bar__group">
+      <button class="fl-icon-btn" type="button" aria-label="Open menu">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+      <h2 class="fl-top-bar__title">Photos</h2>
+      <button class="fl-icon-btn" type="button" aria-label="Search">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="fl-top-bar__group" hidden data-fl-bar-contextual>
+      <button class="fl-icon-btn" type="button" aria-label="Close selection" data-fl-bar-close>
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+      <p class="fl-top-bar__title" id="ctx-count">1 selected</p>
+      <button class="fl-icon-btn" type="button" aria-label="Share selection">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+      <button class="fl-icon-btn" type="button" aria-label="Delete selection">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+  <p style="margin-top:8px;">
+    <button class="fl-btn fl-btn--outline" type="button" id="ctx-toggle" aria-pressed="false">Toggle selection</button>
+  </p>
+  <script>
+    // author logic — selection state is app state, the same contract as the
+    // menu's aria-checked: the class swap and the group swap are one line each.
+    var ctxBar = document.getElementById("ctx-bar");
+    var ctxOn = false;
+    document.getElementById("ctx-toggle").addEventListener("click", function () {
+      ctxOn = !ctxOn;
+      ctxBar.classList.toggle("fl-top-bar--contextual", ctxOn);
+      ctxBar.querySelector(".fl-top-bar__group").hidden = ctxOn;
+      ctxBar.querySelector("[data-fl-bar-contextual]").hidden = !ctxOn;
+      this.setAttribute("aria-pressed", String(ctxOn));
+    });
+    ctxBar.querySelector("[data-fl-bar-close]").addEventListener("click", function () {
+      document.getElementById("ctx-toggle").click();
+    });
+  </script>
+
+  <p class="fl-section-label">Scroll-hide — scroll down hides the bar, scroll up reveals it</p>
+  <div class="fl-shell" style="height:480px; border:1px solid var(--fl-border); border-radius:var(--fl-radius); overflow:hidden;">
+    <header class="fl-top-bar" data-fl-scroll-hide>
+      <button class="fl-icon-btn" type="button" aria-label="Open menu">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+      <h2 class="fl-top-bar__title">Inbox</h2>
+      <button class="fl-icon-btn" type="button" aria-label="Search">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+    <main class="fl-content">
+      <p class="fl-section-label">Scroll this pane</p>
+      <article class="fl-card"><h3 class="fl-card__title">One</h3><p class="fl-card__text">The bar hides when this content scrolls down, and reveals again on the first scroll up.</p></article>
+      <article class="fl-card"><h3 class="fl-card__title">Two</h3><p class="fl-card__text">No shadow appears — the border is the separation, always.</p></article>
+      <article class="fl-card"><h3 class="fl-card__title">Three</h3><p class="fl-card__text">The bar row collapses, so the content reclaims its height.</p></article>
+      <article class="fl-card"><h3 class="fl-card__title">Four</h3><p class="fl-card__text">Scrolling back to the very top always reveals the bar.</p></article>
+      <article class="fl-card"><h3 class="fl-card__title">Five</h3><p class="fl-card__text">Without flint.js nothing hides — the bar just stays put.</p></article>
+    </main>
+  </div>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    In a real app the shell fills the viewport (100dvh). Installed PWAs get the
+    status-bar inset from <code>env(safe-area-inset-top)</code> automatically.
+  </p>
+
+</main>
+
+</body>
+</html>

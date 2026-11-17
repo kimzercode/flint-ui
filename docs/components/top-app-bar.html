@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Top app bar — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.4.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.4.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/menu.html"
+           >Menu</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/snackbar.html"
+           >Snackbar</a>
+      </li>
+      
+      <li>
+        <a href="../components/progress.html"
+           >Progress</a>
+      </li>
+      
+      <li>
+        <a href="../components/select.html"
+           >Select</a>
+      </li>
+      
+      <li>
+        <a href="../components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+      <li>
+        <a href="../components/top-app-bar.html"
+           aria-current="page">Top app bar</a>
+      </li>
+      
+      <li>
+        <a href="../components/tooltip.html"
+           >Tooltip</a>
+      </li>
+      
+    </ul>
+
+    
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Top app bar</h1>
+    <p class="docs-art-lead">The bar that anchors every screen — navigation, title, actions, overflow — with the M2 scrolling behavior and the contextual action bar, on the platform&#39;s safe-area insets.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The top app bar displays information and actions relating to the current
+     screen: branding, screen titles, navigation and actions. It sits at the
+     top of every screen in the app and can transform into a
+     <a href="#d-contextual">contextual action bar</a> when items are
+     selected.</p>
+  <p>In Flint it is part of the
+     <a href="bottom-nav.html">shell</a>: the first grid row of
+     <code>fl-shell</code>, above the scrolling content. Below 600px it is
+     56px tall (M2's mobile spec); above, 64px.</p>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">Mobile-first, so some M2 variations are not here</h3>
+    <p class="docs-callout__text">Extended, prominent and dense bars, imagery in bars and iOS translucency are permanently discarded — native-feel apps on phones don&#39;t use them. The regular bar plus the contextual action bar cover what those apps actually do. See “Deliberately not in Flint” below.</p>
+    <a class="docs-callout__link" href="#d-not-in-flint">The discard list</a>
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <p>M2's recommended left-to-right placement, which the flex row gives you
+     by just writing the elements in order:</p>
+  <ol>
+    <li><strong>Navigation icon</strong> (optional) — a menu icon opening a
+        drawer, an up arrow, or a back arrow; an
+        <code>fl-icon-btn</code> at the far left.</li>
+    <li><strong>Title</strong> (optional) — <code>fl-top-bar__title</code>:
+        the screen, the section or the app. It never wraps — long titles
+        truncate. Left-aligned is the web/desktop idiom (M2's
+        cross-platform note: iOS centers by default; that is a platform
+        convention, not something Flint ships).</li>
+    <li><strong>Action items</strong> (optional) — <code>fl-icon-btn</code>s,
+        most-used on the left, progressing to the least-used.</li>
+    <li><strong>Overflow menu</strong> (optional) — the ⋮ at the far right;
+        anything that doesn't fit goes here. It is a real
+        <a href="menu.html">menu</a>.</li>
+  </ol>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-actions">Actions</h2>
+  <ul>
+    <li><strong>Order by frequency:</strong> most-used action first
+        (leftmost), overflow last (M2's icon-placement rule). Actions move
+        into the overflow as the bar narrows — curate by hand, don't
+        auto-collapse.</li>
+    <li><strong>Icon-only actions need an aria-label</strong> ("Search", not
+        the bare icon). The ⋮ is "More options".</li>
+    <li><strong>Badges</strong> (unread counts) sit on the icon button — see
+        the <a href="bottom-nav.html">shell demo</a>.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-scrolling">Scrolling</h2>
+  <p>M2: scrolling upward hides the bar; scrolling downward reveals it. Add
+     <code>data-fl-scroll-hide</code> to the bar and flint.js watches the
+     shell's <code>fl-content</code> pane (or the window, for bars outside a
+     shell), toggling <code>is-hidden</code> past a 4px threshold:</p>
+  <ul>
+    <li>The bar slides up and the shell's bar row collapses — the content
+        reclaims the space (no dead stripe left behind).</li>
+    <li>Scrolling up at any point reveals the bar; at the very top it always
+        shows, even after a downward fling.</li>
+    <li><code>prefers-reduced-motion</code> removes the slide.</li>
+    <li><strong>No-JS fallback (honest):</strong> without flint.js the bar
+        simply stays put — nothing hides, nothing breaks.</li>
+  </ul>
+  <p><em>Deviation, recorded:</em> M2 grows the bar's elevation when content
+     scrolls behind it. Flint has no shadows, and the bar's 1px bottom
+     border is already the constant separation — so there is nothing to
+     switch on scroll.</p>
+  <p><strong>Safe area:</strong> the bar pads itself with
+     <code>env(safe-area-inset-top)</code>, so an installed PWA under a
+     status bar or a notch keeps its controls below it. Pair with
+     <code>viewport-fit=cover</code> on the meta viewport. In a browser the
+     inset is 0 and nothing changes.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-contextual">Contextual action bar</h2>
+  <p>When the user selects items (photos, messages, notes), the bar
+     transforms: the fill recolors, the navigation icon becomes a close
+     icon, the title reads "N selected", and the actions become the
+     contextual ones. On close it transforms back.</p>
+  <p>Flint ships the state, not the state machine:</p>
+  <ul>
+    <li><code>fl-top-bar--contextual</code> recolors the bar to the
+        <em>inverse surface</em> — the same mapping as the
+        <a href="snackbar.html">snackbar</a> (<code>--fl-text</code> fill,
+        <code>--fl-surface</code> text, light state layers on the dark
+        fill).</li>
+    <li>The bar holds two <code>fl-top-bar__group</code> slot groups — the
+        default one and the contextual one; exactly one is
+        <code>[hidden]</code>. <code>display: contents</code> keeps the
+        bar's flex as the single layout owner.</li>
+    <li>The swap is author logic (selection is app state — the same
+        contract as the menu's <code>aria-checked</code>): one class and
+        two <code>hidden</code> flips. The demo's script is four
+        statements.</li>
+    <li>The contextual group stays in the DOM, so the swap works with JS
+        off — whatever toggles it (a form control, a link, a checkbox) is
+        author code.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The bar is a <code>&lt;header&gt;</code>; the title is a real
+        heading (h1/h2 per document outline).</li>
+    <li>Every icon-only action carries a specific
+        <code>aria-label</code>; "Notifications, 3 unread" beats a bare
+        bell.</li>
+    <li>The overflow trigger uses <code>aria-haspopup="menu"</code> +
+        <code>aria-expanded</code> — the
+        <a href="menu.html">menu</a> contract.</li>
+    <li>Scroll-hide never removes the bar from the accessibility tree or
+        the tab order — it is translated off-screen, so keyboard users
+        still reach its actions; they are never trapped by scroll
+        position.</li>
+    <li>Contextual bar: the close button's label is "Close selection", and
+        the count text is a plain text node screen readers read as the
+        title.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-not-in-flint">Deliberately not in Flint</h2>
+  <table class="docs-table">
+    <thead>
+      <tr><th>M2 variation</th><th>Why not</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Extended / prominent bar</strong> (128dp, larger
+          title)</td><td>Mobile-first native-feel apps don't use them;
+          long titles truncate instead (M2's own "don't wrap in a regular
+          bar" panel applies).</td></tr>
+      <tr><td><strong>Dense / prominent dense</strong> (desktop
+          only)</td><td>Density variants contradict the 44px+ touch
+          targets everywhere else in Flint.</td></tr>
+      <tr><td><strong>Images in bars</strong></td><td>Needs the prominent
+          height to work and risks illegible text — M2's own "don't"
+          panel shows the failure mode.</td></tr>
+      <tr><td><strong>iOS translucency</strong></td><td>M2 expresses bar
+          separation with elevation; Flint's border is the separation.
+          Translucency over scrolling content also fights the opaque
+          surface contract.</td></tr>
+      <tr><td><strong>Center-aligned titles</strong></td><td>iOS platform
+          convention — M2 itself says use the platform's default; the web
+          default is left-aligned.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/top-bar.html — rendered live</span>
+      <a href="../demos/top-bar.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/top-bar.html" title="Top app bar live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>The regular bar — anatomy in DOM order, the ⋮ wired to a real menu:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;header class=&quot;fl-top-bar&quot;&gt;
+  &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; aria-label=&quot;Open menu&quot;&gt;
+    &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;  &lt;!-- your nav icon --&gt;
+  &lt;/button&gt;
+  &lt;h1 class=&quot;fl-top-bar__title&quot;&gt;Flint Mail&lt;/h1&gt;
+  &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; aria-label=&quot;Search&quot;&gt;
+    &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; popovertarget=&quot;bar-more&quot;
+          aria-haspopup=&quot;menu&quot; aria-expanded=&quot;false&quot; aria-label=&quot;More options&quot;&gt;
+    &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/header&gt;
+
+&lt;div class=&quot;fl-menu&quot; id=&quot;bar-more&quot; popover aria-label=&quot;More options&quot;&gt;
+  &lt;button class=&quot;fl-option&quot; role=&quot;menuitem&quot; type=&quot;button&quot;&gt;Settings&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Scroll-hide — one attribute; flint.js toggles <code>is-hidden</code>:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;div class=&quot;fl-shell&quot;&gt;
+  &lt;header class=&quot;fl-top-bar&quot; data-fl-scroll-hide&gt;
+    &lt;h1 class=&quot;fl-top-bar__title&quot;&gt;Inbox&lt;/h1&gt;
+  &lt;/header&gt;
+  &lt;main class=&quot;fl-content&quot;&gt;&lt;!-- scrolls --&gt;&lt;/main&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Contextual action bar — two slot groups, one swap:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;header class=&quot;fl-top-bar&quot; id=&quot;bar&quot;&gt;
+  &lt;div class=&quot;fl-top-bar__group&quot;&gt;
+    &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; aria-label=&quot;Open menu&quot;&gt;…&lt;/button&gt;
+    &lt;h1 class=&quot;fl-top-bar__title&quot;&gt;Photos&lt;/h1&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;fl-top-bar__group&quot; hidden&gt;
+    &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; aria-label=&quot;Close selection&quot;&gt;…&lt;/button&gt;
+    &lt;p class=&quot;fl-top-bar__title&quot;&gt;1 selected&lt;/p&gt;
+    &lt;button class=&quot;fl-icon-btn&quot; type=&quot;button&quot; aria-label=&quot;Delete selection&quot;&gt;…&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+
+&lt;script&gt;
+  // author logic — selection state is app state
+  function setContextual(bar, on) {
+    bar.classList.toggle(&quot;fl-top-bar--contextual&quot;, on);
+    bar.querySelector(&quot;.fl-top-bar__group&quot;).hidden = on;
+    bar.querySelectorAll(&quot;.fl-top-bar__group&quot;)[1].hidden = !on;
+  }
+&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/top-bar.html">demos/top-bar.html</a> covers the
+     regular bar (with the overflow menu), the contextual action bar swap,
+     and a working scroll-hide shell. Scroll the third pane down and
+     up.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>The bar consumes the shared tokens — no top-bar-specific custom
+     properties (internal <code>--_</code> values are not theming API):</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-topbar-h</code></td><td>Bar height (64px, 56px under 600px)</td></tr>
+      <tr><td><code>--fl-surface</code> / <code>--fl-border</code></td><td>Bar fill and 1px bottom border</td></tr>
+      <tr><td><code>--fl-text</code> / <code>--fl-surface</code></td><td>Contextual bar: inverse fill and its text color</td></tr>
+      <tr><td><code>--fl-fs-title</code></td><td>Title size/weight</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Scroll-hide slide timing</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-topbar-h: 72px;   /* roomier bar */
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-actions">Actions</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-scrolling">Scrolling</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-contextual">Contextual action bar</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-not-in-flint">Deliberately not in Flint</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.4.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.4.0" defer></script>
+<script src="../js/docs-ui.js?v=0.4.0" defer></script>
+
+</body>
+</html>

@@ -168,28 +168,78 @@ a { color: var(--fl-accent); text-decoration: none; }
   height: 100dvh; /* scroll lives in the content area, bar stays put */
 }
 
-/* App bar --------------------------------------------------------------- */
+/* App bar ---------------------------------------------------------------
+   One owner: the bar owns its chrome through private tokens — the
+   contextual action bar is a token recolor, not a re-declaration.
+   Safe-area: installed PWAs sit under the status bar (same env() pattern
+   as the tab bar's bottom inset); in a browser env() is 0. */
 .fl-top-bar {
+  --_bar-bg: var(--fl-surface);
+  --_bar-border: var(--fl-border);
+  --_bar-fg: var(--fl-text);
+  --_bar-state: var(--fl-hover);
   display: flex;
   align-items: center;
   gap: var(--fl-space-2);
-  height: var(--fl-topbar-h);
-  padding: 0 var(--fl-space-3);
-  background: var(--fl-surface);
-  border-bottom: 1px solid var(--fl-border);
+  height: calc(var(--fl-topbar-h) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) var(--fl-space-3) 0;
+  background: var(--_bar-bg);
+  color: var(--_bar-fg);
+  border-bottom: 1px solid var(--_bar-border);
   z-index: var(--fl-z-topbar);
 }
+
+/* Contextual action bar (M2): the bar recolors to the inverse surface —
+   the same mapping as the snackbar — while selection is active. Close
+   replaces the navigation icon, the title reads "N selected", the
+   actions are the contextual ones; toggling is author logic. */
+.fl-top-bar--contextual {
+  --_bar-bg: var(--fl-text);
+  --_bar-border: var(--fl-text);
+  --_bar-fg: var(--fl-surface);
+  --_bar-state: rgb(255 255 255 / 0.08);   /* state layer on the dark fill */
+}
+
+/* Slot groups: the bar can hold a default group and a contextual group;
+   exactly one is [hidden]. display:contents keeps the bar's flex the
+   single layout owner (the [hidden] rule wins over contents). */
+.fl-top-bar__group { display: contents; }
+.fl-top-bar__group[hidden] { display: none; }
 
 .fl-top-bar__title {
   margin: 0;
   font-size: var(--fl-fs-title);
   font-weight: 500;
-  color: var(--fl-text);
+  color: inherit;
   flex: 1 1 auto;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis;   /* M2: a regular bar never wraps its title */
+}
+
+/* Scroll-hide (M2 scrolling behavior): data-fl-scroll-hide on the bar;
+   flint.js watches the shell's .fl-content (or the window) and toggles
+   .is-hidden — scrolling down (content moves up) hides, scrolling up
+   reveals, and the bar always shows at the very top. CSS slides the bar
+   and collapses the shell's bar row so the content reclaims the space.
+   Authors can drive .is-hidden themselves; JS is optional. */
+.fl-top-bar[data-fl-scroll-hide] {
+  transition: transform var(--fl-dur) var(--fl-ease);
+}
+.fl-top-bar[data-fl-scroll-hide].is-hidden {
+  transform: translateY(-100%);
+}
+.fl-shell:has(> .fl-top-bar[data-fl-scroll-hide]) {
+  grid-template-rows: calc(var(--fl-topbar-h) + env(safe-area-inset-top, 0px)) 1fr auto;
+  transition: grid-template-rows var(--fl-dur) var(--fl-ease);
+}
+.fl-shell:has(> .fl-top-bar[data-fl-scroll-hide].is-hidden) {
+  grid-template-rows: 0px 1fr auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-top-bar[data-fl-scroll-hide],
+  .fl-shell:has(> .fl-top-bar[data-fl-scroll-hide]) { transition: none; }
 }
 
 /* Icon buttons: generous target, rounded-square flat hover */
@@ -207,7 +257,9 @@ a { color: var(--fl-accent); text-decoration: none; }
 }
 
 @media (hover: hover) {
-  .fl-icon-btn:hover { background: var(--fl-hover); }
+  /* --_bar-state comes from the enclosing bar (contextual flips it to a
+     light overlay on the inverse fill); elsewhere the fallback applies. */
+  .fl-icon-btn:hover { background: var(--_bar-state, var(--fl-hover)); }
 }
 .fl-icon-btn:active { background: var(--fl-divider); }
 

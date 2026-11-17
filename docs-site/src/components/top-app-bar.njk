@@ -1,0 +1,308 @@
+---
+layout: layouts/base.njk
+permalink: components/top-app-bar.html
+assetRoot: ../
+title: Top app bar
+section: components
+current: top-app-bar
+depth: 1
+lead: The bar that anchors every screen — navigation, title, actions, overflow — with the M2 scrolling behavior and the contextual action bar, on the platform's safe-area insets.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: actions
+      title: Actions
+    - id: scrolling
+      title: Scrolling
+    - id: contextual
+      title: Contextual action bar
+    - id: accessibility
+      title: Accessibility
+    - id: not-in-flint
+      title: Deliberately not in Flint
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>The top app bar displays information and actions relating to the current
+     screen: branding, screen titles, navigation and actions. It sits at the
+     top of every screen in the app and can transform into a
+     <a href="#d-contextual">contextual action bar</a> when items are
+     selected.</p>
+  <p>In Flint it is part of the
+     <a href="bottom-nav.html">shell</a>: the first grid row of
+     <code>fl-shell</code>, above the scrolling content. Below 600px it is
+     56px tall (M2's mobile spec); above, 64px.</p>
+  {{ callout({
+    variant: "info",
+    title: "Mobile-first, so some M2 variations are not here",
+    text: "Extended, prominent and dense bars, imagery in bars and iOS translucency are permanently discarded — native-feel apps on phones don't use them. The regular bar plus the contextual action bar cover what those apps actually do. See “Deliberately not in Flint” below.",
+    href: "#d-not-in-flint",
+    linkText: "The discard list"
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <p>M2's recommended left-to-right placement, which the flex row gives you
+     by just writing the elements in order:</p>
+  <ol>
+    <li><strong>Navigation icon</strong> (optional) — a menu icon opening a
+        drawer, an up arrow, or a back arrow; an
+        <code>fl-icon-btn</code> at the far left.</li>
+    <li><strong>Title</strong> (optional) — <code>fl-top-bar__title</code>:
+        the screen, the section or the app. It never wraps — long titles
+        truncate. Left-aligned is the web/desktop idiom (M2's
+        cross-platform note: iOS centers by default; that is a platform
+        convention, not something Flint ships).</li>
+    <li><strong>Action items</strong> (optional) — <code>fl-icon-btn</code>s,
+        most-used on the left, progressing to the least-used.</li>
+    <li><strong>Overflow menu</strong> (optional) — the ⋮ at the far right;
+        anything that doesn't fit goes here. It is a real
+        <a href="menu.html">menu</a>.</li>
+  </ol>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-actions">Actions</h2>
+  <ul>
+    <li><strong>Order by frequency:</strong> most-used action first
+        (leftmost), overflow last (M2's icon-placement rule). Actions move
+        into the overflow as the bar narrows — curate by hand, don't
+        auto-collapse.</li>
+    <li><strong>Icon-only actions need an aria-label</strong> ("Search", not
+        the bare icon). The ⋮ is "More options".</li>
+    <li><strong>Badges</strong> (unread counts) sit on the icon button — see
+        the <a href="bottom-nav.html">shell demo</a>.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-scrolling">Scrolling</h2>
+  <p>M2: scrolling upward hides the bar; scrolling downward reveals it. Add
+     <code>data-fl-scroll-hide</code> to the bar and flint.js watches the
+     shell's <code>fl-content</code> pane (or the window, for bars outside a
+     shell), toggling <code>is-hidden</code> past a 4px threshold:</p>
+  <ul>
+    <li>The bar slides up and the shell's bar row collapses — the content
+        reclaims the space (no dead stripe left behind).</li>
+    <li>Scrolling up at any point reveals the bar; at the very top it always
+        shows, even after a downward fling.</li>
+    <li><code>prefers-reduced-motion</code> removes the slide.</li>
+    <li><strong>No-JS fallback (honest):</strong> without flint.js the bar
+        simply stays put — nothing hides, nothing breaks.</li>
+  </ul>
+  <p><em>Deviation, recorded:</em> M2 grows the bar's elevation when content
+     scrolls behind it. Flint has no shadows, and the bar's 1px bottom
+     border is already the constant separation — so there is nothing to
+     switch on scroll.</p>
+  <p><strong>Safe area:</strong> the bar pads itself with
+     <code>env(safe-area-inset-top)</code>, so an installed PWA under a
+     status bar or a notch keeps its controls below it. Pair with
+     <code>viewport-fit=cover</code> on the meta viewport. In a browser the
+     inset is 0 and nothing changes.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-contextual">Contextual action bar</h2>
+  <p>When the user selects items (photos, messages, notes), the bar
+     transforms: the fill recolors, the navigation icon becomes a close
+     icon, the title reads "N selected", and the actions become the
+     contextual ones. On close it transforms back.</p>
+  <p>Flint ships the state, not the state machine:</p>
+  <ul>
+    <li><code>fl-top-bar--contextual</code> recolors the bar to the
+        <em>inverse surface</em> — the same mapping as the
+        <a href="snackbar.html">snackbar</a> (<code>--fl-text</code> fill,
+        <code>--fl-surface</code> text, light state layers on the dark
+        fill).</li>
+    <li>The bar holds two <code>fl-top-bar__group</code> slot groups — the
+        default one and the contextual one; exactly one is
+        <code>[hidden]</code>. <code>display: contents</code> keeps the
+        bar's flex as the single layout owner.</li>
+    <li>The swap is author logic (selection is app state — the same
+        contract as the menu's <code>aria-checked</code>): one class and
+        two <code>hidden</code> flips. The demo's script is four
+        statements.</li>
+    <li>The contextual group stays in the DOM, so the swap works with JS
+        off — whatever toggles it (a form control, a link, a checkbox) is
+        author code.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li>The bar is a <code>&lt;header&gt;</code>; the title is a real
+        heading (h1/h2 per document outline).</li>
+    <li>Every icon-only action carries a specific
+        <code>aria-label</code>; "Notifications, 3 unread" beats a bare
+        bell.</li>
+    <li>The overflow trigger uses <code>aria-haspopup="menu"</code> +
+        <code>aria-expanded</code> — the
+        <a href="menu.html">menu</a> contract.</li>
+    <li>Scroll-hide never removes the bar from the accessibility tree or
+        the tab order — it is translated off-screen, so keyboard users
+        still reach its actions; they are never trapped by scroll
+        position.</li>
+    <li>Contextual bar: the close button's label is "Close selection", and
+        the count text is a plain text node screen readers read as the
+        title.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-not-in-flint">Deliberately not in Flint</h2>
+  <table class="docs-table">
+    <thead>
+      <tr><th>M2 variation</th><th>Why not</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Extended / prominent bar</strong> (128dp, larger
+          title)</td><td>Mobile-first native-feel apps don't use them;
+          long titles truncate instead (M2's own "don't wrap in a regular
+          bar" panel applies).</td></tr>
+      <tr><td><strong>Dense / prominent dense</strong> (desktop
+          only)</td><td>Density variants contradict the 44px+ touch
+          targets everywhere else in Flint.</td></tr>
+      <tr><td><strong>Images in bars</strong></td><td>Needs the prominent
+          height to work and risks illegible text — M2's own "don't"
+          panel shows the failure mode.</td></tr>
+      <tr><td><strong>iOS translucency</strong></td><td>M2 expresses bar
+          separation with elevation; Flint's border is the separation.
+          Translucency over scrolling content also fights the opaque
+          surface contract.</td></tr>
+      <tr><td><strong>Center-aligned titles</strong></td><td>iOS platform
+          convention — M2 itself says use the platform's default; the web
+          default is left-aligned.</td></tr>
+    </tbody>
+  </table>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>
+     and <code>flint.js</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/top-bar.html — rendered live</span>
+      <a href="../demos/top-bar.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/top-bar.html" title="Top app bar live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  <p>The regular bar — anatomy in DOM order, the ⋮ wired to a real menu:</p>
+  {% set barMarkup %}
+<header class="fl-top-bar">
+  <button class="fl-icon-btn" type="button" aria-label="Open menu">
+    <span class="fl-icon" aria-hidden="true"></span>  <!-- your nav icon -->
+  </button>
+  <h1 class="fl-top-bar__title">Flint Mail</h1>
+  <button class="fl-icon-btn" type="button" aria-label="Search">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+  <button class="fl-icon-btn" type="button" popovertarget="bar-more"
+          aria-haspopup="menu" aria-expanded="false" aria-label="More options">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+</header>
+
+<div class="fl-menu" id="bar-more" popover aria-label="More options">
+  <button class="fl-option" role="menuitem" type="button">Settings</button>
+</div>
+{% endset %}
+  {{ snippet(barMarkup) }}
+  <p>Scroll-hide — one attribute; flint.js toggles <code>is-hidden</code>:</p>
+  {% set scrollMarkup %}
+<div class="fl-shell">
+  <header class="fl-top-bar" data-fl-scroll-hide>
+    <h1 class="fl-top-bar__title">Inbox</h1>
+  </header>
+  <main class="fl-content"><!-- scrolls --></main>
+</div>
+{% endset %}
+  {{ snippet(scrollMarkup) }}
+  <p>Contextual action bar — two slot groups, one swap:</p>
+  {% set contextualMarkup %}
+<header class="fl-top-bar" id="bar">
+  <div class="fl-top-bar__group">
+    <button class="fl-icon-btn" type="button" aria-label="Open menu">…</button>
+    <h1 class="fl-top-bar__title">Photos</h1>
+  </div>
+  <div class="fl-top-bar__group" hidden>
+    <button class="fl-icon-btn" type="button" aria-label="Close selection">…</button>
+    <p class="fl-top-bar__title">1 selected</p>
+    <button class="fl-icon-btn" type="button" aria-label="Delete selection">…</button>
+  </div>
+</header>
+
+<script>
+  // author logic — selection state is app state
+  function setContextual(bar, on) {
+    bar.classList.toggle("fl-top-bar--contextual", on);
+    bar.querySelector(".fl-top-bar__group").hidden = on;
+    bar.querySelectorAll(".fl-top-bar__group")[1].hidden = !on;
+  }
+</script>
+{% endset %}
+  {{ snippet(contextualMarkup) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p><a href="../demos/top-bar.html">demos/top-bar.html</a> covers the
+     regular bar (with the overflow menu), the contextual action bar swap,
+     and a working scroll-hide shell. Scroll the third pane down and
+     up.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>The bar consumes the shared tokens — no top-bar-specific custom
+     properties (internal <code>--_</code> values are not theming API):</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-topbar-h</code></td><td>Bar height (64px, 56px under 600px)</td></tr>
+      <tr><td><code>--fl-surface</code> / <code>--fl-border</code></td><td>Bar fill and 1px bottom border</td></tr>
+      <tr><td><code>--fl-text</code> / <code>--fl-surface</code></td><td>Contextual bar: inverse fill and its text color</td></tr>
+      <tr><td><code>--fl-fs-title</code></td><td>Title size/weight</td></tr>
+      <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Scroll-hide slide timing</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-topbar-h: 72px;   /* roomier bar */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

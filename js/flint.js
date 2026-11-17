@@ -2,8 +2,9 @@
  * Flint UI — flint.js v0.5.0-dev
  * The entire JS surface: nav selected-state, drawer toggling, and the dialog
  * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
- * snackbar (one at a time, 4s auto-dismiss), the password field toggle and
- * the menu anchoring (the Popover API does the rest).
+ * snackbar (one at a time, 4s auto-dismiss), the password field toggle,
+ * the menu anchoring (the Popover API does the rest) and the top bar's
+ * scroll-hide observer.
  * The CSS and the platform do the rest (aria-current/body classes, the
  * <dialog> focus trap, the inert background), so the library still renders
  * correctly with JS off.
@@ -267,9 +268,55 @@
     }
   });
 
+  /* --- Top bar scroll-hide (data-fl-scroll-hide) -------------------------- *
+   * M2 scrolling behavior: scrolling down (content moves up) hides the bar,
+   * scrolling up reveals it, and the bar always shows at the very top.
+   * flint.js watches the shell's .fl-content (or the window when the bar
+   * is not in a shell) and toggles .is-hidden; the CSS does the slide and
+   * the shell row collapse. A 4px threshold keeps touch scroll from
+   * jittering the bar. The class is plain CSS state — author JS can drive
+   * it without this file.
+   *
+   * Collapsing the row changes the scroll range: the browser clamps
+   * scrollTop and fires scroll events while the row animates. Those
+   * self-inflicted events must not flip the state back, so 300ms after a
+   * toggle the handler only tracks position (the clamp lands exactly where
+   * the user would be — the bar's 64px of scroll range became viewport). */
+  function initScrollHide(bar) {
+    if (bar.__flintScrollHide) return;
+    bar.__flintScrollHide = true;
+    var shell = bar.closest(".fl-shell");
+    var scroller = shell ? shell.querySelector(".fl-content") : null;
+    var last = 0;
+    var settle = 0;   /* truthy while our own row transition is settling */
+
+    function setHidden(on) {
+      if (on !== bar.classList.contains("is-hidden")) {
+        bar.classList.toggle("is-hidden", on);
+        clearTimeout(settle);
+        settle = setTimeout(function () { settle = 0; }, 300);
+      }
+    }
+
+    (scroller || window).addEventListener("scroll", function () {
+      var y = scroller ? scroller.scrollTop : window.scrollY;
+      if (y <= 0) {   /* the very top always reveals — even while settling */
+        last = y;
+        setHidden(false);
+        return;
+      }
+      if (settle) { last = y; return; }   /* our own row transition, not the user */
+      if (y > last + 4) setHidden(true);
+      else if (y < last - 4) setHidden(false);
+      last = y;
+    }, { passive: true });
+  }
+
   function scan(root) {
     var groups = (root || document).querySelectorAll("[data-fl-nav]");
     for (var i = 0; i < groups.length; i++) initNav(groups[i]);
+    var bars = (root || document).querySelectorAll("[data-fl-scroll-hide]");
+    for (var j = 0; j < bars.length; j++) initScrollHide(bars[j]);
   }
 
   if (document.readyState === "loading") {

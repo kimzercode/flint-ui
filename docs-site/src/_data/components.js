@@ -96,6 +96,12 @@ const real = [
     summary: "Outlined and filled inputs with helper text, error states and a textarea.",
   },
   {
+    name: "Top app bar",
+    slug: "top-app-bar",
+    status: "ready",
+    summary: "The regular bar as a documented component — safe-area inset, scroll-hide, contextual action bar; extended/dense variants deliberately discarded.",
+  },
+  {
     name: "Tooltip",
     slug: "tooltip",
     status: "ready",
