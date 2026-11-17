@@ -1,0 +1,181 @@
+---
+layout: layouts/base.njk
+permalink: recipes.html
+assetRoot: ""
+title: Recipes
+section: recipes
+depth: 0
+lead: Compositions of existing components — no new CSS in the library, just the few layout lines you add on top. Copy, paste, ship.
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+<div class="docs-hero">
+  <h1>Recipes</h1>
+  <p>Flint recipes are compositions: existing components plus a few lines of
+     author CSS for layout only. Nothing here adds classes to the library —
+     that keeps the component contract small and the recipes copy-pasteable.</p>
+</div>
+
+<section class="docs-section">
+  <h2 id="r-grid">Card grid</h2>
+  <p>The Keep-style wall of note cards: a CSS grid of <code>fl-card</code>s
+     that reflows from one column to as many as fit, no media queries —
+     <code>auto-fill</code> does the work. Two lines of author CSS:</p>
+  {% set gridCss %}
+<style>
+  .fl-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--fl-space-2);              /* Keep's tight 8px rhythm */
+  }
+  .fl-card-grid .fl-card { margin-top: 0; }  /* kill the stacked-card margin */
+</style>
+{% endset %}
+  {{ snippet(gridCss) }}
+  <p>Cards that navigate or open an editor are real interactive elements —
+     a <code>&lt;a class="fl-card"&gt;</code> or
+     <code>&lt;button class="fl-card"&gt;</code>, never a div with a click
+     handler:</p>
+  {% set gridMarkup %}
+<div class="fl-card-grid">
+  <button class="fl-card" type="button">
+    <h2 class="fl-card__title">Packing list</h2>
+    <p class="fl-card__text">Smores, extra towel, warm socks…</p>
+  </button>
+  <a class="fl-card" href="/note/42">
+    <h2 class="fl-card__title">Q3 roadmap</h2>
+    <p class="fl-card__text">Ship the rail shell, then the menu.</p>
+  </a>
+</div>
+{% endset %}
+  {{ snippet(gridMarkup) }}
+  <ul>
+    <li><strong>No-JS:</strong> the grid is pure CSS; every card works as its
+        native element (anchor navigates, button clicks).</li>
+    <li><strong>240px floor:</strong> three cards fill a 960px reading column;
+        phones get one column without a media query. Raise the floor for
+        wider cards, never below ~200px.</li>
+    <li><strong>Selection tint:</strong> for selectable cards combine with the
+        checkbox lesson from the <a href="components/lists.html">Lists</a>
+        page: <code>.fl-card:has(.fl-check:checked)</code> → tint. The
+        checkbox owns the state, the card reads it.</li>
+    <li><strong>Masonry is a gap, deliberately:</strong> variable-height card
+        walls need <code>grid-template-rows: masonry</code>, which no engine
+        ships. Equal-height rows are the honest web version.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="r-empty">Empty state</h2>
+  <p>M2 has no empty-state spec; Google's apps draw it as a centered stack —
+     large muted icon, one title line, one supporting line, and (optionally)
+     one action. Composed from existing pieces, the author CSS is only the
+     stack:</p>
+  {% set emptyCss %}
+<style>
+  .fl-empty {
+    display: grid;
+    justify-items: center;
+    gap: var(--fl-space-2);
+    padding: var(--fl-space-4);
+    text-align: center;
+    color: var(--fl-text-secondary);
+  }
+  .fl-empty .fl-icon { width: 48px; height: 48px; border-radius: var(--fl-radius-card); }
+  .fl-empty__title { margin: 0; font-size: var(--fl-fs-title); font-weight: 500; color: var(--fl-text); }
+</style>
+{% endset %}
+  {{ snippet(emptyCss) }}
+  {% set emptyMarkup %}
+<div class="fl-empty">
+  <span class="fl-icon" aria-hidden="true"></span>
+  <h2 class="fl-empty__title">No notes yet</h2>
+  <p>Notes you add appear here.</p>
+  <button class="fl-btn fl-btn--outline" type="button">Take a note</button>
+</div>
+{% endset %}
+  {{ snippet(emptyMarkup) }}
+  <ul>
+    <li><strong>Announce it once:</strong> the empty state is normal content —
+        no <code>aria-live</code>, no <code>role="status"</code>. It renders
+        where the list would render.</li>
+    <li><strong>One action maximum</strong> — the empty state is a signpost,
+        not a toolbar. More than one action means the screen isn't actually
+        empty.</li>
+    <li><strong>Swap the placeholder</strong> for a real 48px icon when you
+        have a set — the recipe doesn't change.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="r-keep">Keep-style app shell</h2>
+  <p>The form factor Google Keep web uses, assembled from the 0.5 components —
+     this is the same composition the <code>samples/</code> notes app is
+     built on. Nothing here is new CSS beyond the two recipes above:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Region</th><th>Mobile (&lt;905px)</th><th>Desktop (≥905px)</th><th>Component</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Navigation</td>
+        <td>Bottom tab bar</td>
+        <td>Permanent 80px icon rail</td>
+        <td><a href="components/rail.html">Rail shell</a> — one markup, CSS flips it</td>
+      </tr>
+      <tr>
+        <td>Top bar</td>
+        <td colspan="2" style="text-align:center">Transparent, search pill as the anchor</td>
+        <td><a href="components/top-app-bar.html">Top app bar</a> — <code>--transparent</code> + <code>__search</code></td>
+      </tr>
+      <tr>
+        <td>Content</td>
+        <td colspan="2" style="text-align:center">Card grid (recipe above)</td>
+        <td><code>fl-card</code> + <code>.fl-card-grid</code></td>
+      </tr>
+      <tr>
+        <td>Create</td>
+        <td colspan="2" style="text-align:center">Flat FAB</td>
+        <td><a href="components/buttons.html">FAB</a></td>
+      </tr>
+      <tr>
+        <td>Note editor</td>
+        <td colspan="2" style="text-align:center">Centered dialog (Keep web's editing surface)</td>
+        <td><a href="components/dialog.html">Dialog</a> — <code>--fullscreen</code> for full-screen mobile flows</td>
+      </tr>
+      <tr>
+        <td>Delete confirm</td>
+        <td colspan="2" style="text-align:center">Centered dialog</td>
+        <td>Dialog</td>
+      </tr>
+      <tr>
+        <td>Per-note menu</td>
+        <td colspan="2" style="text-align:center">⋮ dropdown on the card</td>
+        <td><a href="components/menu.html">Menu</a></td>
+      </tr>
+      <tr>
+        <td>Status / undo</td>
+        <td colspan="2" style="text-align:center">Inverse-surface snackbar</td>
+        <td><a href="components/snackbar.html">Snackbar</a></td>
+      </tr>
+      <tr>
+        <td>Filters</td>
+        <td>Modal side sheet</td>
+        <td>Standard side sheet (or dialog)</td>
+        <td><a href="components/side-sheet.html">Side sheet</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>A runnable skeleton of the whole table lives at
+     <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a> — open it
+     at both widths and watch the shell flip. The app logic (notes data,
+     undo, discard-blank) is author code by contract; the recipe supplies
+     every piece of chrome.</p>
+  {{ callout({
+    variant: "info",
+    title: "Why no master-detail split",
+    text: "M2 has no spec for a two-pane layout and Google's own web apps disagree (Gmail = split, Keep/Drive = overlay). Flint's wide-screen answer is the side sheet, composed above; a master-detail guide may follow once a real Gmail-web reference audit can back it.",
+    href: "components/side-sheet.html",
+    linkText: "Side sheet component"
+  }) }}
+</section>

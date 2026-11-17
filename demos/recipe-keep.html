@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — Keep-style shell recipe</title>
+<link rel="stylesheet" href="../css/flint.css">
+<script src="../js/flint.js" defer></script>
+<style>
+  /* The two recipe blocks of author CSS (see docs Recipes page) */
+  .fl-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--fl-space-2);
+  }
+  .fl-card-grid .fl-card { margin-top: 0; text-align: left; }
+  /* Cards are buttons that open the editor: reset the button look */
+  .fl-card-grid .fl-card { font: inherit; cursor: pointer; width: 100%; }
+</style>
+</head>
+<body class="fl-reset">
+
+<div class="fl-shell-rail">
+
+  <!-- Transparent bar: the search pill is the anchor (Keep web) -->
+  <header class="fl-top-bar fl-top-bar--transparent">
+    <button class="fl-icon-btn" type="button" aria-label="Main menu">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+    <h1 class="fl-top-bar__title">Keep</h1>
+    <div class="fl-field fl-top-bar__search">
+      <div class="fl-field__box">
+        <span class="fl-field__icon--leading fl-icon" aria-hidden="true"></span>
+        <input class="fl-field__input" type="search" aria-label="Search your notes"
+               placeholder="Search your notes">
+      </div>
+    </div>
+    <button class="fl-icon-btn" type="button" aria-label="Account">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <main class="fl-content" style="padding: var(--fl-space-3);">
+
+    <p class="fl-section-label" style="margin-top:0">Notes</p>
+
+    <!-- Card grid: cards are real buttons that open the editor -->
+    <div class="fl-card-grid">
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Packing list</h2>
+        <p class="fl-card__text">Smores, extra towel, warm socks, head lamp, cards, water filter.</p>
+      </button>
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Sprint 14 retro</h2>
+        <p class="fl-card__text">Shipped the drawer shell and the flat FAB. Next: list rows, then dense.</p>
+      </button>
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Reading queue</h2>
+        <p class="fl-card__text">CSS containment, popover invoker patterns, dialog light dismiss.</p>
+      </button>
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Gift ideas — Mika</h2>
+        <p class="fl-card__text">Field notebook (dot grid), the blue pen that ran out, bookshop voucher.</p>
+      </button>
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Water the plants</h2>
+        <p class="fl-card__text">Monstera on Sunday. Fern only when the soil is dry an inch down.</p>
+      </button>
+      <button class="fl-card" type="button" data-fl-open="note-editor">
+        <h2 class="fl-card__title">Bike tune-up</h2>
+        <p class="fl-card__text">Brake pads, chain lube, pump the tires to 4 bar before the weekend.</p>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Mobile: bottom tab bar · ≥905px: icon rail (same element) -->
+  <nav class="fl-tab-bar" data-fl-nav aria-label="Primary">
+    <button class="fl-tab" aria-current="page">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Notes</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Reminders</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Labels</span>
+    </button>
+    <button class="fl-tab">
+      <span class="fl-tab__icon"><span class="fl-icon" aria-hidden="true"></span></span>
+      <span class="fl-tab__label">Archive</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- Flat FAB: bordered, never shadowed (library contract) -->
+<button class="fl-fab" type="button" data-fl-open="note-editor" aria-label="Take a note">
+  <span class="fl-icon" aria-hidden="true"></span>
+</button>
+
+<!-- Note editor: centered dialog — Keep web's editing surface -->
+<dialog class="fl-dialog" id="note-editor" aria-labelledby="note-editor-t">
+  <div class="fl-dialog__surface">
+    <header class="fl-dialog__header">
+      <h2 class="fl-dialog__title" id="note-editor-t">New note</h2>
+      <button class="fl-icon-btn" type="button" data-fl-close aria-label="Close editor">
+        <span class="fl-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+    <form class="fl-dialog__body" method="dialog" id="note-form" style="padding-bottom:0">
+      <div class="fl-field">
+        <label class="fl-field__label" for="note-title">Title</label>
+        <div class="fl-field__box">
+          <input class="fl-field__input" id="note-title" placeholder="Title" autofocus>
+        </div>
+      </div>
+      <div class="fl-field">
+        <label class="fl-field__label" for="note-text">Note</label>
+        <div class="fl-field__box">
+          <textarea class="fl-field__input" id="note-text" rows="5"
+                    placeholder="Start typing…"></textarea>
+        </div>
+      </div>
+    </form>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" type="button" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" type="submit" data-fl-open="note-saved" form="note-form">Save</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Undo window: the snackbar is status, not a task -->
+<div class="fl-snackbar" id="note-saved" role="status">
+  <span>Note saved</span>
+  <button class="fl-snackbar__action" type="button" data-fl-close>Undo</button>
+</div>
+
+</body>
+</html>

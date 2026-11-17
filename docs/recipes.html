@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Recipes — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="css/flint.css?v=0.4.0">
+  <link rel="stylesheet" href="css/docs.css?v=0.4.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="get-started.html"
+       >Get started</a>
+    <a href="index.html"
+       >Components</a>
+    <a href="recipes.html"
+       class="is-active" aria-current="page">Recipes</a>
+    <a href="roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="get-started.html"
+         >Get started</a></li>
+    <li><a href="index.html"
+         >Components</a></li>
+    <li><a href="recipes.html"
+         class="is-active" aria-current="page">Recipes</a></li>
+    <li><a href="roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
+        <a href="components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="components/dialog.html"
+           >Dialog</a>
+      </li>
+      
+      <li>
+        <a href="components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="components/menu.html"
+           >Menu</a>
+      </li>
+      
+      <li>
+        <a href="components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="components/snackbar.html"
+           >Snackbar</a>
+      </li>
+      
+      <li>
+        <a href="components/progress.html"
+           >Progress</a>
+      </li>
+      
+      <li>
+        <a href="components/select.html"
+           >Select</a>
+      </li>
+      
+      <li>
+        <a href="components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="components/side-sheet.html"
+           >Side sheet</a>
+      </li>
+      
+      <li>
+        <a href="components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+      <li>
+        <a href="components/top-app-bar.html"
+           >Top app bar</a>
+      </li>
+      
+      <li>
+        <a href="components/tooltip.html"
+           >Tooltip</a>
+      </li>
+      
+    </ul>
+
+    
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+<div class="docs-hero">
+  <h1>Recipes</h1>
+  <p>Flint recipes are compositions: existing components plus a few lines of
+     author CSS for layout only. Nothing here adds classes to the library —
+     that keeps the component contract small and the recipes copy-pasteable.</p>
+</div>
+
+<section class="docs-section">
+  <h2 id="r-grid">Card grid</h2>
+  <p>The Keep-style wall of note cards: a CSS grid of <code>fl-card</code>s
+     that reflows from one column to as many as fit, no media queries —
+     <code>auto-fill</code> does the work. Two lines of author CSS:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;style&gt;
+  .fl-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--fl-space-2);              /* Keep&#39;s tight 8px rhythm */
+  }
+  .fl-card-grid .fl-card { margin-top: 0; }  /* kill the stacked-card margin */
+&lt;/style&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>Cards that navigate or open an editor are real interactive elements —
+     a <code>&lt;a class="fl-card"&gt;</code> or
+     <code>&lt;button class="fl-card"&gt;</code>, never a div with a click
+     handler:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;div class=&quot;fl-card-grid&quot;&gt;
+  &lt;button class=&quot;fl-card&quot; type=&quot;button&quot;&gt;
+    &lt;h2 class=&quot;fl-card__title&quot;&gt;Packing list&lt;/h2&gt;
+    &lt;p class=&quot;fl-card__text&quot;&gt;Smores, extra towel, warm socks…&lt;/p&gt;
+  &lt;/button&gt;
+  &lt;a class=&quot;fl-card&quot; href=&quot;/note/42&quot;&gt;
+    &lt;h2 class=&quot;fl-card__title&quot;&gt;Q3 roadmap&lt;/h2&gt;
+    &lt;p class=&quot;fl-card__text&quot;&gt;Ship the rail shell, then the menu.&lt;/p&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <ul>
+    <li><strong>No-JS:</strong> the grid is pure CSS; every card works as its
+        native element (anchor navigates, button clicks).</li>
+    <li><strong>240px floor:</strong> three cards fill a 960px reading column;
+        phones get one column without a media query. Raise the floor for
+        wider cards, never below ~200px.</li>
+    <li><strong>Selection tint:</strong> for selectable cards combine with the
+        checkbox lesson from the <a href="components/lists.html">Lists</a>
+        page: <code>.fl-card:has(.fl-check:checked)</code> → tint. The
+        checkbox owns the state, the card reads it.</li>
+    <li><strong>Masonry is a gap, deliberately:</strong> variable-height card
+        walls need <code>grid-template-rows: masonry</code>, which no engine
+        ships. Equal-height rows are the honest web version.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="r-empty">Empty state</h2>
+  <p>M2 has no empty-state spec; Google's apps draw it as a centered stack —
+     large muted icon, one title line, one supporting line, and (optionally)
+     one action. Composed from existing pieces, the author CSS is only the
+     stack:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;style&gt;
+  .fl-empty {
+    display: grid;
+    justify-items: center;
+    gap: var(--fl-space-2);
+    padding: var(--fl-space-4);
+    text-align: center;
+    color: var(--fl-text-secondary);
+  }
+  .fl-empty .fl-icon { width: 48px; height: 48px; border-radius: var(--fl-radius-card); }
+  .fl-empty__title { margin: 0; font-size: var(--fl-fs-title); font-weight: 500; color: var(--fl-text); }
+&lt;/style&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;div class=&quot;fl-empty&quot;&gt;
+  &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  &lt;h2 class=&quot;fl-empty__title&quot;&gt;No notes yet&lt;/h2&gt;
+  &lt;p&gt;Notes you add appear here.&lt;/p&gt;
+  &lt;button class=&quot;fl-btn fl-btn--outline&quot; type=&quot;button&quot;&gt;Take a note&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <ul>
+    <li><strong>Announce it once:</strong> the empty state is normal content —
+        no <code>aria-live</code>, no <code>role="status"</code>. It renders
+        where the list would render.</li>
+    <li><strong>One action maximum</strong> — the empty state is a signpost,
+        not a toolbar. More than one action means the screen isn't actually
+        empty.</li>
+    <li><strong>Swap the placeholder</strong> for a real 48px icon when you
+        have a set — the recipe doesn't change.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="r-keep">Keep-style app shell</h2>
+  <p>The form factor Google Keep web uses, assembled from the 0.5 components —
+     this is the same composition the <code>samples/</code> notes app is
+     built on. Nothing here is new CSS beyond the two recipes above:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Region</th><th>Mobile (&lt;905px)</th><th>Desktop (≥905px)</th><th>Component</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Navigation</td>
+        <td>Bottom tab bar</td>
+        <td>Permanent 80px icon rail</td>
+        <td><a href="components/rail.html">Rail shell</a> — one markup, CSS flips it</td>
+      </tr>
+      <tr>
+        <td>Top bar</td>
+        <td colspan="2" style="text-align:center">Transparent, search pill as the anchor</td>
+        <td><a href="components/top-app-bar.html">Top app bar</a> — <code>--transparent</code> + <code>__search</code></td>
+      </tr>
+      <tr>
+        <td>Content</td>
+        <td colspan="2" style="text-align:center">Card grid (recipe above)</td>
+        <td><code>fl-card</code> + <code>.fl-card-grid</code></td>
+      </tr>
+      <tr>
+        <td>Create</td>
+        <td colspan="2" style="text-align:center">Flat FAB</td>
+        <td><a href="components/buttons.html">FAB</a></td>
+      </tr>
+      <tr>
+        <td>Note editor</td>
+        <td colspan="2" style="text-align:center">Centered dialog (Keep web's editing surface)</td>
+        <td><a href="components/dialog.html">Dialog</a> — <code>--fullscreen</code> for full-screen mobile flows</td>
+      </tr>
+      <tr>
+        <td>Delete confirm</td>
+        <td colspan="2" style="text-align:center">Centered dialog</td>
+        <td>Dialog</td>
+      </tr>
+      <tr>
+        <td>Per-note menu</td>
+        <td colspan="2" style="text-align:center">⋮ dropdown on the card</td>
+        <td><a href="components/menu.html">Menu</a></td>
+      </tr>
+      <tr>
+        <td>Status / undo</td>
+        <td colspan="2" style="text-align:center">Inverse-surface snackbar</td>
+        <td><a href="components/snackbar.html">Snackbar</a></td>
+      </tr>
+      <tr>
+        <td>Filters</td>
+        <td>Modal side sheet</td>
+        <td>Standard side sheet (or dialog)</td>
+        <td><a href="components/side-sheet.html">Side sheet</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>A runnable skeleton of the whole table lives at
+     <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a> — open it
+     at both widths and watch the shell flip. The app logic (notes data,
+     undo, discard-blank) is author code by contract; the recipe supplies
+     every piece of chrome.</p>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">Why no master-detail split</h3>
+    <p class="docs-callout__text">M2 has no spec for a two-pane layout and Google&#39;s own web apps disagree (Gmail = split, Keep/Drive = overlay). Flint&#39;s wide-screen answer is the side sheet, composed above; a master-detail guide may follow once a real Gmail-web reference audit can back it.</p>
+    <a class="docs-callout__link" href="components/side-sheet.html">Side sheet component</a>
+  </div>
+</div>
+
+</section>
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.4.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="get-started.html">Get started</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="js/flint.js?v=0.4.0" defer></script>
+<script src="js/docs-ui.js?v=0.4.0" defer></script>
+
+</body>
+</html>

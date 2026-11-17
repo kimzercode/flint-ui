@@ -2,7 +2,7 @@
 # Shared docs shell: top app bar + sidebar + footer.
 # Page frontmatter drives it:
 #   assetRoot — relative path from the page to docs/ root ("" or "../")
-#   section   — "components" | "get-started" | "roadmap" (tooltip underline)
+#   section   — "components" | "get-started" | "recipes" | "roadmap" (tooltip underline)
 #   current   — component slug for sidebar highlighting (components pages)
 ---
 <!doctype html>
@@ -35,6 +35,8 @@
        {% if section == "get-started" %}class="is-active" aria-current="page"{% endif %}>Get started</a>
     <a href="{{ assetRoot }}index.html"
        {% if section == "components" %}class="is-active" aria-current="page"{% endif %}>Components</a>
+    <a href="{{ assetRoot }}recipes.html"
+       {% if section == "recipes" %}class="is-active" aria-current="page"{% endif %}>Recipes</a>
     <a href="{{ assetRoot }}roadmap.html"
        {% if section == "roadmap" %}class="is-active" aria-current="page"{% endif %}>Roadmap</a>
   </nav>
@@ -59,6 +61,7 @@
       <p class="docs-footer__brand">Flint UI v0.4.0</p>
       <nav class="docs-footer__links" aria-label="Footer">
         <a href="{{ assetRoot }}get-started.html">Get started</a>
+        <a href="{{ assetRoot }}recipes.html">Recipes</a>
         <a href="{{ assetRoot }}roadmap.html">Roadmap</a>
         <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
         <span>MIT license</span>
