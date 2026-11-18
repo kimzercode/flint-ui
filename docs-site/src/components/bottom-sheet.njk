@@ -226,7 +226,9 @@ toc:
     <li><strong>Known gap:</strong> no swipe-to-dismiss (see Behavior) and
         no Android back-gesture integration — on Android the system back
         navigates away instead of closing the sheet. All four web dismissal
-        paths work; a history-based fix is planned for 0.5.</li>
+        paths work. A history-based fix (push a state on open, close on
+        <code>popstate</code>) is a documented gap, not shipped — it needs
+        app-level routing to cooperate, so the library does not own it.</li>
   </ul>
 </section>
 {% endset %}

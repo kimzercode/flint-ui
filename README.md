@@ -218,7 +218,7 @@ Key tokens: `--fl-surface`, `--fl-text`, `--fl-text-secondary`, `--fl-icon`,
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for the full path from component library to
-mini design system: forms (0.3, ✅), containment (0.4, ✅), data display (0.5),
+mini design system: forms (0.3, ✅), containment (0.4, ✅), data display (0.5, ✅),
 theming (0.6), quality (0.7), API freeze (1.0). The docs site lives at
 [flint-ui docs](https://kimzercode.github.io/flint-ui/) and is built with
 Flint itself.
@@ -239,6 +239,14 @@ forms-completion pass (field-box architecture, affixes, icons, counter,
 password toggle) and the web-native overlay fixes (safe areas, dvh,
 hover guards). "Overlay" is retired as a concept; the theme is
 containment.
+
+Done in 0.5.0: menu, tabs, data table, chips + avatar, side sheet and the
+promoted top app bar (safe-area inset, scroll-hide, contextual state,
+transparent + search-in-bar), plus checkbox-driven list selection,
+interactive cards and the FAB/snackbar anchoring tokens. The gate for the
+release is `samples/notes` — the notes prototype rebuilt entirely on
+Flint in the Keep-web form factor (permanent drawer, full-screen editor
+that becomes a card), with zero hand-rolled chrome.
 
 ## License
 

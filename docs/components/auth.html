@@ -6,8 +6,8 @@
   <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
   <title>Auth shell — Flint UI</title>
   <!-- ?v= busts file:// browser caches; bump with library versions -->
-  <link rel="stylesheet" href="../css/flint.css?v=0.4.0">
-  <link rel="stylesheet" href="../css/docs.css?v=0.4.0">
+  <link rel="stylesheet" href="../css/flint.css?v=0.5.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.5.0">
 </head>
 <body class="docs">
 
@@ -249,8 +249,10 @@
   <h3>Don't use it when</h3>
   <ul>
     <li>The screen has navigation or multiple destinations — use a real shell.</li>
-    <li>You need form controls beyond text inputs (selects, toggles) — the field
-        styles cover inputs only; the planned 0.2 components extend this.</li>
+    <li>You need form controls beyond text inputs — the
+        <a href="selection-controls.html">selection controls</a> and
+        <a href="select.html">select</a> are separate components; the auth
+        shell only lays out the card.</li>
     <li>The flow is multi-step with progress indication — wrap your own step
         indicator inside the card.</li>
   </ul>
@@ -472,7 +474,7 @@
     </main>
 
     <footer class="docs-footer">
-      <p class="docs-footer__brand">Flint UI v0.4.0</p>
+      <p class="docs-footer__brand">Flint UI v0.5.0</p>
       <nav class="docs-footer__links" aria-label="Footer">
         <a href="../get-started.html">Get started</a>
         <a href="../recipes.html">Recipes</a>
@@ -484,8 +486,8 @@
   </div>
 </div>
 
-<script src="../js/flint.js?v=0.4.0" defer></script>
-<script src="../js/docs-ui.js?v=0.4.0" defer></script>
+<script src="../js/flint.js?v=0.5.0" defer></script>
+<script src="../js/docs-ui.js?v=0.5.0" defer></script>
 
 </body>
 </html>

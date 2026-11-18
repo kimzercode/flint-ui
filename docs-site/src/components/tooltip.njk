@@ -130,7 +130,7 @@ toc:
         that's how the spec's "keep the position visible / don't crop"
         rule is honored without script.</li>
     <li><strong>Touch:</strong> M2's mobile trigger is long-press, which CSS
-        can't do — not shipped in 0.4. Tapping a button focuses it on
+        can't do — the library does not ship it. Tapping a button focuses it on
         Android, so <code>:focus-within</code> often shows the tooltip
         there; iOS Safari doesn't focus buttons on tap, so it won't. If you
         need the long-press pattern, it's a few lines of your own JS
@@ -165,7 +165,7 @@ toc:
         only restates the control's own label and covers nothing; if your
         audit requires it, one <code>keydown</code> listener toggling a
         class closes it.</li>
-    <li><strong>Touch gap, honestly:</strong> no long-press in 0.4 (see
+    <li><strong>Touch gap, honestly:</strong> no long-press (see
         behavior). Don't gate a feature on the tooltip being reachable on
         touch.</li>
     <li>Contrast: white on grey 800 (#3c4043) is ~10.6:1 — well past AA at

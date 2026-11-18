@@ -4,6 +4,95 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.5.0] — 2026-11-18
+
+The **data display + app chrome** release: the components an app shell needs
+before it can be built on Flint — a menu, a documented top app bar, in-page
+tabs, a data table and the sheet family's desktop half — plus the first
+`samples/` entry, a notes app that is the rebuild of the 0.4-era prototype and
+the gate for this release.
+
+### Added
+
+- **Menu** (`fl-menu`) — dropdown on the native Popover API: the browser
+  supplies light dismiss, Escape, one-at-a-time and top-layer stacking.
+  `flint.js` adds anchoring with edge flipping, `aria-expanded` sync and the
+  Arrow/Home/End pattern. No scrim (M2 menus are not modal). Selection rows
+  (`aria-checked`) and a group divider are part of the component.
+- **Top app bar** — promoted from a shell part to a documented component:
+  safe-area top inset, action ordering, `data-fl-scroll-hide` (hides on
+  scroll-down, returns on scroll-up, settle-guarded against row-collapse
+  feedback), and the **contextual action bar** state (inverse fill, close
+  replaces the nav icon, "N selected").
+- **Transparent top bar** (`fl-top-bar--transparent`) + **search-in-bar** —
+  the Google web pattern: no fill, no border, the search pill is the anchor.
+  A transparent bar still fills when contextual — a state change you cannot
+  see is not a state change.
+- **Tabs** (`fl-tabs`) — in-page tabs on a native radio group, distinct from
+  the bottom nav: 48px bar, 2px indicator, fixed ≤4, icon variant, scrollable
+  overflow, clustered on desktop. Zero JS; radio semantics documented as the
+  deliberate trade (the bar is a form control, not a `tablist`).
+- **Data table** (`fl-data-table`) — flat 56/52px rows with a 1px outline,
+  numeric alignment, checkbox selection tint, horizontal scroll with a sticky
+  selection column on mobile, sortable headers via `aria-sort`, and
+  link-based pagination. The truncation slot (`.fl-data-table__truncate`) owns
+  ellipsis because auto table layout ignores `max-width` on cells.
+- **Chips + avatar** — filter / choice / action / tag chips on native
+  checkboxes, radios and buttons (zero JS, pill radius token, optional check
+  and remove slots), and one shared `.fl-avatar` (40/32/24) replacing the
+  list-only avatar.
+- **Side sheet** — standard (persistent desktop panel) and modal (native
+  `<dialog>`) on the trailing edge with mobile insets; the 1px leading border
+  stands in for M2 elevation.
+- **List selection state** — a checkbox owns the state and the row reads it
+  (`:has(.fl-check:checked)` → `--fl-tint`); a `<label>` row makes the whole
+  line the target.
+- **Interactive cards** — `a.fl-card` / `button.fl-card` are shipped
+  patterns: the real element is the hit area and the semantics, with the
+  element reset in the library. `button` cards use `.fl-card__title/text`
+  spans (phrasing content only); anchors and articles keep real headings.
+- **Recipes** — card grid, empty state, and the Keep-style app-shell
+  composition map, with a runnable skeleton at `demos/recipe-keep.html`.
+- **`samples/notes`** — the prototype rebuilt on Flint in the Keep-web form
+  factor: transparent bar + search pill, drawer shell (pinned 280px column
+  from 905px, off-canvas below), card grid, FAB, live editor as a full-screen
+  dialog that becomes a 560px card, label chips, ⋮ menu, and a snackbar whose
+  Undo/Open is real. No hand-rolled chrome; the app logic is author code.
+  Probed at 390 + 1024px (37 assertions).
+
+### Changed
+
+- **Full-screen dialog** now performs the M2 type swap: full-bleed below
+  600px, a 560px card above it, with the dismiss control re-ordered to the
+  trailing edge. Header, body and actions share one inset per arrangement
+  (16px app bar / 24px card).
+- **FAB** distance from the bottom edge is `--fl-fab-inset` (16px + safe area
+  by default); a shell that renders `.fl-tab-bar` raises it automatically with
+  `:has()`. While a snackbar is visible the FAB steps up 56px instead of
+  being covered.
+- **Snackbar** gutter is `--fl-snackbar-inset`, and the single action sits at
+  the trailing edge.
+- **Fields** — `.fl-field__input` is `width: 0` + `flex: 1 1 auto`: a control's
+  width comes from the box's flex line, never from its `size` attribute (a
+  search pill in a 390px app bar was dragging the whole page 8px sideways).
+  The auto-grow textarea loses its resize grip.
+- **Navigation rows** can be `<button class="fl-nav-item">` for client-side
+  destinations, with the browser chrome reset in the library.
+- **`[hidden]`** is a real hiding primitive again (`display: none
+  !important`) — author `display` rules had been silently beating it.
+- A closed off-canvas drawer sets `visibility: hidden`, so its links leave the
+  tab order.
+
+### Docs
+
+- Component pages for menu, tabs, data table, top app bar and side sheet,
+  plus the chips/avatar, card, bottom-nav, snackbar and text-field updates.
+- `NOTES.md` records every deviation and every gap found by the sample
+  (type-swap insets, popover-inside-dialog, no-JS sample state, the Keep
+  deviations: view title, one column below 600px, outlined editor fields, FAB
+  instead of the compose bar, one label per note, close·title·⋮ header,
+  Archive without Trash).
+
 ## [0.4.0] — 2026-11-16
 
 The containment + forms completion release: five new components, the

@@ -6,8 +6,8 @@
   <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
   <title>Roadmap — Flint UI</title>
   <!-- ?v= busts file:// browser caches; bump with library versions -->
-  <link rel="stylesheet" href="css/flint.css?v=0.4.0">
-  <link rel="stylesheet" href="css/docs.css?v=0.4.0">
+  <link rel="stylesheet" href="css/flint.css?v=0.5.0">
+  <link rel="stylesheet" href="css/docs.css?v=0.5.0">
 </head>
 <body class="docs">
 
@@ -260,32 +260,21 @@
       <tr>
         <td><strong>0.5.0</strong></td>
         <td>Data display + app chrome</td>
-        <td>Data table, standalone tabs, pagination, avatar, chips (split
-            from badges) — plus the app-chrome set that enables a
-            Keep-style app build: <strong>menu</strong>
-            (dropdown on the native Popover API — light-dismiss, Escape,
-            instant dismiss — deferred here from 0.4),
-            <strong>top app bar</strong> promoted to a component
-            (own docs page, safe-area top inset, action ordering,
-            scroll-hide, contextual action bar state,
-            <strong>transparent variant</strong> with search-in-bar —
-            Google's actual web pattern;
-            extended/prominent/dense/images-in-bar deliberately
-            discarded — mobile-first native feel), <strong>checkbox-driven
-            selection state</strong> on list rows, <strong>side
-            sheet</strong> (standard + modal, completes the sheet family;
-            audit against a <code>sheets-side-docs/</code> reference
-            folder before building), docs recipes (empty state, card
-            grid). Master-detail split: <strong>not in 0.5</strong> — M2
-            has no spec, Google's own web apps are inconsistent (Gmail =
-            split, Keep/Drive = overlay); returns in a later release as
-            an "App shells" guide composed from existing primitives,
-            sequenced after the side sheet. <strong>Acceptance: the notes
-            prototype (<code>prototype/test-mdl2.html</code>) rebuilt
-            entirely on Flint components in the Keep-web form factor
-            (rail on desktop, editor as centered dialog) as the first
-            <code>samples/</code> entry — zero hand-rolled chrome; only
-            the app logic (data, undo) is author code.</strong></td>
+        <td>✅ Data table (1px outline, sticky selection, <code>aria-sort</code>,
+            link paging), tabs (radio-driven, zero JS), chips + avatar,
+            <strong>menu</strong> (native Popover API), <strong>top app
+            bar</strong> promoted (safe-area inset, scroll-hide, contextual
+            action bar state, transparent variant with search-in-bar),
+            checkbox-driven list selection, <strong>side sheet</strong>
+            (standard + modal), interactive cards, FAB/snackbar anchoring
+            tokens, docs recipes (card grid, empty state, Keep-style shell).
+            Master-detail split: still not in Flint (App shells guide later).
+            <strong>Acceptance met:</strong> <a
+            href="samples/notes/index.html"><code>samples/notes</code></a>
+            rebuilds the prototype entirely on Flint in the Keep-web form
+            factor — pinned 280px drawer from 905px, off-canvas below,
+            full-screen dialog that becomes a 560px card, real Undo — zero
+            hand-rolled chrome; probe 37/37.</td>
       </tr>
       <tr>
         <td><strong>0.6.0</strong></td>
@@ -320,18 +309,18 @@
 
 <section class="docs-section">
   <h2 id="rm-now">Where this docs site stands</h2>
-  <p>Ten components have full pages: the five shipping shells (bottom-nav,
-     rail, drawer, auth, lists), the 0.1 building blocks (buttons, cards)
-     and the 0.3 form family (text fields, selection controls, select).
-     Dialog and bottom sheet are honest stubs marked <em>Planned · 0.4</em>
-     until the dialog/sheet work lands — the sidebar only ever links somewhere
-     real.</p>
+  <p>Every component in <code>_data/components.js</code> has a full page —
+     shells (bottom-nav, rail, drawer, auth, lists), the 0.1 building blocks
+     (buttons, cards), the 0.3 form family, the 0.4 feedback set and the 0.5
+     data-display + app-chrome set. There are no planned stubs left: the
+     sidebar only ever links somewhere real, and <code>samples/notes</code>
+     shows the whole library doing a job.</p>
 </section>
 
     </main>
 
     <footer class="docs-footer">
-      <p class="docs-footer__brand">Flint UI v0.4.0</p>
+      <p class="docs-footer__brand">Flint UI v0.5.0</p>
       <nav class="docs-footer__links" aria-label="Footer">
         <a href="get-started.html">Get started</a>
         <a href="recipes.html">Recipes</a>
@@ -343,8 +332,8 @@
   </div>
 </div>
 
-<script src="js/flint.js?v=0.4.0" defer></script>
-<script src="js/docs-ui.js?v=0.4.0" defer></script>
+<script src="js/flint.js?v=0.5.0" defer></script>
+<script src="js/docs-ui.js?v=0.5.0" defer></script>
 
 </body>
 </html>
