@@ -36,6 +36,12 @@ const real = [
     summary: "Outlined content containers, no shadows.",
   },
   {
+    name: "Chips",
+    slug: "chips",
+    status: "ready",
+    summary: "Filter, choice, action and tag pills on native inputs and buttons — zero JS, pill by default.",
+  },
+  {
     name: "Dialog",
     slug: "dialog",
     status: "ready",

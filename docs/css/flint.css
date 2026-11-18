@@ -46,6 +46,7 @@
   --fl-radius: 4px;
   --fl-radius-lg: 8px;
   --fl-radius-card: 8px;
+  --fl-chip-radius: 999px;  /* M2 chip = 16dp on a 32dp pill; set 8px for M3's boxy look */
 
   /* Spacing (4px grid) */
   --fl-space-1: 4px;
@@ -59,6 +60,7 @@
   --fl-content-max: 960px;     /* desktop reading column */
   --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
   --fl-sidesheet-w: 320px;     /* side sheet width (M2 desktop standard: 320dp) */
+  --fl-chip-h: 32px;           /* M2 chip height; the 48px target comes from the set's spacing */
   --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
   --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
 
@@ -1159,21 +1161,8 @@ button.fl-list-item:active { --_row-bg: var(--fl-divider); }
 
 .fl-list-item .fl-icon { width: 24px; height: 24px; }
 
-/* Initials as text, or put the class on an <img> (object-fit crops it) */
-.fl-list-item__avatar {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--fl-icon-ph);
-  color: var(--fl-text-secondary);
-  font-size: var(--fl-fs-body);
-  font-weight: 500;
-  object-fit: cover;
-}
+/* Initials as text, or put the class on an <img> (object-fit crops it).
+   The avatar itself is shared: see .fl-avatar (§19). */
 
 /* Text block: min-width: 0 is what lets long titles/subs ellipsize */
 .fl-list-item__text {
@@ -2084,4 +2073,223 @@ dialog.fl-sidesheet[open] {
     width: min(var(--fl-sidesheet-w), calc(100vw - 48px));
   }
   dialog.fl-sidesheet .fl-sidesheet__header { min-height: 56px; }
+}
+
+/* --------------------------------------------------------------------------
+   19. Avatar — a circle of initials, or an <img class="fl-avatar">. M2 has no
+       avatar component; this is the shared entity thumbnail (24/32/40px) the
+       lists, chips and top bars use. Text is author content: put initials in
+       the element, or use an image (object-fit crops it).
+   -------------------------------------------------------------------------- */
+.fl-avatar {
+  --_avatar-size: 40px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--_avatar-size);
+  height: var(--_avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--fl-icon-ph);
+  color: var(--fl-text-secondary);
+  font-size: var(--fl-fs-body);
+  font-weight: 500;
+  line-height: 1;
+  object-fit: cover;
+}
+
+.fl-avatar--sm {
+  --_avatar-size: 32px;
+  font-size: var(--fl-fs-caption);
+}
+
+.fl-avatar--xs {
+  --_avatar-size: 24px;
+  font-size: var(--fl-fs-caption);
+}
+
+/* --------------------------------------------------------------------------
+   20. Chips — compact pills for filters, single choices, actions and tags.
+       The element is the contract: <label> + native input is a stateful chip
+       (the input owns the state, the chip reads it with :has(:checked)), a
+       <button> is an action, a <span> is a tag with a remove button.
+       32px tall, pill by default (M2: 16dp radius on 32dp; --fl-chip-radius
+       turns it into M3's 8px rounded rect). The 48px touch target comes from
+       .fl-chip-set's 16px row gap — 8px of dead space above and below.
+       Zero JS; without :has() the selected styling is simply absent.
+   -------------------------------------------------------------------------- */
+.fl-chip {
+  --_chip-bg: var(--fl-divider);
+  --_chip-border: transparent;
+  --_chip-fg: var(--fl-text);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fl-space-1);
+  height: var(--fl-chip-h);
+  padding: 0 12px;
+  border: 1px solid var(--_chip-border);
+  border-radius: var(--fl-chip-radius);
+  background: var(--_chip-bg);
+  color: var(--_chip-fg);
+  font-size: var(--fl-fs-body);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--fl-dur) var(--fl-ease),
+              border-color var(--fl-dur) var(--fl-ease),
+              color var(--fl-dur) var(--fl-ease);
+}
+
+/* Outlined variant: transparent container, 1px border. The transparent
+   border on the base keeps both variants geometrically identical. */
+.fl-chip--outline {
+  --_chip-bg: transparent;
+  --_chip-border: var(--fl-border);
+}
+
+/* The stateful input: visually hidden, still focusable, still announced.
+   The focus ring moves to the chip instead (below). */
+.fl-chip__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.fl-chip:has(.fl-chip__input:focus-visible) {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: 2px;
+}
+
+/* Selected: the library's tint/accent selection language (Gmail-web idiom,
+   shared with nav and list selection). M2 draws filter chips with a check —
+   the .fl-chip__check slot supplies it; choice chips leave the slot out. */
+.fl-chip:has(.fl-chip__input:checked) {
+  --_chip-bg: var(--fl-tint);
+  --_chip-fg: var(--fl-accent);
+}
+
+/* Check slot: author-supplied, revealed only while selected. Drawn with a
+   mask so it inherits currentColor (accent when selected). */
+.fl-chip__check {
+  display: none;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fl-chip:has(.fl-chip__input:checked) .fl-chip__check { display: block; }
+
+/* 18px icons inside a 32px chip (M2 chip icon size) */
+.fl-chip .fl-icon { width: 18px; height: 18px; }
+
+/* Input chip (tag): thumbnail + text + remove. The chip itself is not a
+   target, so the cursor stays default; the remove button is. */
+.fl-chip--input {
+  gap: var(--fl-space-2);
+  padding: 0 6px;
+  cursor: default;
+}
+
+.fl-chip--input:has(.fl-avatar) { padding-left: 4px; }
+
+.fl-chip__remove {
+  position: relative;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-right: -6px;
+  border-radius: 50%;
+  color: inherit;
+}
+
+/* The × is drawn, not authored: a mask follows currentColor. */
+.fl-chip__remove::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fl-chip__remove:focus-visible { outline-offset: -2px; }
+
+/* Hover/pressed skip selected and disabled chips — the state tokens would
+   otherwise be overwritten by the neutral fill. */
+@media (hover: hover) {
+  .fl-chip:not(:has(:checked), :disabled, :has(:disabled)):hover {
+    --_chip-bg: var(--fl-border);
+  }
+  .fl-chip--outline:not(:has(:checked), :disabled, :has(:disabled)):hover {
+    --_chip-bg: var(--fl-hover);
+  }
+  .fl-chip__remove:hover { background: var(--fl-border); }
+}
+
+.fl-chip:not(:has(:checked), :disabled, :has(:disabled)):active {
+  --_chip-bg: var(--fl-border);
+}
+
+.fl-chip--outline:not(:has(:checked), :disabled, :has(:disabled)):active {
+  --_chip-bg: var(--fl-divider);
+}
+
+/* Disabled after the selected rule so a checked-but-disabled chip grays out */
+.fl-chip:has(.fl-chip__input:disabled),
+.fl-chip:disabled {
+  --_chip-bg: var(--fl-hover);
+  --_chip-border: transparent;
+  --_chip-fg: var(--fl-disabled);
+  cursor: not-allowed;
+}
+
+.fl-chip--outline:has(.fl-chip__input:disabled),
+.fl-chip--outline:disabled {
+  --_chip-bg: transparent;
+  --_chip-border: var(--fl-divider);
+}
+
+.fl-chip--input:has(.fl-chip__remove:disabled) {
+  --_chip-fg: var(--fl-disabled);
+}
+
+/* Set: wraps; the 16px row gap plus the 8px top/bottom padding makes every
+   32px chip a 48px touch target. Works on a <fieldset> too (chrome reset). */
+.fl-chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fl-space-3) var(--fl-space-2);
+  margin: 0;
+  padding: var(--fl-space-2) 0;
+  border: 0;
+}
+
+/* Overflow: one row, native horizontal scrolling + snap — no JS, no arrows.
+   The clipped chip is the "there is more" affordance (M2 scrollable sets). */
+.fl-chip-set--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;   /* overflow-x:auto computes overflow-y:auto; pin it (probe lesson) */
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.fl-chip-set--scroll::-webkit-scrollbar { display: none; }
+
+.fl-chip-set--scroll > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
 }

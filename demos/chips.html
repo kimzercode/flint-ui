@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — chips demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Filter chips — checkboxes, select many</p>
+  <div class="fl-chip-set" role="group" aria-label="Filter notes by label">
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input" checked>
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Work
+    </label>
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input">
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Personal
+    </label>
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input" checked>
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Ideas
+    </label>
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input">
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Archive
+    </label>
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input" disabled>
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Locked
+    </label>
+  </div>
+
+  <p class="fl-section-label">Choice chips — radios, one answer</p>
+  <div class="fl-chip-set" role="radiogroup" aria-label="Sort notes by">
+    <label class="fl-chip">
+      <input type="radio" class="fl-chip__input" name="sort" checked>
+      Last modified
+    </label>
+    <label class="fl-chip">
+      <input type="radio" class="fl-chip__input" name="sort">
+      Title
+    </label>
+    <label class="fl-chip">
+      <input type="radio" class="fl-chip__input" name="sort">
+      Manual
+    </label>
+    <label class="fl-chip">
+      <input type="radio" class="fl-chip__input" name="sort" disabled>
+      Pinned first
+    </label>
+  </div>
+
+  <p class="fl-section-label">Action chips — buttons, with a leading icon</p>
+  <div class="fl-chip-set">
+    <button class="fl-chip" type="button">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Add reminder
+    </button>
+    <button class="fl-chip" type="button">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Add label
+    </button>
+    <button class="fl-chip" type="button">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Collaborators
+    </button>
+    <button class="fl-chip" type="button" disabled>
+      <span class="fl-icon" aria-hidden="true"></span>
+      Share
+    </button>
+  </div>
+
+  <p class="fl-section-label">Input chips — tags with thumbnails and remove</p>
+  <div class="fl-chip-set" role="list" aria-label="Labels on this note">
+    <span class="fl-chip fl-chip--input" role="listitem">
+      <span class="fl-avatar fl-avatar--xs" aria-hidden="true">P</span>
+      Portland
+      <button class="fl-chip__remove" type="button" aria-label="Remove Portland"></button>
+    </span>
+    <span class="fl-chip fl-chip--input" role="listitem">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Biking
+      <button class="fl-chip__remove" type="button" aria-label="Remove Biking"></button>
+    </span>
+    <span class="fl-chip fl-chip--input" role="listitem">
+      Recipes
+      <button class="fl-chip__remove" type="button" aria-label="Remove Recipes"></button>
+    </span>
+    <span class="fl-chip fl-chip--input" role="listitem">
+      Read-only
+      <button class="fl-chip__remove" type="button" aria-label="Remove Read-only" disabled></button>
+    </span>
+  </div>
+
+  <p class="fl-section-label">Outlined — transparent container, 1px border</p>
+  <div class="fl-chip-set">
+    <label class="fl-chip fl-chip--outline">
+      <input type="checkbox" class="fl-chip__input" checked>
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Washer / Dryer
+    </label>
+    <button class="fl-chip fl-chip--outline" type="button">Set alarm</button>
+    <button class="fl-chip fl-chip--outline" type="button" disabled>Unavailable</button>
+  </div>
+
+  <p class="fl-section-label">Overflow — one row, native scroll (no arrows, no JS)</p>
+  <div class="fl-chip-set fl-chip-set--scroll" role="group" aria-label="Neighborhoods">
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Sørenga</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Bygdøy</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Rodeløkka</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Tveita</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Grünerløkka</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Majorstuen</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>Frogner</label>
+  </div>
+
+  <p class="fl-section-label">In context — filter bar over a list</p>
+  <div class="fl-chip-set" role="group" aria-label="Filter results">
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input" checked><span class="fl-chip__check" aria-hidden="true"></span>Unread</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>With attachments</label>
+    <label class="fl-chip"><input type="checkbox" class="fl-chip__input"><span class="fl-chip__check" aria-hidden="true"></span>This week</label>
+  </div>
+
+  <div class="fl-card" style="margin-top:8px;">
+    <h2 class="fl-card__title">3 notes match</h2>
+    <p class="fl-card__text">Chips above a list are the filter-bar placement M2 specs for
+       tables and collections: the chips select the set, the list renders it.</p>
+  </div>
+
+</main>
+
+<script>
+  // Author code, not library code: removing a tag is app state. Without this
+  // script every chip still renders and every filter still toggles.
+  document.addEventListener("click", (event) => {
+    const remove = event.target.closest(".fl-chip__remove");
+    if (remove) remove.closest(".fl-chip").remove();
+  });
+</script>
+
+</body>
+</html>

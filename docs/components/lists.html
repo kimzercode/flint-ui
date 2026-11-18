@@ -103,6 +103,11 @@
       </li>
       
       <li>
+        <a href="../components/chips.html"
+           >Chips</a>
+      </li>
+      
+      <li>
         <a href="../components/dialog.html"
            >Dialog</a>
       </li>
@@ -287,7 +292,7 @@
       </g>
     </svg>
     <ol>
-      <li><strong>Leading zone</strong> — 24px icon or 40px avatar (initials text, or an <code>&lt;img&gt;</code> cropped by <code>object-fit</code>).</li>
+      <li><strong>Leading zone</strong> — 24px icon or <code>.fl-avatar</code> at 40px (initials text, or an <code>&lt;img&gt;</code> cropped by <code>object-fit</code>). The avatar is shared with chips (<code>--sm</code> 32px, <code>--xs</code> 24px).</li>
       <li><strong>Selected row</strong> — tint fill via <code>aria-current="page"</code>; content rows keep neutral text (unlike nav items, which also take the accent).</li>
       <li><strong>72dp keyline</strong> — the 16px gap after a 40px avatar lands text on the spec keyline automatically.</li>
       <li><strong>Meta zone</strong> — trailing actions, badges, or secondary text (timestamps). Badges sit inline here.</li>
@@ -295,6 +300,37 @@
       <li><strong>Dense variant</strong> — 40px rows (60/76px for two/three-line) for data-heavy screens.</li>
     </ol>
   </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-avatar">Avatars</h2>
+  <p><code>.fl-avatar</code> is the shared entity thumbnail — lists, chips and
+     top bars all use it. M2 has no avatar component, so it is documented here
+     as a building block, not a spec'd control. Initials are author content;
+     an <code>&lt;img&gt;</code> works the same way and is cropped by
+     <code>object-fit</code>.</p>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <span class="fl-avatar" aria-hidden="true">AK</span>
+    <span class="fl-avatar fl-avatar--sm" aria-hidden="true">AK</span>
+    <span class="fl-avatar fl-avatar--xs" aria-hidden="true">AK</span>
+  </div>
+  <table class="docs-table" style="margin-top:16px;">
+    <thead>
+      <tr><th>Class</th><th>Size</th><th>Used by</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>.fl-avatar</code></td><td>40px</td><td>List rows (two/three-line)</td></tr>
+      <tr><td><code>.fl-avatar--sm</code></td><td>32px</td><td>Dense rows, account chips</td></tr>
+      <tr><td><code>.fl-avatar--xs</code></td><td>24px</td><td>Input chips (tags)</td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><strong>Decorative by default.</strong> When the row already names the
+        person, mark the initials <code>aria-hidden="true"</code>; for an
+        <code>&lt;img&gt;</code>, an empty <code>alt</code> does the same.</li>
+    <li><strong>Initials are text.</strong> Two characters, upper case — don't
+        shrink the font below 12px to fit three.</li>
+  </ul>
 </section>
 
 <section class="docs-section">
@@ -393,7 +429,7 @@
      icon button is the target) --&gt;
 &lt;ul class=&quot;fl-list&quot;&gt;
   &lt;li class=&quot;fl-list-item fl-list-item--two-line&quot;&gt;
-    &lt;span class=&quot;fl-list-item__avatar&quot; aria-hidden=&quot;true&quot;&gt;AK&lt;/span&gt;
+    &lt;span class=&quot;fl-avatar&quot; aria-hidden=&quot;true&quot;&gt;AK&lt;/span&gt;
     &lt;span class=&quot;fl-list-item__text&quot;&gt;
       &lt;span class=&quot;fl-list-item__title&quot;&gt;Aisha Karim&lt;/span&gt;
       &lt;span class=&quot;fl-list-item__sub&quot;&gt;aisha@example.com&lt;/span&gt;
@@ -422,7 +458,7 @@
 &lt;ul class=&quot;fl-list&quot;&gt;
   &lt;li&gt;
     &lt;a class=&quot;fl-list-item fl-list-item--two-line&quot; href=&quot;#&quot; aria-current=&quot;page&quot;&gt;
-      &lt;span class=&quot;fl-list-item__avatar&quot; aria-hidden=&quot;true&quot;&gt;HK&lt;/span&gt;
+      &lt;span class=&quot;fl-avatar&quot; aria-hidden=&quot;true&quot;&gt;HK&lt;/span&gt;
       &lt;span class=&quot;fl-list-item__text&quot;&gt;
         &lt;span class=&quot;fl-list-item__title&quot;&gt;hakim@example.com&lt;/span&gt;
         &lt;span class=&quot;fl-list-item__sub&quot;&gt;Personal&lt;/span&gt;
@@ -507,6 +543,8 @@
         <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-avatar">Avatars</a></li>
         
         <li data-fl-docs-toc-tab="design"><a href="#d-row-types">Row types</a></li>
         

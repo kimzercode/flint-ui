@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en" class="docs-no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
+  <title>Chips — Flint UI</title>
+  <!-- ?v= busts file:// browser caches; bump with library versions -->
+  <link rel="stylesheet" href="../css/flint.css?v=0.4.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.4.0">
+</head>
+<body class="docs">
+
+<header class="docs-topbar">
+  <button class="fl-icon-btn docs-menu-btn" data-fl-drawer-open
+          aria-label="Open navigation menu"
+          aria-controls="docs-drawer" aria-expanded="false">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
+
+  <a class="docs-brand" href="../index.html">
+    <span class="docs-brand__mark" aria-hidden="true">F</span>
+    <span class="docs-brand__name">Flint UI</span>
+  </a>
+
+  <nav class="docs-nav" aria-label="Site sections">
+    <a href="../get-started.html"
+       >Get started</a>
+    <a href="../index.html"
+       class="is-active" aria-current="page">Components</a>
+    <a href="../recipes.html"
+       >Recipes</a>
+    <a href="../roadmap.html"
+       >Roadmap</a>
+  </nav>
+
+  <a class="docs-github" href="https://github.com/kimzercode/flint-ui"
+     aria-label="Flint UI on GitHub">GitHub</a>
+</header>
+
+
+<div class="fl-scrim" data-fl-drawer-close aria-hidden="true"></div>
+
+<div class="docs-shell">
+  
+<aside class="fl-drawer docs-sidebar" id="docs-drawer" aria-label="Docs navigation">
+  <div class="docs-side-sticky">
+  <div class="fl-drawer__header docs-drawer-head">
+    Flint UI
+    <span class="fl-drawer__spacer"></span>
+    <button class="fl-icon-btn fl-only-mobile" data-fl-drawer-close
+            aria-label="Close navigation menu"
+            aria-controls="docs-drawer" aria-expanded="true">
+      <span class="fl-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  
+  <ul class="docs-side-sections">
+    <li><a href="../get-started.html"
+         >Get started</a></li>
+    <li><a href="../index.html"
+         class="is-active" aria-current="page">Components</a></li>
+    <li><a href="../recipes.html"
+         >Recipes</a></li>
+    <li><a href="../roadmap.html"
+         >Roadmap</a></li>
+  </ul>
+
+  <h2 class="docs-sidebar__title">Components</h2>
+
+  <input class="docs-filter" type="search"
+         placeholder="Filter components"
+         aria-label="Filter components by name"
+         data-fl-docs-filter="docs-side-btns docs-side-planned">
+
+  <nav class="docs-side-nav" aria-label="Components">
+    <ul class="docs-side-btns" id="docs-side-btns">
+      
+      <li>
+        <a href="../components/auth.html"
+           >Auth shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-nav.html"
+           >Bottom-nav shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/bottom-sheet.html"
+           >Bottom sheet</a>
+      </li>
+      
+      <li>
+        <a href="../components/buttons.html"
+           >Buttons</a>
+      </li>
+      
+      <li>
+        <a href="../components/cards.html"
+           >Cards</a>
+      </li>
+      
+      <li>
+        <a href="../components/chips.html"
+           aria-current="page">Chips</a>
+      </li>
+      
+      <li>
+        <a href="../components/dialog.html"
+           >Dialog</a>
+      </li>
+      
+      <li>
+        <a href="../components/drawer.html"
+           >Drawer shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/lists.html"
+           >Lists</a>
+      </li>
+      
+      <li>
+        <a href="../components/menu.html"
+           >Menu</a>
+      </li>
+      
+      <li>
+        <a href="../components/rail.html"
+           >Rail shell</a>
+      </li>
+      
+      <li>
+        <a href="../components/snackbar.html"
+           >Snackbar</a>
+      </li>
+      
+      <li>
+        <a href="../components/progress.html"
+           >Progress</a>
+      </li>
+      
+      <li>
+        <a href="../components/select.html"
+           >Select</a>
+      </li>
+      
+      <li>
+        <a href="../components/selection-controls.html"
+           >Selection controls</a>
+      </li>
+      
+      <li>
+        <a href="../components/side-sheet.html"
+           >Side sheet</a>
+      </li>
+      
+      <li>
+        <a href="../components/text-fields.html"
+           >Text fields</a>
+      </li>
+      
+      <li>
+        <a href="../components/top-app-bar.html"
+           >Top app bar</a>
+      </li>
+      
+      <li>
+        <a href="../components/tooltip.html"
+           >Tooltip</a>
+      </li>
+      
+    </ul>
+
+    
+  </nav>
+  </div>
+</aside>
+
+
+  <div class="docs-main">
+    <main class="docs-content" id="content">
+    
+
+
+
+
+
+
+<article class="docs-article">
+  <header class="docs-art-head">
+    <h1>Chips</h1>
+    <p class="docs-art-lead">Compact pills for filters, single choices, actions and tags — native inputs and buttons, zero JavaScript.</p>
+  </header>
+
+  <div class="docs-tabbar" role="tablist" aria-label="Component documentation tabs">
+    <button type="button" class="docs-tab is-active" id="tab-design" role="tab"
+            aria-selected="true" aria-controls="panel-design"
+            data-fl-docs-tab="design">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      Design
+    </button>
+    <button type="button" class="docs-tab" id="tab-impl" role="tab"
+            aria-selected="false" aria-controls="panel-impl"
+            data-fl-docs-tab="impl">
+      <svg class="docs-tab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      Implementation
+    </button>
+  </div>
+
+  <div class="docs-tabbody">
+    <div class="docs-panels">
+      <section class="docs-panel" id="panel-design" role="tabpanel"
+               aria-labelledby="tab-design" data-fl-docs-panel="design">
+      
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A chip is a compact, <em>dynamic</em> affordance: it appears next to the
+     content it acts on, does one small thing, and can change state without a
+     save button. That is the difference from a
+     <a href="buttons.html">button</a>, which is persistent and consistent
+     across screens.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>You are <strong>filtering</strong> a collection — the M2 placement is
+        directly above or below the thing being filtered (a table, a list).</li>
+    <li>The user picks <strong>one of 2–5 visible options</strong> faster than a
+        select would allow (choice chips).</li>
+    <li>An action is <strong>contextual</strong> to the content beside it
+        ("Add reminder" on a note), not a standing toolbar.</li>
+    <li>You are showing an <strong>entity or tag</strong> the user entered
+        (input chips — a person, a label, a place).</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>The chip <strong>navigates</strong> to another screen — that is a link
+        or a <a href="bottom-nav.html">tab</a>, and its selected state means
+        "where am I", not "what did I choose".</li>
+    <li>The set has <strong>one option</strong> — a filter or choice with a
+        single chip is a pointless control; M2 lists this as a don't.</li>
+    <li>You need a <strong>primary submit</strong> action — use a
+        <code>fl-btn</code>; chips are secondary by nature.</li>
+    <li>The set is long and unordered — more than a screenful of choices is a
+        <a href="select.html">select</a> or a side-sheet filter list, not a
+        chip wall.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-types">Types</h2>
+  <p>Four kinds, and the <strong>element is the contract</strong> — the same
+     base class, a different native control underneath. Pick by semantics, not
+     by looks:</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Kind</th><th>Element</th><th>State</th><th>Typical use</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Filter</strong></td>
+        <td><code>label</code> + <code>&lt;input type="checkbox"&gt;</code></td>
+        <td>many selected</td>
+        <td>Labels/amenities above a list or table; add the
+            <code>fl-chip__check</code> slot</td>
+      </tr>
+      <tr>
+        <td><strong>Choice</strong></td>
+        <td><code>label</code> + <code>&lt;input type="radio"&gt;</code></td>
+        <td>one selected (shared <code>name</code>)</td>
+        <td>Sort order, size, density — 2–5 options</td>
+      </tr>
+      <tr>
+        <td><strong>Action</strong></td>
+        <td><code>&lt;button class="fl-chip"&gt;</code></td>
+        <td>pressed only</td>
+        <td>Contextual command under content ("Add reminder")</td>
+      </tr>
+      <tr>
+        <td><strong>Input</strong> (tag)</td>
+        <td><code>span</code> + <code>fl-chip__remove</code></td>
+        <td>presence</td>
+        <td>Showing already-entered tags, with a remove button</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter and choice chips contain a real input, so keyboard, form payload
+     and screen-reader announcements are the platform's — not a
+     <code>role="button"</code> imitation. Action chips are real buttons. Tags
+     are static text plus one real button.</p>
+  
+<div class="docs-callout docs-callout--info">
+  <span class="docs-callout__dot" aria-hidden="true"></span>
+  <div>
+    <h3 class="docs-callout__title">Input chips are display-only</h3>
+    <p class="docs-callout__text">M2&#39;s input chip can also be an editor: typing text transforms into a chip, chips reorder by drag, and a chip can expand into a details overlay. Flint ships the tag form (thumbnail + text + remove) and leaves the editor to the app: a text field plus chips is the honest web composition.</p>
+    
+  </div>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="fl-chip-set">
+    <span class="fl-chip fl-chip--input">
+      <span class="fl-avatar fl-avatar--xs" aria-hidden="true">P</span>
+      Portland
+      <span class="fl-chip__remove" aria-hidden="true"></span>
+    </span>
+    <label class="fl-chip">
+      <input type="checkbox" class="fl-chip__input" checked>
+      <span class="fl-chip__check" aria-hidden="true"></span>
+      Washer / Dryer
+    </label>
+    <button class="fl-chip" type="button">
+      <span class="fl-icon" aria-hidden="true"></span>
+      Add label
+    </button>
+  </div>
+  <ol>
+    <li><strong>Container</strong> — 32px tall, one line, never wraps or
+        resizes. <code>--fl-chip-radius</code> is a pill by default (M2:
+        16dp on a 32dp chip).</li>
+    <li><strong>Thumbnail (optional)</strong> — <code>.fl-avatar--xs</code>
+        (24px) for a person, or an 18px <code>.fl-icon</code> for a
+        place/thing.</li>
+    <li><strong>Text</strong> — 14px, one line, sentence case. Truncate the
+        content, never the chip's shape.</li>
+    <li><strong>Check (filter only)</strong> — the <code>fl-chip__check</code>
+        slot, revealed only while selected.</li>
+    <li><strong>Remove (input only)</strong> — a 24px button with its own
+        <code>aria-label</code>; the × is drawn by CSS.</li>
+  </ol>
+  <p>The 32px chip is below the 48px touch minimum, so the <em>set</em> pays
+     for it: <code>.fl-chip-set</code> adds 8px above and below and 16px
+     between rows, which makes every chip a 48px target without growing the
+     chip.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <h3>State lives in the input</h3>
+  <p>The chip is a label; the checkbox or radio inside owns the state. The
+     selected treatment is a token assignment keyed off
+     <code>:has(.fl-chip__input:checked)</code> — so clicking the text, the
+     check or anywhere else on the pill toggles the same control, and the
+     native keyboard model applies: <kbd>Space</kbd> toggles a filter,
+     arrow keys move through a choice group.</p>
+  <h3>Selection changes width</h3>
+  <p>A selected filter chip reveals its check slot, which adds 18px plus the
+     4px gap — the chip grows. That is the M2 behavior; don't reserve the
+     space or shrink the label to compensate, and never resize the text.</p>
+  <h3>Overflow is native scroll</h3>
+  <p>When a set cannot wrap, use <code>.fl-chip-set--scroll</code>: one row,
+     horizontal native scrolling with scroll-snap, no arrows and no
+     JavaScript. The half-visible chip at the trailing edge is the "there is
+     more" affordance — M2's scrollable-set guidance, minus a script.</p>
+  <h3>Removing a tag is app code</h3>
+  <p>The library ships the button, not the data model. Four lines of delegated
+     author code are the whole handler:</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>document.addEventListener(&quot;click&quot;, (event) =&gt; {
+  const remove = event.target.closest(&quot;.fl-chip__remove&quot;);
+  if (remove) remove.closest(&quot;.fl-chip&quot;).remove();
+});</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <h3>Deliberately not shipped</h3>
+  <ul>
+    <li><strong>Drag to reorder</strong> chips between fields — pointer
+        choreography with no keyboard equivalent; M2 documents it, the web
+        doesn't need it for tags.</li>
+    <li><strong>Text-to-chip transform</strong> and expandable chips — an
+        editor surface, not a primitive (see the input-chip callout).</li>
+    <li><strong>Swipe gestures</strong> of any kind — a chip is a tap target.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li><strong>The input is the control.</strong> It is clipped to 1px, not
+        <code>display:none</code>, so it stays tabbable and in the
+        accessibility tree; the label supplies the accessible name
+        ("Personal, checkbox, not checked").</li>
+    <li><strong>Focus ring on the chip.</strong> The global ring would land on
+        the 1px input; <code>:has(:focus-visible)</code> moves it to the pill
+        instead.</li>
+    <li><strong>Name the set.</strong> Wrap filters in
+        <code>role="group"</code> with an <code>aria-label</code> ("Filter
+        notes by label") and choices in <code>role="radiogroup"</code>; a
+        <code>fieldset</code>/<code>legend</code> pair works too.</li>
+    <li><strong>The check is decoration.</strong> It is
+        <code>aria-hidden</code>; the checked state is already announced by
+        the input.</li>
+    <li><strong>The remove button is a button.</strong> Give it
+        <code>aria-label="Remove Portland"</code> — "Remove" alone leaves the
+        target ambiguous when several tags are read in sequence.</li>
+    <li><strong>Touch target.</strong> 48px effective via the set's spacing
+        (see Anatomy). The remove button's own box is 24px — the smallest
+        target in the library, and the one place a miss is recoverable
+        (removing is not destructive to data beyond the tag).</li>
+    <li><strong>Works without JS.</strong> Toggling, the tint and the check
+        are CSS + native inputs; the tint needs <code>:has()</code> (baseline
+        2023) — without it, the chip is simply not tinted, the state is still
+        announced by the control. Removing tags needs the author handler
+        above.</li>
+  </ul>
+</section>
+
+      </section>
+
+      <section class="docs-panel" id="panel-impl" role="tabpanel"
+               aria-labelledby="tab-impl" hidden data-fl-docs-panel="impl">
+      
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/chips.html — rendered live</span>
+      <a href="../demos/chips.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/chips.html" title="Chips live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; below is one of each chip kind.</p>
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;css/flint.css&quot;&gt;
+&lt;script src=&quot;js/flint.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Filter chips: checkbox owns the state, the check slot shows selection --&gt;
+&lt;div class=&quot;fl-chip-set&quot; role=&quot;group&quot; aria-label=&quot;Filter notes by label&quot;&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;
+    &lt;input type=&quot;checkbox&quot; class=&quot;fl-chip__input&quot; checked&gt;
+    &lt;span class=&quot;fl-chip__check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+    Work
+  &lt;/label&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;
+    &lt;input type=&quot;checkbox&quot; class=&quot;fl-chip__input&quot;&gt;
+    &lt;span class=&quot;fl-chip__check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+    Personal
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Choice chips: radios with a shared name = one answer --&gt;
+&lt;div class=&quot;fl-chip-set&quot; role=&quot;radiogroup&quot; aria-label=&quot;Sort notes by&quot;&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;
+    &lt;input type=&quot;radio&quot; class=&quot;fl-chip__input&quot; name=&quot;sort&quot; checked&gt;
+    Last modified
+  &lt;/label&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;
+    &lt;input type=&quot;radio&quot; class=&quot;fl-chip__input&quot; name=&quot;sort&quot;&gt;
+    Title
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Action chip: a real button with a leading icon --&gt;
+&lt;button class=&quot;fl-chip&quot; type=&quot;button&quot;&gt;
+  &lt;span class=&quot;fl-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+  Add reminder
+&lt;/button&gt;
+
+&lt;!-- Outlined variant: transparent container, 1px border --&gt;
+&lt;button class=&quot;fl-chip fl-chip--outline&quot; type=&quot;button&quot;&gt;Set alarm&lt;/button&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Input chip (tag): thumbnail + text + a real remove button --&gt;
+&lt;span class=&quot;fl-chip fl-chip--input&quot;&gt;
+  &lt;span class=&quot;fl-avatar fl-avatar--xs&quot; aria-hidden=&quot;true&quot;&gt;P&lt;/span&gt;
+  Portland
+  &lt;button class=&quot;fl-chip__remove&quot; type=&quot;button&quot; aria-label=&quot;Remove Portland&quot;&gt;&lt;/button&gt;
+&lt;/span&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  
+  
+<div class="docs-snippet">
+  <pre><code>&lt;!-- Overflow: one row + native scrolling; no arrows, no JS --&gt;
+&lt;div class=&quot;fl-chip-set fl-chip-set--scroll&quot; role=&quot;group&quot; aria-label=&quot;Neighborhoods&quot;&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;fl-chip__input&quot;&gt;&lt;span class=&quot;fl-chip__check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Sørenga&lt;/label&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;fl-chip__input&quot;&gt;&lt;span class=&quot;fl-chip__check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Bygdøy&lt;/label&gt;
+  &lt;label class=&quot;fl-chip&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;fl-chip__input&quot;&gt;&lt;span class=&quot;fl-chip__check&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;Rodeløkka&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/chips.html">demos/chips.html</a>. For the filter-bar
+     placement over content, see the
+     <a href="../recipes.html#r-keep">Keep-style recipe</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property — override inline or in your own
+     stylesheet, no rebuild. <code>--_</code>-prefixed properties are internal
+     state tokens and not part of the API.</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-chip-h</code></td><td>Chip height (default 32px; the set's spacing keeps the 48px target)</td></tr>
+      <tr><td><code>--fl-chip-radius</code></td><td>Shape — pill by default; <code>8px</code> gives the M3 boxy chip, <code>4px</code> Shrine-like, <code>0</code> a cut chip</td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Selected text, check glyph, focus ring</td></tr>
+      <tr><td><code>--fl-tint</code></td><td>Selected fill</td></tr>
+      <tr><td><code>--fl-divider</code></td><td>Filled (unselected) container</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Outlined container border, filled hover/active</td></tr>
+      <tr><td><code>--fl-hover</code></td><td>Outlined hover, disabled fill</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled text</td></tr>
+      <tr><td><code>--fl-icon-ph</code> / <code>--fl-text-secondary</code></td><td>Avatar fill and initials</td></tr>
+    </tbody>
+  </table>
+  
+  
+<div class="docs-snippet">
+  <pre><code>:root {
+  --fl-chip-radius: 8px;   /* M3&#39;s boxy chip — the pill is the M2 default */
+  --fl-accent: #188038;    /* selection follows the brand */
+  --fl-tint: #e6f4ea;
+}</code></pre>
+  <button type="button" class="docs-copy" data-fl-docs-copy="Copy">Copy</button>
+</div>
+
+  <p>The shape note is worth repeating: M2 chips are
+     <strong>pills</strong> (16dp on 32dp) and Material 3 made them boxier
+     with 8dp corners. Flint follows the M2 idiom and ships the radius as a
+     token, so the M3 look is one line away.</p>
+</section>
+
+      </section>
+    </div>
+
+    <aside class="docs-toc" aria-label="Contents">
+      <h2 class="docs-toc__label">Contents</h2>
+      <ul class="docs-toc__list" data-fl-docs-toc>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-usage">Usage</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-types">Types</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-anatomy">Anatomy</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-behavior">Behavior</a></li>
+        
+        <li data-fl-docs-toc-tab="design"><a href="#d-accessibility">Accessibility</a></li>
+        
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-example">Live example</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-code">Code</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-demos">Fullscreen demo</a></li>
+        
+        <li data-fl-docs-toc-tab="impl"><a href="#i-theming">Theming</a></li>
+        
+      </ul>
+    </aside>
+  </div>
+</article>
+
+
+    </main>
+
+    <footer class="docs-footer">
+      <p class="docs-footer__brand">Flint UI v0.4.0</p>
+      <nav class="docs-footer__links" aria-label="Footer">
+        <a href="../get-started.html">Get started</a>
+        <a href="../recipes.html">Recipes</a>
+        <a href="../roadmap.html">Roadmap</a>
+        <a href="https://github.com/kimzercode/flint-ui" aria-label="Flint UI on GitHub">GitHub</a>
+        <span>MIT license</span>
+      </nav>
+    </footer>
+  </div>
+</div>
+
+<script src="../js/flint.js?v=0.4.0" defer></script>
+<script src="../js/docs-ui.js?v=0.4.0" defer></script>
+
+</body>
+</html>
