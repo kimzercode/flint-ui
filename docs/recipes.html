@@ -223,14 +223,18 @@
   <p>Cards that navigate or open an editor are real interactive elements —
      a <code>&lt;a class="fl-card"&gt;</code> or
      <code>&lt;button class="fl-card"&gt;</code>, never a div with a click
-     handler:</p>
+     handler. Note the inner elements: a <code>&lt;button&gt;</code> takes
+     phrasing content only, so its title and text are <code>&lt;span&gt;</code>s
+     with the card classes; the anchor (transparent content model) keeps a real
+     <code>h2</code>/<code>p</code> so screen-reader heading navigation still
+     finds it:</p>
   
   
 <div class="docs-snippet">
   <pre><code>&lt;div class=&quot;fl-card-grid&quot;&gt;
   &lt;button class=&quot;fl-card&quot; type=&quot;button&quot;&gt;
-    &lt;h2 class=&quot;fl-card__title&quot;&gt;Packing list&lt;/h2&gt;
-    &lt;p class=&quot;fl-card__text&quot;&gt;Smores, extra towel, warm socks…&lt;/p&gt;
+    &lt;span class=&quot;fl-card__title&quot;&gt;Packing list&lt;/span&gt;
+    &lt;span class=&quot;fl-card__text&quot;&gt;Smores, extra towel, warm socks…&lt;/span&gt;
   &lt;/button&gt;
   &lt;a class=&quot;fl-card&quot; href=&quot;/note/42&quot;&gt;
     &lt;h2 class=&quot;fl-card__title&quot;&gt;Q3 roadmap&lt;/h2&gt;

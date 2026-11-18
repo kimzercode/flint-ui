@@ -396,9 +396,15 @@ a { color: var(--fl-accent); text-decoration: none; }
    4. FAB — flat: white circle with a border, never a shadow
    -------------------------------------------------------------------------- */
 .fl-fab {
+  /* One token owns the distance from the viewport's bottom edge (safe-area
+     included, because an installed PWA's FAB must clear the home indicator).
+     The default is the tab-less app; a shell that renders a tab bar raises it
+     in the rule below. Override the token for a different rhythm — never
+     recompute `bottom` by hand. */
+  --fl-fab-inset: calc(var(--fl-space-3) + env(safe-area-inset-bottom, 0px));
   position: fixed;
-  right: 16px;
-  bottom: calc(var(--fl-tabbar-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  right: var(--fl-space-3);
+  bottom: var(--fl-fab-inset);
   z-index: var(--fl-z-fab);
   width: 56px;
   height: 56px;
@@ -409,8 +415,25 @@ a { color: var(--fl-accent); text-decoration: none; }
   background: var(--fl-surface);
   border: 1px solid var(--fl-border);
   color: var(--fl-accent);
-  transition: background-color var(--fl-dur) var(--fl-ease);
+  transition: background-color var(--fl-dur) var(--fl-ease),
+              transform var(--fl-dur) var(--fl-ease);
 }
+
+/* A shell with a bottom tab bar lifts the FAB clear of it. The selector targets
+   the FAB element itself, so its specificity wins over the base token and the
+   tab-less default stays right with no author CSS. :has() is the whole trick:
+   no extra class, no JS measuring the bar. */
+.fl-shell:has(.fl-tab-bar) .fl-fab,
+.fl-shell-drawer:has(.fl-tab-bar) .fl-fab,
+.fl-shell-rail:has(.fl-tab-bar) .fl-fab {
+  --fl-fab-inset: calc(var(--fl-tabbar-h) + var(--fl-space-3) + env(safe-area-inset-bottom, 0px));
+}
+
+/* A visible snackbar takes the bottom edge for its 4 seconds; the FAB steps up
+   by the snackbar's footprint instead of being covered by it (z-order puts the
+   snackbar on top). One rule, no measurement, and it reverses when the class
+   goes away. */
+body:has(.fl-snackbar.is-visible) .fl-fab { transform: translateY(-56px); }
 
 @media (hover: hover) {
   .fl-fab:hover { background: var(--fl-hover); }
@@ -455,6 +478,28 @@ a { color: var(--fl-accent); text-decoration: none; }
 }
 
 .fl-card + .fl-card { margin-top: var(--fl-space-3); }
+
+/* An interactive card is a real <a> or <button>. Both carry the card chrome;
+   this reset is the piece the element brings for free (no default button look,
+   no underline, the whole box clickable). */
+a.fl-card,
+button.fl-card {
+  display: block;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Card slots are block-level in their own right, so a card that must be a
+   button (or an anchor) can hold <span>s: <button> admits phrasing content
+   only, and an <h2>/<p> inside one is invalid HTML that browsers have to
+   re-parent. Headings remain allowed — use them wherever the card is an
+   <article>/<a>, and spans where it is a <button>. */
+.fl-card__title,
+.fl-card__text { display: block; }
 
 .fl-card__title {
   margin: 0;
@@ -774,6 +819,12 @@ a { color: var(--fl-accent); text-decoration: none; }
 .fl-field__input {
   flex: 1 1 auto;
   min-width: 0;
+  /* The control's width belongs to the box's flex line, never to the control's
+     own `size` attribute (which is ~20 characters of intrinsic width). Without
+     this a field refuses to shrink below that intrinsic width and drags its
+     container wider — a search pill in a 390px app bar pushed the whole page
+     8px sideways. width:0 + flex-grow fills the box exactly as before. */
+  width: 0;
   height: 100%;
   padding: 0 var(--fl-space-3);
   font: inherit;
@@ -1694,9 +1745,12 @@ dialog.fl-sheet--full[open] {
    -------------------------------------------------------------------------- */
 
 .fl-snackbar {
+  /* The gutter from the viewport edge, safe-area included. One token for both
+     the horizontal and the bottom edge so the mobile sheet stays square to the
+     screen; override it to sit flush or to clear a persistent bar. */
+  --fl-snackbar-inset: calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
   position: fixed;
-  inset: auto var(--fl-space-2)
-    calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
+  inset: auto var(--fl-snackbar-inset) var(--fl-snackbar-inset);
   display: flex;
   align-items: center;
   gap: var(--fl-space-3);
@@ -1723,9 +1777,7 @@ dialog.fl-sheet--full[open] {
    Keep it consistent — M2 forbids mixing alignments. */
 @media (min-width: 600px) {
   .fl-snackbar {
-    inset: auto auto
-      calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px))
-      var(--fl-space-2);
+    inset: auto auto var(--fl-snackbar-inset) var(--fl-snackbar-inset);
     max-width: 560px;
   }
 }
@@ -1750,7 +1802,12 @@ dialog.fl-sheet--full[open] {
 .fl-snackbar__action:active { background: rgb(255 255 255 / 0.12); }
 
 /* Persistent bottom navigation raises the sheet line, not the snackbar —
-   apps with a tab bar lift the snackbar above it (see docs recipe). */
+   apps with a tab bar lift the snackbar above it with the same token:
+
+     .fl-snackbar { --fl-snackbar-inset: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px)); }
+
+   The FAB already clears a tab bar on its own (--fl-fab-inset) and steps up
+   while a snackbar is visible, so the two never stack. */
 
 /* --------------------------------------------------------------------------
    15. Progress — linear (<progress>) and circular (conic-gradient ring)

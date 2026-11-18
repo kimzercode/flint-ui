@@ -107,7 +107,7 @@ toc:
   <ul>
     <li><strong>Stacking:</strong> adjacent cards get a 16px gap automatically (<code>.fl-card + .fl-card</code>) — wrap a feed in a container and the rhythm is free.</li>
     <li><strong>Grouping:</strong> <code>fl-section-label</code> (uppercase caption) heads each group; it collapses its top margin as the first child of a container.</li>
-    <li><strong>Cards are not interactive surfaces by default</strong> — no hover fill, no cursor change. Interactivity belongs to the controls inside. Whole-clickable cards are not in the library (planned pattern: make an inner link cover the card).</li>
+    <li><strong>Cards are not interactive surfaces by default</strong> — no hover fill, no cursor change; interactivity belongs to the controls inside. When the whole card is the action, make it the element: <code>&lt;a class="fl-card"&gt;</code> or <code>&lt;button class="fl-card" type="button"&gt;</code>. Those two get the card chrome plus the reset the element would otherwise impose (block, full width, inherited font, left-aligned text, no underline). Never a <code>&lt;div&gt;</code> with a click handler, and never a link or button <em>inside</em> an interactive card.</li>
     <li><strong>Composition:</strong> cards nest (the demos show a button row inside a card) and work with every shell's <code>fl-content</code> column, capped at <code>--fl-content-max</code> on desktop.</li>
     <li><strong>Width:</strong> block-level, fills its container — constrain the parent, don't set card widths.</li>
   </ul>
@@ -116,7 +116,16 @@ toc:
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>Use a real heading element for <code>fl-card__title</code> and keep the page's heading order sane (cards are usually <code>h2</code>/<code>h3</code>, never skip levels for styling).</li>
+    <li><strong>Headings where the HTML allows them:</strong> an
+        <code>&lt;article&gt;</code>/<code>&lt;a&gt;</code> card can hold a real
+        <code>h2</code>/<code>h3</code> — use one and keep the page's heading
+        order sane (cards are usually <code>h2</code>/<code>h3</code>, never
+        skip levels for styling). A <code>&lt;button&gt;</code> admits
+        phrasing content only, so a button card's title and text are
+        <code>&lt;span class="fl-card__title"&gt;</code> /
+        <code>&lt;span class="fl-card__text"&gt;</code>: both classes are
+        block-level, and an <code>h2</code>/<code>p</code> inside a button is
+        invalid HTML that browsers have to re-parent.</li>
     <li><code>&lt;article class="fl-card"&gt;</code> gives each card its own landmark-ish region in feed contexts (screen readers list the articles).</li>
     <li>Action rows keep real buttons — same rules as the buttons page; right-aligned text-then-filled order preserves a logical focus order.</li>
     <li>The border/separation is presentation, not semantics — no <code>role</code> needed on the card itself.</li>

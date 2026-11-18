@@ -35,12 +35,16 @@ lead: Compositions of existing components — no new CSS in the library, just th
   <p>Cards that navigate or open an editor are real interactive elements —
      a <code>&lt;a class="fl-card"&gt;</code> or
      <code>&lt;button class="fl-card"&gt;</code>, never a div with a click
-     handler:</p>
+     handler. Note the inner elements: a <code>&lt;button&gt;</code> takes
+     phrasing content only, so its title and text are <code>&lt;span&gt;</code>s
+     with the card classes; the anchor (transparent content model) keeps a real
+     <code>h2</code>/<code>p</code> so screen-reader heading navigation still
+     finds it:</p>
   {% set gridMarkup %}
 <div class="fl-card-grid">
   <button class="fl-card" type="button">
-    <h2 class="fl-card__title">Packing list</h2>
-    <p class="fl-card__text">Smores, extra towel, warm socks…</p>
+    <span class="fl-card__title">Packing list</span>
+    <span class="fl-card__text">Smores, extra towel, warm socks…</span>
   </button>
   <a class="fl-card" href="/note/42">
     <h2 class="fl-card__title">Q3 roadmap</h2>

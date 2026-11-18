@@ -13,9 +13,7 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: var(--fl-space-2);
   }
-  .fl-card-grid .fl-card { margin-top: 0; text-align: left; }
-  /* Cards are buttons that open the editor: reset the button look */
-  .fl-card-grid .fl-card { font: inherit; cursor: pointer; width: 100%; }
+  .fl-card-grid .fl-card { margin-top: 0; }  /* kill the stacked-card margin */
 </style>
 </head>
 <body class="fl-reset">
@@ -47,28 +45,28 @@
     <!-- Card grid: cards are real buttons that open the editor -->
     <div class="fl-card-grid">
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Packing list</h2>
-        <p class="fl-card__text">Smores, extra towel, warm socks, head lamp, cards, water filter.</p>
+        <span class="fl-card__title">Packing list</span>
+        <span class="fl-card__text">Smores, extra towel, warm socks, head lamp, cards, water filter.</span>
       </button>
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Sprint 14 retro</h2>
-        <p class="fl-card__text">Shipped the drawer shell and the flat FAB. Next: list rows, then dense.</p>
+        <span class="fl-card__title">Sprint 14 retro</span>
+        <span class="fl-card__text">Shipped the drawer shell and the flat FAB. Next: list rows, then dense.</span>
       </button>
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Reading queue</h2>
-        <p class="fl-card__text">CSS containment, popover invoker patterns, dialog light dismiss.</p>
+        <span class="fl-card__title">Reading queue</span>
+        <span class="fl-card__text">CSS containment, popover invoker patterns, dialog light dismiss.</span>
       </button>
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Gift ideas — Mika</h2>
-        <p class="fl-card__text">Field notebook (dot grid), the blue pen that ran out, bookshop voucher.</p>
+        <span class="fl-card__title">Gift ideas — Mika</span>
+        <span class="fl-card__text">Field notebook (dot grid), the blue pen that ran out, bookshop voucher.</span>
       </button>
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Water the plants</h2>
-        <p class="fl-card__text">Monstera on Sunday. Fern only when the soil is dry an inch down.</p>
+        <span class="fl-card__title">Water the plants</span>
+        <span class="fl-card__text">Monstera on Sunday. Fern only when the soil is dry an inch down.</span>
       </button>
       <button class="fl-card" type="button" data-fl-open="note-editor">
-        <h2 class="fl-card__title">Bike tune-up</h2>
-        <p class="fl-card__text">Brake pads, chain lube, pump the tires to 4 bar before the weekend.</p>
+        <span class="fl-card__title">Bike tune-up</span>
+        <span class="fl-card__text">Brake pads, chain lube, pump the tires to 4 bar before the weekend.</span>
       </button>
     </div>
 

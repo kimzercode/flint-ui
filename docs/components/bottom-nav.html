@@ -324,7 +324,17 @@
     <li><strong>≥905px:</strong> the bar becomes an inline, centered 56px pill bar; the selected tab takes the tinted pill and stays inline (icon + label side by side).</li>
     <li><strong>Selection:</strong> <code>aria-current="page"</code> styles the active tab; <code>flint.js</code> moves it on click inside any <code>[data-fl-nav]</code> container — set it server-side and skip the JS if you prefer.</li>
     <li><strong>Badges:</strong> <code>fl-badge</code> rides the tab's icon (top-right); in the app bar it floats over the icon button.</li>
-    <li><strong>FAB</strong> docks above the bar on mobile and moves with the content column on desktop.</li>
+    <li><strong>FAB</strong> docks above the bar on mobile and moves with the
+        content column on desktop. The distance from the bottom edge is
+        <code>--fl-fab-inset</code>: a shell that renders an
+        <code>fl-tab-bar</code> raises it by the bar's height automatically
+        (<code>:has()</code>, no JS), and a tab-less app gets the 16px default
+        with the safe-area inset already added. Override the token rather than
+        recomputing <code>bottom</code>.</li>
+    <li><strong>FAB vs snackbar:</strong> while a snackbar is visible the FAB
+        steps up 56px instead of being covered by it (the snackbar is above it
+        in the z-order). CSS-only, and it reverses the moment
+        <code>is-visible</code> goes away.</li>
     <li><strong>Tabs can be links or buttons</strong> — anchors still navigate; the selection state is reflected either way.</li>
   </ul>
 </section>
@@ -445,7 +455,8 @@
       <tr><td><code>--fl-border</code></td><td>Bar top border, FAB border</td></tr>
       <tr><td><code>--fl-topbar-h</code></td><td>Top bar height</td></tr>
       <tr><td><code>--fl-content-max</code></td><td>Max content column width on desktop</td></tr>
-      <tr><td><code>--fl-tabbar-h</code></td><td>Tab bar height (56px at every breakpoint)</td></tr>
+      <tr><td><code>--fl-tabbar-h</code></td><td>Tab bar height (56px at every breakpoint); also what raises the FAB</td></tr>
+      <tr><td><code>--fl-fab-inset</code></td><td>Distance from the FAB to the bottom edge, safe-area included (16px default; tab bar height + 16px inside a shell with a tab bar)</td></tr>
     </tbody>
   </table>
   
