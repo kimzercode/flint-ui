@@ -121,6 +121,12 @@ canvas {
   background: var(--fl-surface);
 }
 
+/* One hiding primitive. Components declare their own `display` (the FAB is
+   inline-flex, the grid is grid…), and an author `display` beats the UA's
+   `[hidden] { display: none }`, so the attribute silently stopped working.
+   Library components honour `hidden` instead of inventing .is-hidden. */
+[hidden] { display: none !important; }
+
 input,
 button,
 textarea,
@@ -927,13 +933,15 @@ textarea.fl-field__input {
   resize: vertical;
 }
 
-/* Opt-in auto-grow: field-sizing where supported, rows as the fallback */
+/* Opt-in auto-grow: field-sizing where supported, rows as the fallback.
+   The textarea base rule sets resize:vertical and outranks a plain class, so
+   the grow variant must outrank it back — otherwise the grip reappears. */
 .fl-field__input--grow {
   field-sizing: content;
   max-height: 240px;
-  resize: none;
   overflow-y: auto;
 }
+textarea.fl-field__input--grow { resize: none; }
 
 /* --- Select: same box, chevron drawn on the control ---------------------- *
  * The dropdown popup stays browser-styled; the CSS shapes the closed control.
@@ -987,6 +995,18 @@ textarea.fl-field__input {
 }
 
 .fl-nav-item .fl-icon { width: 20px; height: 20px; }
+
+/* A nav row can be a <button> when the destination is client-side state (an
+   SPA view) rather than a URL. Same row, no default browser chrome — the
+   selected state below is a class/attribute read either way. */
+button.fl-nav-item {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
 
 @media (hover: hover) {
   .fl-nav-item:hover { background: var(--fl-hover); }
@@ -1517,9 +1537,16 @@ dialog.fl-dialog--fullscreen .fl-dialog__surface {
   border-radius: 0;
 }
 
-/* The full-screen header is an app bar: 16dp insets (the card keeps 24dp). */
+/* The full-screen dialog is an app bar surface: 16dp insets for the header,
+   the body and the actions (the card keeps 24dp). One inset per arrangement —
+   the header used to be 16dp while the body stayed at 24dp, which misaligned
+   the content under the title. */
 dialog.fl-dialog--fullscreen .fl-dialog__header {
   padding: var(--fl-space-3) var(--fl-space-3) 0;
+}
+dialog.fl-dialog--fullscreen .fl-dialog__body,
+dialog.fl-dialog--fullscreen .fl-dialog__actions {
+  padding-inline: var(--fl-space-3);
 }
 
 /* M2: "a full-screen dialog can change into a simple dialog at larger
@@ -1550,6 +1577,10 @@ dialog.fl-dialog--fullscreen .fl-dialog__header {
      header's dismiss control carries data-fl-close. */
   dialog.fl-dialog--fullscreen .fl-dialog__header {
     padding: var(--fl-space-4) var(--fl-space-4) 0;
+  }
+  dialog.fl-dialog--fullscreen .fl-dialog__body,
+  dialog.fl-dialog--fullscreen .fl-dialog__actions {
+    padding-inline: var(--fl-space-4);
   }
   dialog.fl-dialog--fullscreen .fl-dialog__header > [data-fl-close] { order: 2; }
 }
@@ -1753,6 +1784,7 @@ dialog.fl-sheet--full[open] {
   inset: auto var(--fl-snackbar-inset) var(--fl-snackbar-inset);
   display: flex;
   align-items: center;
+  justify-content: space-between;   /* the action sits at the trailing edge (M2) */
   gap: var(--fl-space-3);
   min-height: 48px;   /* 48dp single line → 64dp two lines (M2) */
   padding: var(--fl-space-2) var(--fl-space-3);

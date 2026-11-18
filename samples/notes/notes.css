@@ -1,0 +1,92 @@
+/* Notes sample — author CSS only. Everything that is chrome (bars, drawer,
+   cards, fields, chips, dialog, menu, snackbar, FAB) is Flint; this file is the
+   handful of things the library deliberately does not own: the grid rhythm,
+   the card's preview clamp, the empty state and two drawer details. */
+
+/* The FAB floats over the scroll area, so the list ends above it instead of
+   hiding its last row underneath (Keep does the same). */
+.fl-content { padding-bottom: calc(72px + var(--fl-space-3)); }
+
+/* Card grid: the Recipes page's two-line recipe, verbatim. One column below
+   ~600px, two across the drawer shell's reading column. */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--fl-space-2);
+  align-items: start;
+}
+.notes-grid .fl-card { margin-top: 0; }   /* the grid owns the gap */
+
+/* A note card is a preview: the body clamps, the title does not. The tag chip
+   trails the preview like Keep's. */
+.notes-grid .fl-card__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.notes-grid .fl-chip { margin-top: var(--fl-space-2); }
+
+/* Empty / no-match state. M2 has no spec for it: Google's apps center a small
+   icon, a title and one line of help. */
+.notes-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fl-space-2);
+  min-height: 52dvh;                                   /* sit mid-page, not at the top */
+  padding-bottom: 120px;                               /* clear the FAB */
+  text-align: center;
+}
+.notes-empty__icon { width: 48px; height: 48px; }
+.notes-empty__title {
+  margin: 0;
+  font-size: var(--fl-fs-title);
+  font-weight: 400;
+  color: var(--fl-text);
+}
+.notes-empty__text {
+  margin: 0;
+  max-width: 32ch;
+  font-size: var(--fl-fs-body);
+  color: var(--fl-text-secondary);
+}
+
+/* ≥905px the drawer is the permanent column. Its own header (logo + app name)
+   would duplicate the bar's title, which already names the current view — so
+   the pinned drawer starts with its rows, like Keep's. On phones the bar hides
+   its title behind the hamburger, so the drawer header stays. */
+@media (min-width: 905px) {
+  .fl-drawer__header { display: none; }
+}
+
+/* Drawer details: a section caption inside the drawer (the library's label is
+   sized for content), and the footer's one-line note. */
+.fl-drawer__section {
+  margin: 0;
+  padding: var(--fl-space-1) var(--fl-space-3) var(--fl-space-2);
+}
+.notes-drawer__note {
+  font-size: var(--fl-fs-caption);
+  color: var(--fl-text-secondary);
+}
+
+/* Label picker: a fieldset groups the radios natively, so no ARIA radiogroup
+   is needed — the legend names the group. */
+.notes-labels {
+  margin: var(--fl-space-4) 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;   /* fieldsets refuse to shrink below their content */
+}
+.notes-labels .fl-field__label { padding: 0; }   /* legend needs no extra inset */
+.notes-labels .fl-chip-set { margin-top: var(--fl-space-2); }
+
+/* The editor's meta line ("Edited today, 9:12"). */
+.notes-editor__meta {
+  margin: var(--fl-space-4) 0 0;
+  font-size: var(--fl-fs-caption);
+  color: var(--fl-text-secondary);
+}
