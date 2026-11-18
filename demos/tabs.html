@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — tabs demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Fixed tabs — text only, equal cells</p>
+  <div class="fl-tabs">
+    <div class="fl-tabs__bar" role="radiogroup" aria-label="Note view">
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="views" checked>
+        <span class="fl-tabs__label">Overview</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="views">
+        <span class="fl-tabs__label">Activity</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="views">
+        <span class="fl-tabs__label">Settings</span>
+      </label>
+    </div>
+    <div class="fl-tabs__panels">
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Overview panel — the note's title, labels and body live here. The bar
+          above switches views; nothing reloads and no script runs.
+        </p>
+      </div>
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Activity panel — edits, shares and reminders in reverse order.
+        </p>
+      </div>
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Settings panel — sharing, reminders and note color.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Tabs with icons — 72px stacked bar</p>
+  <div class="fl-tabs fl-tabs--icons">
+    <div class="fl-tabs__bar" role="radiogroup" aria-label="Mail section">
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="mail" checked>
+        <span class="fl-icon" aria-hidden="true"></span>
+        <span class="fl-tabs__label">Inbox</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="mail">
+        <span class="fl-icon" aria-hidden="true"></span>
+        <span class="fl-tabs__label">Starred</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="mail">
+        <span class="fl-icon" aria-hidden="true"></span>
+        <span class="fl-tabs__label">Sent</span>
+      </label>
+    </div>
+    <div class="fl-tabs__panels">
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Inbox — 12 unread. Icon and label are both author content, so the
+          bar works without an icon font.
+        </p>
+      </div>
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Starred — messages you flagged.
+        </p>
+      </div>
+      <div class="fl-tabs__panel">
+        <p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">
+          Sent — delivered mail, newest first.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Scrollable — more tabs than fit, native scroll</p>
+  <div style="max-width:360px;">
+    <div class="fl-tabs fl-tabs--scroll">
+      <div class="fl-tabs__bar" role="radiogroup" aria-label="Keep labels">
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels" checked><span class="fl-tabs__label">All notes</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Work</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Personal</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Ideas</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Recipes</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Travel</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Archive</span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="labels"><span class="fl-tabs__label">Trash</span></label>
+      </div>
+      <div class="fl-tabs__panels">
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">All notes — eight labels, one row, horizontal scroll with snap. No arrows, no JS.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Work — 14 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Personal — 9 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Ideas — 23 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Recipes — 6 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Travel — 4 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Archive — 118 notes.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Trash — emptied automatically after 30 days.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Icon-only — the scrollable set M2 allows</p>
+  <div style="max-width:280px;">
+    <div class="fl-tabs fl-tabs--icons fl-tabs--scroll">
+      <div class="fl-tabs__bar" role="radiogroup" aria-label="Note tools">
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="tools" checked aria-label="Text"><span class="fl-icon" aria-hidden="true"></span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="tools" aria-label="Checklist"><span class="fl-icon" aria-hidden="true"></span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="tools" aria-label="Drawing"><span class="fl-icon" aria-hidden="true"></span></label>
+        <label class="fl-tabs__item"><input class="fl-tabs__input" type="radio" name="tools" aria-label="Image"><span class="fl-icon" aria-hidden="true"></span></label>
+      </div>
+      <div class="fl-tabs__panels">
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Text tool.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Checklist tool.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Drawing tool.</p></div>
+        <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Image tool.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Disabled — a view that is not available</p>
+  <div class="fl-tabs">
+    <div class="fl-tabs__bar" role="radiogroup" aria-label="Account">
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="account" checked>
+        <span class="fl-tabs__label">Profile</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="account" disabled>
+        <span class="fl-tabs__label">Billing</span>
+      </label>
+      <label class="fl-tabs__item">
+        <input class="fl-tabs__input" type="radio" name="account">
+        <span class="fl-tabs__label">Security</span>
+      </label>
+    </div>
+    <div class="fl-tabs__panels">
+      <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Profile panel.</p></div>
+      <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Billing panel — unreachable while the tab is disabled.</p></div>
+      <div class="fl-tabs__panel"><p style="padding-top:16px; font-size:14px; color:var(--fl-text-secondary);">Security panel.</p></div>
+    </div>
+  </div>
+
+  <p class="fl-section-label">In context — tabs on a surface, above a list</p>
+  <div class="fl-card" style="padding:0; overflow:hidden;">
+    <div class="fl-tabs">
+      <div class="fl-tabs__bar" role="radiogroup" aria-label="Notes list">
+        <label class="fl-tabs__item">
+          <input class="fl-tabs__input" type="radio" name="notes" checked>
+          <span class="fl-tabs__label">Notes</span>
+        </label>
+        <label class="fl-tabs__item">
+          <input class="fl-tabs__input" type="radio" name="notes">
+          <span class="fl-tabs__label">Reminders</span>
+        </label>
+      </div>
+      <div class="fl-tabs__panels">
+        <div class="fl-tabs__panel">
+          <ul class="fl-list">
+            <li class="fl-list-item fl-list-item--two-line">
+              <span class="fl-list-item__text">
+                <span class="fl-list-item__title">Portland trip</span>
+                <span class="fl-list-item__sub">Flights, coffee, the bookstore on 10th</span>
+              </span>
+            </li>
+            <li class="fl-list-item fl-list-item--two-line">
+              <span class="fl-list-item__text">
+                <span class="fl-list-item__title">Q4 planning</span>
+                <span class="fl-list-item__sub">Draft the one-pager before Thursday</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="fl-tabs__panel">
+          <ul class="fl-list">
+            <li class="fl-list-item">
+              <span class="fl-list-item__text">
+                <span class="fl-list-item__title">Call the dentist — Friday, 9:00</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

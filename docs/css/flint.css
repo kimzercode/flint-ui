@@ -41,6 +41,7 @@
   --fl-fs-title: 16px;
   --fl-fs-body: 14px;
   --fl-fs-caption: 12px;
+  --fl-tabs-transform: uppercase;  /* M2 tab labels are all caps; set none for sentence case */
 
   /* Shape (flat Google: small on controls, larger on cards) */
   --fl-radius: 4px;
@@ -61,6 +62,7 @@
   --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
   --fl-sidesheet-w: 320px;     /* side sheet width (M2 desktop standard: 320dp) */
   --fl-chip-h: 32px;           /* M2 chip height; the 48px target comes from the set's spacing */
+  --fl-tabs-h: 48px;           /* M2 fixed tab bar height; stacked (--icons) sets 72px */
   --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
   --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
 
@@ -2292,4 +2294,172 @@ dialog.fl-sidesheet[open] {
 .fl-chip-set--scroll > * {
   flex: 0 0 auto;
   scroll-snap-align: start;
+}
+
+/* --------------------------------------------------------------------------
+   21. Tabs — in-page tabs. Not the bottom navigation: that keeps
+       .fl-tab-bar/.fl-tab because those are app destinations, while these are
+       views inside one page. Zero JS — the bar is a radio group and panels
+       are keyed by order: the k-th tab shows the k-th panel (the one place
+       where document order is the API, capped at 8 tabs).
+       48px bar (72px with icons), 2px indicator, equal cells up to four on
+       phones, clustered auto-width cells from 905px, native scroll overflow.
+       Not shipped: swipe between panels (M2's own guidance warns tabs
+       conflict with swipeable content) and drag on the strip.
+   -------------------------------------------------------------------------- */
+.fl-tabs__bar {
+  display: flex;
+  align-items: stretch;
+  height: var(--fl-tabs-h);
+  border-bottom: 1px solid var(--fl-divider);
+}
+
+.fl-tabs__item {
+  --_tab-fg: var(--fl-text-secondary);
+  --_tab-bg: transparent;
+  --_tab-border: transparent;
+  flex: 1 1 0;   /* equal cells for the fixed ≤4 case; shrinks before it overflows */
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fl-space-2);
+  padding: 0 var(--fl-space-2);
+  border-bottom: 2px solid var(--_tab-border);
+  background: var(--_tab-bg);
+  color: var(--_tab-fg);
+  font-size: var(--fl-fs-body);
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 1;
+  text-transform: var(--fl-tabs-transform);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--fl-dur) var(--fl-ease),
+              color var(--fl-dur) var(--fl-ease),
+              border-color var(--fl-dur) var(--fl-ease);
+}
+
+.fl-tabs__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;   /* M2: tab labels never wrap or resize */
+}
+
+/* The radio is the state; it is clipped, not display:none, so it stays in the
+   tab order and the a11y tree (same treatment as .fl-chip__input). Focus
+   lands on the input, the ring is drawn on the cell. */
+.fl-tabs__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.fl-tabs__item:has(> .fl-tabs__input:focus-visible) {
+  outline: 2px solid var(--fl-accent);
+  outline-offset: -4px;   /* inside the cell: a scrolling bar would clip an outer ring */
+  z-index: 1;
+}
+
+/* Inactive-only hover/pressed: the active cell already reads as selected. */
+@media (hover: hover) {
+  .fl-tabs__item:not(:has(> .fl-tabs__input:checked, > .fl-tabs__input:disabled)):hover {
+    --_tab-fg: var(--fl-text);
+    --_tab-bg: var(--fl-hover);
+  }
+}
+
+.fl-tabs__item:not(:has(> .fl-tabs__input:checked, > .fl-tabs__input:disabled)):active {
+  --_tab-bg: var(--fl-divider);
+}
+
+/* Selected — declared after the state rules so it wins */
+.fl-tabs__item:has(> .fl-tabs__input:checked) {
+  --_tab-fg: var(--fl-accent);
+  --_tab-border: var(--fl-accent);
+}
+
+/* Disabled last: grey and inert, no indicator — the underline means
+   "selected", and an unchecked disabled tab is not. A checked-but-disabled
+   tab (the current view became unavailable) keeps a muted indicator. */
+.fl-tabs__item:has(> .fl-tabs__input:disabled) {
+  --_tab-fg: var(--fl-disabled);
+  cursor: not-allowed;
+}
+
+.fl-tabs__item:has(> .fl-tabs__input:checked:disabled) {
+  --_tab-border: var(--fl-disabled);
+}
+
+/* Panels: hidden by default, one shown by the order map below. */
+.fl-tabs__panel { display: none; }
+
+/* Order map — tab k ↔ panel k. Eight branches is the documented cap; each
+   branch is the same rule with a different index, not a second structure. */
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(1) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(1),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(2) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(2),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(3) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(3),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(4) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(4),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(5) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(5),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(6) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(6),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(7) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(7),
+.fl-tabs:has(> .fl-tabs__bar > .fl-tabs__item:nth-child(8) > .fl-tabs__input:checked) > .fl-tabs__panels > .fl-tabs__panel:nth-child(8) {
+  display: block;
+}
+
+/* No :has() (pre-2023 engines): show every panel — stacked content is honest,
+   silently hiding content is not. The bar stays usable as a radio group. */
+@supports not selector(:has(*)) {
+  .fl-tabs__panel { display: block; }
+}
+
+/* Icons: 24px, stacked above the label — the 72px icon+text tab (icon-only
+   tabs use the same layout, centered on the icon). */
+.fl-tabs .fl-icon { width: 24px; height: 24px; }
+.fl-tabs--icons .fl-tabs__bar { height: 72px; }
+.fl-tabs--icons .fl-tabs__item {
+  flex-direction: column;
+  gap: var(--fl-space-1);
+}
+
+/* Scrollable bar: native horizontal scrolling + snap, no arrows, no JS.
+   min-width 90dp is the M2 floor; the 8px bar inset keeps the first and last
+   indicator off the clip edge. */
+.fl-tabs--scroll .fl-tabs__bar {
+  padding: 0 var(--fl-space-2);
+  overflow-x: auto;
+  overflow-y: hidden;   /* overflow-x:auto computes overflow-y:auto; pin it */
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.fl-tabs--scroll .fl-tabs__bar::-webkit-scrollbar { display: none; }
+
+.fl-tabs--scroll .fl-tabs__item {
+  flex: 0 0 auto;
+  min-width: 90px;
+  padding: 0 var(--fl-space-3);
+  scroll-snap-align: start;
+}
+
+/* Tablet/laptop (M2 fixed tabs become clustered): auto-width cells, centered,
+   on the same 905px line the shells use. A scrollable set stays scrollable. */
+@media (min-width: 905px) {
+  .fl-tabs__bar { justify-content: center; }
+  /* …but a scrolling bar must start at its first item: centering an
+     overflowing row pushes the left overflow out of reach. */
+  .fl-tabs--scroll .fl-tabs__bar { justify-content: flex-start; }
+  .fl-tabs:not(.fl-tabs--scroll) .fl-tabs__item {
+    flex: 0 1 auto;
+    min-width: 120px;
+    padding: 0 var(--fl-space-4);
+  }
 }

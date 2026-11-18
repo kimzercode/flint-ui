@@ -128,7 +128,7 @@ toc:
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>The tab bar is a <code>&lt;nav&gt;</code> with <code>aria-label="Primary"</code> — not <code>role="tablist"</code>; these are navigation destinations, not view tabs.</li>
+    <li>The tab bar is a <code>&lt;nav&gt;</code> with <code>aria-label="Primary"</code> — not <code>role="tablist"</code>; these are navigation destinations, not view tabs. For tabs that switch views inside one page, use <a href="tabs.html">Tabs</a>.</li>
     <li>Exactly one tab carries <code>aria-current="page"</code>; don't leave it off "so nothing is selected" — screen readers use it to orient.</li>
     <li>Icon-only controls (FAB, app-bar buttons) need <code>aria-label</code>; labels and badges are visible text where they exist.</li>
     <li>Badges are <code>aria-hidden</code> with the count duplicated in the button's label ("Notifications, 3 unread") — the visible "3" alone isn't announced.</li>

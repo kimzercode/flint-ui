@@ -102,6 +102,12 @@ const real = [
     summary: "Trailing-edge supplementary surface — standard panel on desktop, modal on the native <dialog> with mobile insets.",
   },
   {
+    name: "Tabs",
+    slug: "tabs",
+    status: "ready",
+    summary: "In-page tabs on a native radio group — 48px bar, 2px indicator, fixed ≤4, clustered on desktop, zero JS.",
+  },
+  {
     name: "Text fields",
     slug: "text-fields",
     status: "ready",
