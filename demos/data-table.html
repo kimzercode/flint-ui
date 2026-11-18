@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flint UI — data table demo</title>
+<link rel="stylesheet" href="../css/flint.css">
+</head>
+<body class="fl-reset">
+
+<main style="max-width:960px; margin:0 auto; padding:32px 20px;">
+
+  <p class="fl-section-label">Full table — filters, selection, sorting, pagination</p>
+  <div class="fl-data-table">
+    <div class="fl-data-table__toolbar" role="group" aria-label="Filter rows">
+      <div class="fl-chip-set">
+        <label class="fl-chip">
+          <input type="checkbox" class="fl-chip__input" checked>
+          <span class="fl-chip__check" aria-hidden="true"></span>
+          Offline signals
+        </label>
+        <label class="fl-chip">
+          <input type="checkbox" class="fl-chip__input" checked>
+          <span class="fl-chip__check" aria-hidden="true"></span>
+          Lapsed time &gt; 10 min
+        </label>
+        <label class="fl-chip">
+          <input type="checkbox" class="fl-chip__input">
+          <span class="fl-chip__check" aria-hidden="true"></span>
+          Not triaged
+        </label>
+      </div>
+    </div>
+
+    <div class="fl-data-table__scroll">
+      <table aria-label="Recent deployments">
+        <thead>
+          <tr>
+            <th scope="col" class="fl-data-table__check">
+              <label>
+                <input type="checkbox" class="fl-check" aria-label="Select all rows">
+              </label>
+            </th>
+            <th scope="col">Status</th>
+            <th scope="col" aria-sort="ascending">
+              <button class="fl-data-table__sort" type="button">
+                <span class="fl-data-table__truncate">Signal name</span>
+              </button>
+            </th>
+            <th scope="col">Severity</th>
+            <th scope="col">Stage</th>
+            <th scope="col">Updated</th>
+            <th scope="col" class="fl-data-table__num">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" checked aria-label="Select Cosmo deployment"></label>
+            </td>
+            <td>Offline</td>
+            <td>Cosmo: prod shared vms</td>
+            <td>Huge</td>
+            <td>Triaged</td>
+            <td>2 min</td>
+            <td class="fl-data-table__num">$1,240</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Astrid deployment"></label>
+            </td>
+            <td>Online</td>
+            <td>Astrid: NE shared managed-features</td>
+            <td>Medium</td>
+            <td>Triaged</td>
+            <td>12 min</td>
+            <td class="fl-data-table__num">$860</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Phoenix deployment"></label>
+            </td>
+            <td>Warning</td>
+            <td>Phoenix: prod shared lyra-managed-features</td>
+            <td>Minor</td>
+            <td>Not triaged</td>
+            <td>33 min</td>
+            <td class="fl-data-table__num">$12,400</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Sirius deployment"></label>
+            </td>
+            <td>Online</td>
+            <td>Sirius: NW prod shared locations</td>
+            <td>Negligible</td>
+            <td>Triaged</td>
+            <td>1 h</td>
+            <td class="fl-data-table__num">$0</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Vega deployment"></label>
+            </td>
+            <td>Offline</td>
+            <td>Vega: prod shared dre-managed-features</td>
+            <td>Medium</td>
+            <td>Triaged</td>
+            <td>3 h</td>
+            <td class="fl-data-table__num">$4,090</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Orion deployment"></label>
+            </td>
+            <td>Online</td>
+            <td>Orion: prod shared independent account</td>
+            <td>Huge</td>
+            <td>Not triaged</td>
+            <td>5 h</td>
+            <td class="fl-data-table__num">$27,300</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fl-data-table__footer">
+      <label class="fl-data-table__perpage">
+        Rows per page
+        <span class="fl-data-table__select">
+          <select aria-label="Rows per page">
+            <option>10</option>
+            <option selected>25</option>
+            <option>50</option>
+          </select>
+        </span>
+      </label>
+      <span class="fl-data-table__range">1–6 of 132</span>
+      <nav class="fl-data-table__pager" aria-label="Table pagination">
+        <span class="fl-data-table__page fl-data-table__page--first" role="link" aria-disabled="true" aria-label="First page"></span>
+        <span class="fl-data-table__page" role="link" aria-disabled="true" aria-label="Previous page"></span>
+        <a class="fl-data-table__page fl-data-table__page--next" href="?page=2" aria-label="Next page"></a>
+        <a class="fl-data-table__page fl-data-table__page--last" href="?page=6" aria-label="Last page"></a>
+      </nav>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Sorting states + a truncated header with its tooltip</p>
+  <div class="fl-data-table">
+    <div class="fl-data-table__scroll">
+      <table aria-label="Deployments by schedule">
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="descending">
+              <button class="fl-data-table__sort" type="button">
+                <span class="fl-data-table__truncate">Schedule</span>
+              </button>
+            </th>
+            <th scope="col">
+              <button class="fl-data-table__sort" type="button">
+                <span class="fl-data-table__truncate">Signal name</span>
+              </button>
+            </th>
+            <th scope="col">
+              <span class="fl-tip">
+                <button class="fl-data-table__sort" type="button">
+                  <span class="fl-data-table__truncate" style="max-width:120px;">Project team lead name</span>
+                </button>
+                <span class="fl-tip__bubble" role="tooltip">Project team lead name</span>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>13:18</td><td>Sirius: NW prod shared locations</td><td>Angelica Howards</td></tr>
+          <tr><td>0:33</td><td>Astrid: NE shared managed-features</td><td>Chase Nguyen</td></tr>
+          <tr><td>0:39</td><td>Cosmo: prod shared vms</td><td>Brie Furman</td></tr>
+          <tr><td>3:12</td><td>Phoenix: prod shared lyra-managed-features</td><td>Jeremy Lake</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Same records, list rows below 600px (author recipe)</p>
+  <div class="demo-records">
+    <div class="demo-records__table fl-data-table">
+      <div class="fl-data-table__scroll">
+        <table aria-label="Deployments">
+          <thead>
+            <tr>
+              <th scope="col">Status</th>
+              <th scope="col">Signal name</th>
+              <th scope="col">Updated</th>
+              <th scope="col" class="fl-data-table__num">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Offline</td><td>Cosmo: prod shared vms</td><td>2 min</td><td class="fl-data-table__num">$1,240</td></tr>
+            <tr><td>Online</td><td>Astrid: NE shared managed-features</td><td>12 min</td><td class="fl-data-table__num">$860</td></tr>
+            <tr><td>Warning</td><td>Phoenix: prod shared lyra-managed-features</td><td>33 min</td><td class="fl-data-table__num">$12,400</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ul class="fl-list demo-records__list">
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Cosmo: prod shared vms</span>
+          <span class="fl-list-item__sub">Offline · 2 min · $1,240</span>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Astrid: NE shared managed-features</span>
+          <span class="fl-list-item__sub">Online · 12 min · $860</span>
+        </span>
+      </li>
+      <li class="fl-list-item fl-list-item--two-line">
+        <span class="fl-list-item__text">
+          <span class="fl-list-item__title">Phoenix: prod shared lyra-managed-features</span>
+          <span class="fl-list-item__sub">Warning · 33 min · $12,400</span>
+        </span>
+      </li>
+    </ul>
+  </div>
+
+</main>
+
+<script>
+  // Author code, not library code: select-all is app state, like the chips
+  // demo's remove handler. The library ships the control, the row tint and
+  // zero JS; wiring header <-> rows is the app's job. Without this script
+  // every row checkbox still toggles and tints — only "select all" is inert.
+  (() => {
+    const table = document.querySelector(".fl-data-table");
+    const all = table.querySelector("thead .fl-check");
+    const rows = [...table.querySelectorAll("tbody .fl-check")];
+    if (!all || !rows.length) return;
+    all.addEventListener("change", () => rows.forEach((box) => { box.checked = all.checked; }));
+    rows.forEach((box) => box.addEventListener("change", () => {
+      all.checked = rows.every((row) => row.checked);
+    }));
+  })();
+</script>
+
+<style>
+  /* Author recipe, not library CSS: the table stays one structure, the phone
+     gets the same records as list rows. The breakpoint is the library's. */
+  .demo-records__list { display: none; }
+  @media (max-width: 600px) {
+    .demo-records__table { display: none; }
+    .demo-records__list { display: block; }
+  }
+</style>
+
+</body>
+</html>

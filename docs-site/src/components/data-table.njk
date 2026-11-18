@@ -1,0 +1,399 @@
+---
+layout: layouts/base.njk
+permalink: components/data-table.html
+assetRoot: ../
+title: Data table
+current: data-table
+section: components
+depth: 1
+lead: Records in columns — flat 1px outline, 56/52px rows, selection, sorting and link-based pagination, zero JavaScript.
+toc:
+  design:
+    - id: usage
+      title: Usage
+    - id: anatomy
+      title: Anatomy
+    - id: behavior
+      title: Behavior
+    - id: accessibility
+      title: Accessibility
+  impl:
+    - id: example
+      title: Live example
+    - id: code
+      title: Code
+    - id: demos
+      title: Fullscreen demo
+    - id: theming
+      title: Theming
+---
+{% from "macros.njk" import callout, snippet with context %}
+
+{% set design %}
+<section class="docs-section">
+  <h2 id="d-usage">Usage</h2>
+  <p>A data table compares <strong>many records across the same columns</strong>.
+     Scanning one column downward is the task, so the structure is a real
+     <code>&lt;table&gt;</code>: row headers, column headers and cells stay
+     machine-readable for screen readers and for “copy to spreadsheet”.</p>
+  <h3>Do use it when</h3>
+  <ul>
+    <li>The user <strong>compares values in a column</strong> — cost, date,
+        status — and the comparison is the point.</li>
+    <li>There are <strong>more than three fields per record</strong>, or the
+        header labels are what make the data legible.</li>
+    <li>The set has <strong>sorting, filtering or paging</strong>: the table is
+        where those controls belong (M2 puts filters directly above the header
+        row).</li>
+    <li>Rows are <strong>entities of one kind</strong> — deployments, invoices,
+        members.</li>
+  </ul>
+  <h3>Don't use it when</h3>
+  <ul>
+    <li>The record is <strong>content</strong>, not a row: a note with a title,
+        snippet and timestamp is a <a href="lists.html">list row</a>, and
+        reading it matters more than comparing it.</li>
+    <li>Each record needs <strong>different fields</strong> — that is a card
+        grid, not a table.</li>
+    <li>The table would need <strong>nested tables</strong> or merged cells to
+        make sense; the data model is wrong, not the layout.</li>
+    <li>You only have <strong>two columns of short values</strong> — a list of
+        label/value pairs reads faster.</li>
+  </ul>
+  <h3>The phone answer</h3>
+  <p>The table scrolls horizontally (the selection column stays pinned) and the
+     docs ship a recipe for the other phone pattern: render the same records as
+     <strong>two-line list rows below 600px</strong>. One structure in the
+     library, two presentations of the same records in your app — see the
+     <a href="#i-code">code</a>.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-anatomy">Anatomy</h2>
+  <div class="fl-data-table">
+    <div class="fl-data-table__scroll">
+      <table aria-label="Example deployments">
+        <thead>
+          <tr>
+            <th scope="col" class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select all rows"></label>
+            </th>
+            <th scope="col" aria-sort="ascending">
+              <button class="fl-data-table__sort" type="button">
+                <span class="fl-data-table__truncate">Status</span>
+              </button>
+            </th>
+            <th scope="col">Signal name</th>
+            <th scope="col">Updated</th>
+            <th scope="col" class="fl-data-table__num">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" checked aria-label="Select Cosmo deployment"></label>
+            </td>
+            <td>Offline</td>
+            <td>Cosmo: prod shared vms</td>
+            <td>2 min</td>
+            <td class="fl-data-table__num">$1,240</td>
+          </tr>
+          <tr>
+            <td class="fl-data-table__check">
+              <label><input type="checkbox" class="fl-check" aria-label="Select Astrid deployment"></label>
+            </td>
+            <td>Online</td>
+            <td>Astrid: NE shared managed-features</td>
+            <td>12 min</td>
+            <td class="fl-data-table__num">$860</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ol>
+    <li><strong>Container</strong> — 1px outline, 4px radius, <strong>no
+        shadow</strong> (0dp elevation). M2's spec is already flat here; Flint
+        did not have to deviate.</li>
+    <li><strong>Header row</strong> — 56px, medium weight, secondary text. No
+        fill and no vertical rules: weight separates the header (M2).</li>
+    <li><strong>Rows</strong> — 52px, 1px dividers in
+        <code>--fl-divider</code>, 16px cell padding (16 + 16 = the spec's
+        32dp gutter).</li>
+    <li><strong>Selection column</strong> — reuses <code>.fl-check</code>. The
+        cell is a 48px target, sticks to the left edge when the table scrolls,
+        and carries a 1px divider (see the note below).</li>
+    <li><strong>Sort control</strong> — a 48px button (or link) in the header;
+        the arrow is drawn from <code>aria-sort</code> on the
+        <code>&lt;th&gt;</code>.</li>
+    <li><strong>Numbers</strong> — <code>--num</code> right-aligns and switches
+        to tabular figures so digits line up.</li>
+    <li><strong>Toolbar</strong> — filter <a href="chips.html">chips</a>
+        directly above the header row, inside the container (M2's placement).</li>
+    <li><strong>Footer</strong> — rows-per-page, range text, and four 48px
+        pager controls.</li>
+  </ol>
+  {{ callout({
+    variant: "warn",
+    title: "One deliberate line",
+    text: "M2 draws no vertical rules. Flint adds a single 1px divider after the sticky selection column: with no shadow allowed, it is what stops a horizontally scrolled row from looking like text cut off mid-word. Without horizontal scrolling the line is a quiet gutter; with it, it is the only separation available."
+  }) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="d-behavior">Behavior</h2>
+  <h3>Sorting is author state</h3>
+  <p>The library styles the sort control and reads the direction from
+     <code>aria-sort</code> on the header cell — it never sorts anything.
+     Server-rendered apps use a link:</p>
+  {% set sortLink %}
+<th scope="col" aria-sort="ascending">
+  <a class="fl-data-table__sort" href="?sort=status&amp;dir=desc">
+    <span class="fl-data-table__truncate">Status</span>
+  </a>
+</th>
+{% endset %}
+  {{ snippet(sortLink) }}
+  <p>Client-side apps use a button and flip the attribute. Either way the
+     arrow's space is reserved (<code>opacity</code> only), so sorting never
+     reflows the header. While a sort request is in flight, show progress with
+     the existing <a href="progress.html">linear progress</a> bar above the
+     table — no new component.</p>
+  <h3>Selection reuses the checkbox</h3>
+  <p>Row tint is <code>:has(.fl-check:checked)</code> — the same tint language
+     as <a href="selection-controls.html">selection controls</a>,
+     <a href="lists.html#d-selection">lists</a> and
+     <a href="chips.html">chips</a>. Each selection cell wraps the input in a
+     <code>&lt;label&gt;</code> so the whole 48px cell is the target, and the
+     <code>aria-label</code> names the row.</p>
+  <p>Select-all is app state, not library state. The demo's script is ten
+     lines; without it every row still toggles and tints, only “select all” is
+     inert:</p>
+  {% set selectAll %}
+const table = document.querySelector(".fl-data-table");
+const all = table.querySelector("thead .fl-check");
+const rows = [...table.querySelectorAll("tbody .fl-check")];
+all.addEventListener("change", () => rows.forEach((box) => { box.checked = all.checked; }));
+rows.forEach((box) => box.addEventListener("change", () => {
+  all.checked = rows.every((row) => row.checked);
+}));
+{% endset %}
+  {{ snippet(selectAll) }}
+  <h3>Pagination is links</h3>
+  <p>First / previous / next / last are links with a query string, so they work
+     with JS off and can be opened in a new tab. Unavailable directions render
+     as a <code>span</code> with <code>role="link"</code> and
+     <code>aria-disabled="true"</code> — greyed, not focusable, still
+     announced.</p>
+  <p>The rows-per-page <code>&lt;select&gt;</code> is the one control that needs
+     a submit path with JS off: wrap it in a <code>&lt;form method="get"&gt;</code>
+     with a submit button, or let your app handle <code>change</code>. A select
+     that changes the URL by itself is a script, and the library ships none.</p>
+  <h3>Sticky column, not a second structure</h3>
+  <p>Below roughly 900px of table width the table scrolls inside its container
+     while the selection column stays put, so the checkbox never scrolls away.
+     Nothing is duplicated: it is the same <code>&lt;table&gt;</code> with
+     <code>position: sticky</code> on the first cell, and the sticky cell paints
+     the row's own background so nothing shows through it.</p>
+  <h3>Truncation is explicit</h3>
+  <p>Auto table layout ignores <code>max-width</code> on cells, so a column does
+     not shrink to fit — it widens and the table scrolls. When a value must
+     truncate, wrap it in the slot and cap the slot:</p>
+  {% set truncate %}
+<td>
+  <span class="fl-data-table__truncate" style="max-width:180px;">
+    Phoenix: prod shared lyra-managed-features
+  </span>
+</td>
+{% endset %}
+  {{ snippet(truncate) }}
+  <p>For a truncated header, wrap the sort control in
+     <a href="tooltip.html"><code>.fl-tip</code></a> so the full label is
+     available on hover and on keyboard focus — exactly what the demo's last
+     column does.</p>
+  <h3>Deliberately not shipped</h3>
+  <ul>
+    <li><strong>Inline per-cell menus</strong> (the ⋮ inside a row) as a table
+        feature — use a trailing <code>.fl-icon-btn</code> or a
+        <a href="menu.html">menu</a> in a cell; the table does not own it.</li>
+    <li><strong>Column resize, row drag, row grouping, aggregates</strong> —
+        data-grid territory, and every one of them needs JavaScript.</li>
+    <li><strong>A sticky header row</strong> — deferred until a real screen
+        needs it; it interacts with the sticky column and the shell's scroll.</li>
+    <li><strong>Sorting, filtering and paging logic</strong> — the library
+        never touches your data.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-accessibility">Accessibility</h2>
+  <ul>
+    <li><strong>It is a real table.</strong> A <code>&lt;caption&gt;</code> or
+        <code>aria-label</code> names it, <code>scope="col"</code> ties headers
+        to cells, and each row's checkbox is named ("Select Cosmo
+        deployment"). Screen readers can read by row or by column.</li>
+    <li><strong>Sorting is announced.</strong> <code>aria-sort</code> on the
+        header is the state; the visible arrow is only its picture. Set
+        <code>aria-sort="ascending"</code> / <code>"descending"</code> on the
+        active column and leave it off everywhere else.</li>
+    <li><strong>Targets are 48px.</strong> The sort control, the selection cell
+        (the label, not the 18px box) and every pager control clear the M2
+        minimum; footer text and range are not interactive.</li>
+    <li><strong>Unavailable pager directions are announced, not hidden.</strong>
+        <code>role="link"</code> + <code>aria-disabled="true"</code> reads as a
+        dimmed link; a plain greyed <code>span</code> would read as nothing.</li>
+    <li><strong>The sticky column does not change the reading order.</strong> It
+        is the first cell of the row in the DOM and stays the first cell
+        visually; horizontal scrolling does not reorder anything.</li>
+    <li><strong>Works without JS.</strong> Selection, tint, hover, sorting
+        links and paging links are native/CSS. Two things need author code:
+        select-all, and applying the rows-per-page select.</li>
+    <li><strong>Hover is a bonus.</strong> The row hover layer is behind
+        <code>@media (hover: hover)</code>; the selected tint is not, so touch
+        users still see what they picked.</li>
+  </ul>
+</section>
+{% endset %}
+
+{% set impl %}
+<section class="docs-section">
+  <h2 id="i-example">Live example</h2>
+  <p>The frame below renders the real demo page with real <code>flint.css</code>.</p>
+  <div class="docs-example">
+    <div class="docs-example__head">
+      <span>demos/data-table.html — rendered live</span>
+      <a href="../demos/data-table.html">Open fullscreen ↗</a>
+    </div>
+    <iframe src="../demos/data-table.html" title="Data table live demo" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-code">Code</h2>
+  <p>Two files bring the library in; the table is a table, plus four class
+     names for the chrome and the controls.</p>
+  {% set quickStart %}
+<link rel="stylesheet" href="css/flint.css">
+<script src="js/flint.js" defer></script>
+{% endset %}
+  {{ snippet(quickStart) }}
+  {% set tableMarkup %}
+<!-- Full table: sticky selection column, one sortable header, numeric column -->
+<div class="fl-data-table">
+  <div class="fl-data-table__scroll">
+    <table aria-label="Recent deployments">
+      <thead>
+        <tr>
+          <th scope="col" class="fl-data-table__check">
+            <label>
+              <input type="checkbox" class="fl-check" aria-label="Select all rows">
+            </label>
+          </th>
+          <th scope="col" aria-sort="ascending">
+            <button class="fl-data-table__sort" type="button">
+              <span class="fl-data-table__truncate">Status</span>
+            </button>
+          </th>
+          <th scope="col">Signal name</th>
+          <th scope="col" class="fl-data-table__num">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fl-data-table__check">
+            <label>
+              <input type="checkbox" class="fl-check" aria-label="Select Cosmo deployment">
+            </label>
+          </td>
+          <td>Offline</td>
+          <td>Cosmo: prod shared vms</td>
+          <td class="fl-data-table__num">$1,240</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endset %}
+  {{ snippet(tableMarkup) }}
+  {% set footerMarkup %}
+<!-- Footer: rows-per-page, range, pager. Links by default; unavailable
+     directions are spans with role="link" aria-disabled="true". -->
+<div class="fl-data-table__footer">
+  <label class="fl-data-table__perpage">
+    Rows per page
+    <span class="fl-data-table__select">
+      <select aria-label="Rows per page">
+        <option selected>25</option>
+      </select>
+    </span>
+  </label>
+  <span class="fl-data-table__range">1–25 of 132</span>
+  <nav class="fl-data-table__pager" aria-label="Table pagination">
+    <span class="fl-data-table__page fl-data-table__page--first" role="link" aria-disabled="true" aria-label="First page"></span>
+    <span class="fl-data-table__page" role="link" aria-disabled="true" aria-label="Previous page"></span>
+    <a class="fl-data-table__page fl-data-table__page--next" href="?page=2" aria-label="Next page"></a>
+    <a class="fl-data-table__page fl-data-table__page--last" href="?page=6" aria-label="Last page"></a>
+  </nav>
+</div>
+{% endset %}
+  {{ snippet(footerMarkup) }}
+  {% set recipe %}
+/* Author CSS — the phone answer: same records, list rows below 600px. */
+.records__list { display: none; }
+@media (max-width: 600px) {
+  .records__table { display: none; }
+  .records__list { display: block; }
+}
+{% endset %}
+  {{ snippet(recipe) }}
+  <p>Render both from the same data and let CSS pick the presentation — the
+     table's columns above, a two-line <a href="lists.html">list row</a> below.
+     The selection column and the pager stay in the table; the list rows link to
+     the same record.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-demos">Fullscreen demo</h2>
+  <p>The embedded example above is the actual demo page, unchanged — open
+     <a href="../demos/data-table.html">demos/data-table.html</a> for the
+     toolbar, selection, sorting states, tooltip, pagination and the responsive
+     list recipe.</p>
+</section>
+
+<section class="docs-section">
+  <h2 id="i-theming">Theming</h2>
+  <p>Everything is a CSS custom property — override inline or in your own
+     stylesheet, no rebuild. <code>--_</code>-prefixed properties are internal
+     state tokens and not part of the API.</p>
+  <table class="docs-table">
+    <thead>
+      <tr><th>Token</th><th>Affects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>--fl-table-head-h</code></td><td>Header row height (default 56px)</td></tr>
+      <tr><td><code>--fl-table-row-h</code></td><td>Body row height (default 52px)</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Container outline, select border</td></tr>
+      <tr><td><code>--fl-divider</code></td><td>Row dividers, sticky-column divider</td></tr>
+      <tr><td><code>--fl-hover</code></td><td>Row hover, pager hover</td></tr>
+      <tr><td><code>--fl-tint</code></td><td>Selected row fill</td></tr>
+      <tr><td><code>--fl-text-secondary</code></td><td>Header text, inactive pager</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Unavailable pager directions</td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Focus rings (sort, pager, select)</td></tr>
+    </tbody>
+  </table>
+  {% set themeExample %}
+:root {
+  --fl-table-row-h: 44px;   /* dense tables on a data-heavy screen */
+  --fl-tint: #e6f4ea;       /* selected rows tint green */
+}
+{% endset %}
+  {{ snippet(themeExample) }}
+  <p>Dense rows are a token, not a second component: 44px still fits a 14px
+     label with 16px padding. A table with a selection column keeps a 48px floor
+     on the checkbox cell, so dense rows are for read-only tables — a shorter
+     checkbox target is not a trade this library makes. That is also why the
+     default is 52px.</p>
+</section>
+{% endset %}
+
+{% include "partials/article.njk" %}

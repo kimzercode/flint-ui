@@ -42,6 +42,12 @@ const real = [
     summary: "Filter, choice, action and tag pills on native inputs and buttons — zero JS, pill by default.",
   },
   {
+    name: "Data table",
+    slug: "data-table",
+    status: "ready",
+    summary: "Records in columns — 1px outline, 56/52px rows, sticky selection, aria-sort, link paging, zero JS.",
+  },
+  {
     name: "Dialog",
     slug: "dialog",
     status: "ready",

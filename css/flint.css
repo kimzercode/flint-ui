@@ -63,6 +63,8 @@
   --fl-sidesheet-w: 320px;     /* side sheet width (M2 desktop standard: 320dp) */
   --fl-chip-h: 32px;           /* M2 chip height; the 48px target comes from the set's spacing */
   --fl-tabs-h: 48px;           /* M2 fixed tab bar height; stacked (--icons) sets 72px */
+  --fl-table-head-h: 56px;     /* M2 data table header row */
+  --fl-table-row-h: 52px;      /* M2 data table body row */
   --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
   --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
 
@@ -2462,4 +2464,288 @@ dialog.fl-sidesheet[open] {
     min-width: 120px;
     padding: 0 var(--fl-space-4);
   }
+}
+
+/* --------------------------------------------------------------------------
+   22. Data table — records, not cards. M2's own spec is the flat one: 0dp
+       elevation, a 1px outline, 4px radius, 1px row dividers, no vertical
+       lines and no header fill. 56px header / 52px rows / 16px cell padding
+       (16 + 16 = the spec's 32dp gutter). One structure: the table scrolls
+       horizontally and the selection column sticks to the left edge; the
+       phone answer is the list-row recipe in the docs, not a second table.
+       Selection reuses .fl-check and the library's tint language. Zero JS:
+       sort state is the author's aria-sort, pagination is links.
+   -------------------------------------------------------------------------- */
+.fl-data-table {
+  overflow: hidden;   /* clip the toolbar and rows to the radius */
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius);
+  background: var(--fl-surface);
+}
+
+.fl-data-table__scroll {
+  overflow-x: auto;
+  overflow-y: hidden;   /* overflow-x:auto computes overflow-y:auto; pin it */
+  overscroll-behavior-x: contain;
+}
+
+.fl-data-table table {
+  width: 100%;
+  border-collapse: separate;   /* separate + zero spacing: the sticky cell paints cleanly */
+  border-spacing: 0;
+  font-size: var(--fl-fs-body);
+  color: var(--fl-text);
+}
+
+.fl-data-table th {
+  height: var(--fl-table-head-h);
+  padding: 0 var(--fl-space-3);
+  border-bottom: 1px solid var(--fl-divider);
+  color: var(--fl-text-secondary);
+  font-weight: 500;   /* M2: weight, not colour, separates the header */
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fl-data-table td {
+  height: var(--fl-table-row-h);
+  padding: 0 var(--fl-space-3);
+  border-bottom: 1px solid var(--fl-divider);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fl-data-table tbody tr:last-child > td { border-bottom: 0; }
+
+/* Row state layer: hover and selection assign the token. Cells stay
+   transparent so the row paints through them — including under the sticky
+   column, which copies the row's background (see below). */
+.fl-data-table tr { --_row-bg: var(--fl-surface); background: var(--_row-bg); }
+
+@media (hover: hover) {
+  .fl-data-table tbody tr:hover { --_row-bg: var(--fl-hover); }
+}
+
+.fl-data-table tbody tr:has(.fl-check:checked) { --_row-bg: var(--fl-tint); }
+
+/* Selection column. Sticky is Flint's mobile answer: M2 keeps the checkbox in
+   the first column, and this keeps that control reachable when the table is
+   wider than the screen. background:inherit makes the cell opaque with the
+   row's exact fill — no shadow needed to separate it from the sliding cells. */
+.fl-data-table__check {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 50px;
+  min-width: 50px;   /* auto table layout treats width as a suggestion; the floor pins it */
+  padding: 0;
+  border-right: 1px solid var(--fl-divider);   /* the flat stand-in for the shadow Gmail uses */
+  background: inherit;
+}
+
+/* The whole cell is the target (48px), not the 18px box. The label owns the
+   width: an auto-layout cell can shrink to its content, so a `width` on the
+   cell alone is not enough. */
+.fl-data-table__check > label {
+  display: flex;
+  align-items: center;
+  width: 48px;
+  min-height: 48px;
+  padding-left: var(--fl-space-3);
+  cursor: pointer;
+}
+
+/* Numeric columns: right-aligned and tabular, so digits line up (M2) */
+.fl-data-table__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sortable header: the button (or a link) is the 48px target and owns the
+   arrow; aria-sort on the <th> owns the direction. Author code flips it. */
+.fl-data-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fl-space-1);
+  min-width: 48px;
+  min-height: 48px;
+  color: inherit;
+  font: inherit;
+  white-space: inherit;
+}
+
+.fl-data-table__sort:focus-visible { outline-offset: -4px; }
+
+@media (hover: hover) {
+  .fl-data-table__sort:hover { color: var(--fl-text); }
+}
+
+/* Ellipsis slot. Auto table layout ignores max-width on cells, so truncation
+   is capped on the text itself: <span class="fl-data-table__truncate"
+   style="max-width:140px">. Use it in body cells too — then the column can be
+   narrower than its longest value. */
+.fl-data-table__truncate {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The arrow's box is always reserved (opacity only) so sorting never reflows
+   the header. One up-arrow mask, rotated for descending. */
+.fl-data-table__sort::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8z'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0;
+}
+
+.fl-data-table th[aria-sort="ascending"] .fl-data-table__sort::after,
+.fl-data-table th[aria-sort="descending"] .fl-data-table__sort::after {
+  opacity: 1;
+}
+
+.fl-data-table th[aria-sort="descending"] .fl-data-table__sort::after {
+  transform: rotate(180deg);
+}
+
+.fl-data-table th[aria-sort="ascending"],
+.fl-data-table th[aria-sort="descending"] {
+  color: var(--fl-text);
+}
+
+/* Toolbar — filter chips sit directly above the header row (M2's placement,
+   and the reference shows them inside the container). */
+.fl-data-table__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fl-space-2);
+  padding: var(--fl-space-2) var(--fl-space-3) 0;
+}
+
+/* Footer — rows-per-page, range, pager. Right-aligned like the reference;
+   wraps to two lines on phones. */
+.fl-data-table__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--fl-space-2) var(--fl-space-3);
+  padding: var(--fl-space-1) var(--fl-space-2) var(--fl-space-1) var(--fl-space-3);
+  font-size: var(--fl-fs-body);
+}
+
+.fl-data-table__range {
+  color: var(--fl-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.fl-data-table__perpage {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  min-height: 48px;
+  margin-right: auto;   /* the reference leads the footer with this control */
+  color: var(--fl-text-secondary);
+}
+
+/* Compact native select + a CSS caret that follows --fl-icon (a bare
+   <select> cannot host a pseudo-element, so the wrapper draws it). */
+.fl-data-table__select {
+  position: relative;
+  display: inline-flex;
+}
+
+.fl-data-table__select select {
+  appearance: none;
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius);
+  background: var(--fl-surface);
+  color: var(--fl-text);
+  font-size: var(--fl-fs-body);
+  cursor: pointer;
+}
+
+.fl-data-table__select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  background: var(--fl-icon);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.fl-data-table__select select:focus-visible { outline-offset: 0; }
+
+/* Pager: four 48px controls. Enabled = <a href>; unavailable = a span with
+   role="link" aria-disabled="true" (not focusable, still announced). */
+.fl-data-table__pager {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fl-data-table__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--fl-text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Direction glyphs, drawn (no icon font): default is "previous". */
+.fl-data-table__page::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fl-data-table__page--first::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.41 16.59 13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.41 16.59 13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z'/%3E%3C/svg%3E");
+}
+
+.fl-data-table__page--next::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z'/%3E%3C/svg%3E");
+}
+
+.fl-data-table__page--last::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.59 7.41 10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.59 7.41 10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z'/%3E%3C/svg%3E");
+}
+
+@media (hover: hover) {
+  .fl-data-table__page:not([aria-disabled="true"]):hover {
+    background: var(--fl-hover);
+    color: var(--fl-text);
+  }
+}
+
+.fl-data-table__page[aria-disabled="true"] {
+  color: var(--fl-disabled);
+  cursor: default;
 }
