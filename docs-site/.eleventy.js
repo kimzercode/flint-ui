@@ -13,6 +13,11 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/vendor/demos/*": "demos/" });
 
   // Docs-only assets (companion files to the vendored ones in docs/css, docs/js)
+  // Samples are copied straight from the repo (they are already plain static
+  // files — vendoring them would put a README.md through the markdown
+  // pipeline).
+  eleventyConfig.addPassthroughCopy({ "../samples": "samples" });
+
   eleventyConfig.addPassthroughCopy({ "src/css/*": "css/" });
   eleventyConfig.addPassthroughCopy({ "src/js/*": "js/" });
 

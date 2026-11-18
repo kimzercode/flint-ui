@@ -113,9 +113,10 @@ lead: Compositions of existing components — no new CSS in the library, just th
 
 <section class="docs-section">
   <h2 id="r-keep">Keep-style app shell</h2>
-  <p>The form factor Google Keep web uses, assembled from the 0.5 components —
-     this is the same composition the <code>samples/</code> notes app is
-     built on. Nothing here is new CSS beyond the two recipes above:</p>
+  <p>The form factor Google Keep web uses, assembled from the 0.5 components.
+     Nothing here is new CSS beyond the two recipes above — and
+     <a href="../samples/notes/index.html">samples/notes</a> is the whole
+     thing built for real:</p>
   <table class="docs-table">
     <thead>
       <tr><th>Region</th><th>Mobile (&lt;905px)</th><th>Desktop (≥905px)</th><th>Component</th></tr>
@@ -123,9 +124,9 @@ lead: Compositions of existing components — no new CSS in the library, just th
     <tbody>
       <tr>
         <td>Navigation</td>
-        <td>Bottom tab bar</td>
-        <td>Permanent 80px icon rail</td>
-        <td><a href="components/rail.html">Rail shell</a> — one markup, CSS flips it</td>
+        <td>Off-canvas drawer over a scrim</td>
+        <td>Permanent 280px drawer column</td>
+        <td><a href="components/drawer.html">Drawer shell</a> — one markup, CSS flips it</td>
       </tr>
       <tr>
         <td>Top bar</td>
@@ -144,18 +145,19 @@ lead: Compositions of existing components — no new CSS in the library, just th
       </tr>
       <tr>
         <td>Note editor</td>
-        <td colspan="2" style="text-align:center">Centered dialog (Keep web's editing surface)</td>
-        <td><a href="components/dialog.html">Dialog</a> — <code>--fullscreen</code> for full-screen mobile flows</td>
+        <td>Full-screen dialog (fills the viewport)</td>
+        <td>560px dialog card (the M2 type swap)</td>
+        <td><a href="components/dialog.html">Dialog</a> — one <code>--fullscreen</code> DOM, CSS swaps it</td>
       </tr>
       <tr>
-        <td>Delete confirm</td>
-        <td colspan="2" style="text-align:center">Centered dialog</td>
-        <td>Dialog</td>
+        <td>Delete</td>
+        <td colspan="2" style="text-align:center">No confirm — snackbar Undo is the safety net</td>
+        <td><a href="components/snackbar.html">Snackbar</a></td>
       </tr>
       <tr>
         <td>Per-note menu</td>
-        <td colspan="2" style="text-align:center">⋮ dropdown on the card</td>
-        <td><a href="components/menu.html">Menu</a></td>
+        <td colspan="2" style="text-align:center">⋮ dropdown in the editor header</td>
+        <td><a href="components/menu.html">Menu</a> — a popover <em>inside</em> the dialog (a modal makes its siblings inert)</td>
       </tr>
       <tr>
         <td>Status / undo</td>
@@ -164,17 +166,27 @@ lead: Compositions of existing components — no new CSS in the library, just th
       </tr>
       <tr>
         <td>Filters</td>
-        <td>Modal side sheet</td>
-        <td>Standard side sheet (or dialog)</td>
-        <td><a href="components/side-sheet.html">Side sheet</a></td>
+        <td colspan="2" style="text-align:center">Drawer rows (Notes / Archive / labels) + search pill</td>
+        <td><a href="components/drawer.html">Drawer</a> + <a href="components/text-fields.html">Text field</a></td>
       </tr>
     </tbody>
   </table>
-  <p>A runnable skeleton of the whole table lives at
-     <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a> — open it
-     at both widths and watch the shell flip. The app logic (notes data,
-     undo, discard-blank) is author code by contract; the recipe supplies
-     every piece of chrome.</p>
+  <p><a href="../samples/notes/index.html">samples/notes</a> is this table
+     built for real — 6 seed notes, views, labels, search, a live editor,
+     duplicate, archive and a working Undo. The reduced skeleton is still
+     <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a>. The app
+     logic (notes data, undo, discard-blank) is author code by contract; the
+     recipe supplies every piece of chrome.</p>
+  <p>It is plain HTML — no build step, no bundler, no dependency. Four tags
+     are the whole page:</p>
+  {% set sampleNote %}
+<!-- samples/notes/index.html -->
+<link rel="stylesheet" href="../../css/flint.css">
+<link rel="stylesheet" href="notes.css">
+<script src="../../js/flint.js" defer></script>
+<script src="notes.js" defer></script>
+{% endset %}
+  {{ snippet(sampleNote) }}
   {{ callout({
     variant: "info",
     title: "Why no master-detail split",
