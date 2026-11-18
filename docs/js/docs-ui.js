@@ -15,6 +15,10 @@
   var tabs = [].slice.call(doc.querySelectorAll("[data-fl-docs-tab]"));
   var panels = [].slice.call(doc.querySelectorAll("[data-fl-docs-panel]"));
   var tocItems = [].slice.call(doc.querySelectorAll("[data-fl-docs-toc-tab]"));
+  /* Declared before setTab() runs: setTab highlights the first visible TOC
+     entry, and a `var` declared further down is still undefined at that point
+     (hoisting) — which used to throw on every component page. */
+  var tocLinks = [].slice.call(doc.querySelectorAll("[data-fl-docs-toc] a"));
 
   function setTab(name) {
     tabs.forEach(function (tab) {
@@ -100,7 +104,6 @@
   });
 
   /* --- 3. TOC scrollspy ------------------------------------------------------ */
-  var tocLinks = [].slice.call(doc.querySelectorAll("[data-fl-docs-toc] a"));
   function markToc(link) {
     tocLinks.forEach(function (a) {
       var on = a === link;

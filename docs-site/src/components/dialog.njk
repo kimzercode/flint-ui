@@ -106,7 +106,8 @@ toc:
       <tr>
         <td><strong>Full-screen</strong></td>
         <td><code>fl-dialog--fullscreen</code> + <code>fl-dialog__header</code>
-            (close, title, confirming action in the top bar); body scrolls</td>
+            (close, title, confirming action in the top bar); body scrolls;
+            becomes the ordinary card at ≥600px</td>
         <td>The mobile form pattern — compose, settings sub-pages; content too
             big for a card</td>
       </tr>
@@ -230,6 +231,17 @@ toc:
         one.</li>
     <li><strong>Scroll lock:</strong> the page locks while any modal surface
         is open, restored on close.</li>
+    <li><strong>Full-screen dialogs swap type at 600px.</strong> M2:
+        <em>"a full-screen dialog can change into a simple dialog at larger
+        breakpoints."</em> Below 600px the surface fills the viewport with a
+        16dp app-bar header; above it, the same DOM renders as the ordinary
+        560px card with 24dp insets, and the header's
+        <code>data-fl-close</code> control moves to the trailing edge (the
+        simple-dialog arrangement). One structure, two arrangements — the
+        breakpoint is CSS, so no <code>matchMedia</code> and no duplicate
+        markup. Keep <code>data-fl-close</code> on the dismiss control of a
+        <code>fl-dialog__header</code>: that attribute is the contract the
+        re-order reads.</li>
     <li><strong>Animation:</strong> 150ms fade + scale in, slide/scale out,
         scrim fading on the same clock — all CSS,
         <code>prefers-reduced-motion</code> disables it entirely.</li>
@@ -332,7 +344,8 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
      list; every row is a submit button, so picking one closes and records its
      value. Rows are <code>fl-option</code> — the shared option row, 48px
      here (sheets set 56px on their surface), hover state layer, optional
-     leading icon — you supply the SVG:</p>
+     leading icon — the <code>.fl-icon</code> slot, which the library renders
+     as a placeholder until you supply a glyph:</p>
   {% set simpleMarkup %}
 <dialog class="fl-dialog" id="dlg-label" aria-labelledby="dlg-label-t">
   <div class="fl-dialog__surface">
@@ -387,13 +400,14 @@ document.querySelector("#dlg-rename").addEventListener("close", () => {
 {% endset %}
   {{ snippet(confirmationMarkup) }}
   <p>Full-screen — the mobile form pattern; the confirming action lives in
-     the header, the body scrolls beneath it:</p>
+     the header, the body scrolls beneath it. The same markup is a card above
+     600px, with the close control trailing:</p>
   {% set fullscreenMarkup %}
 <dialog class="fl-dialog fl-dialog--fullscreen" id="compose" aria-labelledby="compose-t">
   <div class="fl-dialog__surface">
     <div class="fl-dialog__header">
       <button class="fl-icon-btn" data-fl-close aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24"><!-- X icon --></svg>
+        <span class="fl-icon" aria-hidden="true"></span>
       </button>
       <h2 class="fl-dialog__title" id="compose-t">New message</h2>
       <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>

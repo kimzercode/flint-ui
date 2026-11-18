@@ -80,19 +80,19 @@
     <div class="fl-dialog__list">
       <form method="dialog">
         <button class="fl-option" value="finance" autofocus>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20.59 13.41l-8.17 8.17a2 2 0 0 1-2.83 0L2 14V2h12l7.41 7.41a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.5"/></svg>
+          <span class="fl-icon" aria-hidden="true"></span>
           Finance
         </button>
       </form>
       <form method="dialog">
         <button class="fl-option" value="personal">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="fl-icon" aria-hidden="true"></span>
           Personal
         </button>
       </form>
       <form method="dialog">
         <button class="fl-option" value="work">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fl-text-secondary)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          <span class="fl-icon" aria-hidden="true"></span>
           Work
         </button>
       </form>
@@ -130,14 +130,15 @@
   </div>
 </dialog>
 
-<!-- Full-screen dialog: the mobile form pattern. The confirming action lives
-     in the header (M2 full-screen idiom); the close button on the left; the
-     body scrolls beneath. -->
+<!-- Full-screen dialog: the mobile form pattern. Below 600px it fills the
+     viewport; above it becomes the ordinary card (M2's type swap), with the
+     close control moving to the trailing edge. The confirming action lives
+     in the header; the body scrolls beneath. -->
 <dialog class="fl-dialog fl-dialog--fullscreen" id="dlg-compose" aria-labelledby="dlg-compose-t">
   <div class="fl-dialog__surface">
     <div class="fl-dialog__header">
       <button class="fl-icon-btn" data-fl-close aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <span class="fl-icon" aria-hidden="true"></span>
       </button>
       <h2 class="fl-dialog__title" id="dlg-compose-t">New message</h2>
       <button class="fl-btn fl-btn--filled" form="compose-form" value="send">Send</button>

@@ -988,11 +988,19 @@ textarea.fl-field__input {
   background: var(--fl-surface);
   border-right: 1px solid var(--fl-border);
   transform: translateX(-102%); /* allow the 1px border to fully exit */
-  transition: transform 200ms var(--fl-ease);
+  /* Off-screen is not the same as gone: without this the closed drawer keeps
+     its links in the tab order and the accessibility tree. visibility flips
+     after the slide-out (0s 200ms) and instantly on open. */
+  visibility: hidden;
+  transition: transform 200ms var(--fl-ease), visibility 0s 200ms;
 }
 
 /* `fl-drawer-open` is toggled on <body> by flint.js (no elements needed) */
-body.fl-drawer-open .fl-drawer { transform: none; }
+body.fl-drawer-open .fl-drawer {
+  transform: none;
+  visibility: visible;
+  transition: transform 200ms var(--fl-ease);   /* visible before the slide-in starts */
+}
 body.fl-drawer-open { overflow: hidden; }
 
 .fl-drawer__header {
@@ -1040,6 +1048,7 @@ body.fl-drawer-open .fl-scrim { opacity: 1; pointer-events: auto; }
     width: auto;
     transform: none;
     transition: none;
+    visibility: visible;   /* pinned, never off-canvas */
   }
   .fl-scrim { display: none; }
 }
@@ -1455,6 +1464,43 @@ dialog.fl-dialog--fullscreen .fl-dialog__surface {
   max-height: none;   /* the cap is for the card; fullscreen fills the viewport */
   border: none;
   border-radius: 0;
+}
+
+/* The full-screen header is an app bar: 16dp insets (the card keeps 24dp). */
+dialog.fl-dialog--fullscreen .fl-dialog__header {
+  padding: var(--fl-space-3) var(--fl-space-3) 0;
+}
+
+/* M2: "a full-screen dialog can change into a simple dialog at larger
+   breakpoints." Below 600px the surface fills the viewport; above it is the
+   ordinary card, and the dismiss control moves to the trailing edge (M2's
+   simple-dialog anatomy). One DOM, two arrangements — no second structure. */
+@media (min-width: 600px) {
+  dialog.fl-dialog--fullscreen {
+    width: min(92vw, 560px);
+    height: fit-content;
+    transform: scale(0.96);
+  }
+  dialog.fl-dialog--fullscreen[open] {
+    inset: 0;
+    margin: auto;
+    transform: none;
+  }
+  @starting-style {
+    dialog.fl-dialog--fullscreen[open] { transform: scale(0.96); }
+  }
+  dialog.fl-dialog--fullscreen .fl-dialog__surface {
+    height: auto;
+    max-height: min(88dvh, 560px);
+    border: 1px solid var(--fl-border);
+    border-radius: var(--fl-radius-card);
+  }
+  /* Card insets again, and the M2 simple-dialog arrangement. Contract: the
+     header's dismiss control carries data-fl-close. */
+  dialog.fl-dialog--fullscreen .fl-dialog__header {
+    padding: var(--fl-space-4) var(--fl-space-4) 0;
+  }
+  dialog.fl-dialog--fullscreen .fl-dialog__header > [data-fl-close] { order: 2; }
 }
 
 /* Top bar of the full-screen dialog: close on the left, confirming action

@@ -325,6 +325,11 @@
     <li><strong>≥905px:</strong> the drawer is a permanent 280px grid column. The top bar spans both columns; only the content scrolls.</li>
     <li><strong>&lt;905px:</strong> the drawer is fixed off-canvas and slides in over a scrim. <code>flint.js</code> toggles a <code>fl-drawer-open</code> class on <code>&lt;body&gt;</code> and syncs <code>aria-expanded</code> on the open button.</li>
     <li><strong>Closing:</strong> scrim click, the close button, or <kbd>Escape</kbd>.</li>
+    <li><strong>Closed means gone:</strong> while off-canvas the drawer is
+        <code>visibility: hidden</code>, so its links leave the tab order and
+        the accessibility tree instead of lurking off-screen. Visibility flips
+        after the slide-out and immediately on open; the pinned ≥905px drawer
+        stays visible with no open state.</li>
     <li><strong>Manual control:</strong> <code>flint.drawer(true)</code> / <code>flint.drawer(false)</code>.</li>
     <li><strong>Selection:</strong> rows key off <code>aria-current="page"</code>; <code>flint.js</code> reflects it on click inside any <code>[data-fl-nav]</code> container. With server routing you set it yourself and skip JS entirely.</li>
     <li><strong>Links over buttons:</strong> rows can be <code>&lt;a href&gt;</code> — navigation still happens; the selected state is reflected.</li>
@@ -338,6 +343,9 @@
     <li>The nav has <code>aria-label="Primary"</code>; the drawer has <code>aria-label</code> so screen readers announce it as a landmark.</li>
     <li>The scrim is <code>aria-hidden="true"</code> — it is decoration, not a control.</li>
     <li>Rows are real <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code> elements — keyboard support is built in; <code>:focus-visible</code> gets the accent ring.</li>
+    <li>A closed off-canvas drawer is not focusable: skipping it is the
+        platform's behaviour, so no <code>inert</code> or <code>tabindex</code>
+        juggling is needed (and none is shipped).</li>
     <li>Icon placeholders and badges are <code>aria-hidden</code>; put meaning in the row text or the button label.</li>
     <li>Include <code>viewport-fit=cover</code> in your meta viewport for safe-area support.</li>
   </ul>
