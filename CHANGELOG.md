@@ -4,6 +4,38 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.5.1] — 2026-11-19
+
+A **sample layout pass**, plus one library fix it uncovered. No component API
+changed; the notes sample is the only thing rebuilt.
+
+### Fixed
+
+- **Pinned drawer stacked above overlays.** At ≥905px the drawer is an in-flow
+  grid item, but it kept the off-canvas `z-index: 40` — and a grid item's
+  z-index still applies. The snackbar (and any menu positioned over the drawer)
+  painted underneath it. The pinned drawer is now `z-index: auto`.
+
+### Changed
+
+- **Notes sample rebuilt against the Keep references**, in two chrome
+  arrangements that share one stylesheet and one script:
+  `samples/notes/index.html` (hamburger inside the search pill, note actions in
+  the meta footer) and `samples/notes/classic.html` (hamburger beside the pill,
+  actions in the editor's top bar).
+- The phone bar has **no visible title** — the search pill takes the title's
+  slot; the `<h1>` remains for heading navigation. The drawer names the app on
+  phones and its selected row names the view.
+- **Two-column masonry on phones** (240px minimum up to four columns above
+  600px), placed row-major by the sample; balanced CSS columns remain the no-JS
+  fallback. No compose bar: the FAB creates notes at every width.
+- **Borderless editor canvas** — naked title/body controls with `aria-label`s
+  instead of fields, a meta-footer hairline ("Edited …") and the note actions
+  there or in the top bar. Labels moved to a small radio-row dialog opened from
+  ⋮ → Labels….
+- Drawer: brand row on phones, labels caption, Archive in its own bottom group,
+  and a link between the two arrangements in the footer.
+
 ## [0.5.0] — 2026-11-18
 
 The **data display + app chrome** release: the components an app shell needs

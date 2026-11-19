@@ -10,32 +10,45 @@
 <script src="../../js/flint.js" defer></script>
 <script src="notes.js" defer></script>
 </head>
-<body class="fl-reset">
+<body class="fl-reset notes-app">
 
-<!-- One shell, two layouts: the drawer is off-canvas at every width today
-     (the permanent ≥905px column is a later step). -->
+<!-- Variant A — "Keep": the hamburger sits inside the search pill and the
+     editor's more button sits in the meta footer. classic.html is the same
+     app with those two controls in the classic places. One shell at every
+     width: the drawer is off-canvas below 905px and the pinned column above
+     it; there is no bottom nav and no compose bar. -->
 <div class="fl-shell-drawer">
 
-  <!-- Transparent bar (Keep's web idiom): the search pill is the anchor. -->
-  <header class="fl-top-bar fl-top-bar--transparent">
-    <button class="fl-icon-btn fl-only-mobile" type="button" data-fl-drawer-open
-            aria-label="Open navigation" aria-controls="notes-drawer" aria-expanded="false">
-      <span class="fl-icon" aria-hidden="true"></span>
-    </button>
-    <h1 class="fl-top-bar__title" id="view-title">Notes</h1>
+  <!-- No visible title: the search pill takes the title's slot, exactly as
+       Keep's phone bar does. The h1 stays for heading navigation. -->
+  <header class="fl-top-bar fl-top-bar--transparent notes-bar">
+    <span class="notes-brand"><span class="fl-icon" aria-hidden="true"></span>Flint Notes</span>
+    <h1 class="fl-top-bar__title notes-sr" id="view-title">Notes</h1>
     <div class="fl-field fl-top-bar__search">
       <div class="fl-field__box">
-        <span class="fl-field__icon--leading fl-icon" aria-hidden="true"></span>
+        <!-- Keep's phone bar puts the menu control inside the pill. It is a
+             real button in the field's leading slot (the library supports
+             interactive icons there); ≥905 the drawer is pinned, so the
+             magnifier replaces it. -->
+        <button class="fl-field__icon fl-field__icon--leading fl-only-mobile notes-search__menu"
+                type="button" data-fl-drawer-open
+                aria-label="Open navigation" aria-controls="notes-drawer" aria-expanded="false">
+          <span class="fl-icon" aria-hidden="true"></span>
+        </button>
+        <span class="fl-field__icon--leading fl-icon notes-search__glyph notes-search__glyph--pin"
+              aria-hidden="true"></span>
         <input class="fl-field__input" type="search" id="search"
                aria-label="Search notes" placeholder="Search notes">
       </div>
     </div>
   </header>
 
-  <aside class="fl-drawer" id="notes-drawer">
-    <div class="fl-drawer__header">
+  <aside class="fl-drawer notes-drawer" id="notes-drawer" aria-label="Navigation">
+    <!-- Phones only: the bar carries no title, so the drawer names the app.
+         ≥905 the bar's brand does that and this row is hidden. -->
+    <div class="fl-drawer__header notes-drawer__brand">
       <span class="fl-icon" aria-hidden="true"></span>
-      Notes
+      <span class="notes-drawer__brand-name">Flint Notes</span>
       <button class="fl-icon-btn fl-only-mobile" type="button" data-fl-drawer-close
               aria-label="Close navigation">
         <span class="fl-icon" aria-hidden="true"></span>
@@ -49,12 +62,7 @@
         <button class="fl-nav-item" type="button" data-view="notes" aria-current="page">
           <span class="fl-icon" aria-hidden="true"></span> Notes
         </button>
-        <button class="fl-nav-item" type="button" data-view="archive">
-          <span class="fl-icon" aria-hidden="true"></span> Archive
-        </button>
       </nav>
-
-      <hr class="fl-divider" aria-hidden="true">
 
       <p class="fl-section-label fl-drawer__section">Labels</p>
       <nav class="fl-nav" aria-label="Labels">
@@ -68,10 +76,20 @@
           <span class="fl-icon" aria-hidden="true"></span> Ideas
         </button>
       </nav>
+
+      <hr class="fl-divider" aria-hidden="true">
+
+      <nav class="fl-nav" aria-label="More views">
+        <button class="fl-nav-item" type="button" data-view="archive">
+          <span class="fl-icon" aria-hidden="true"></span> Archive
+        </button>
+      </nav>
     </div>
 
-    <div class="fl-drawer__footer">
-      <span class="fl-icon" aria-hidden="true"></span>
+    <div class="fl-drawer__footer notes-drawer__footer">
+      <!-- The two pages are one app with two chrome arrangements; this link
+           is the honest way to compare them. -->
+      <a class="notes-drawer__switch" href="classic.html">Classic layout →</a>
       <span class="notes-drawer__note">In-memory sample — reload resets it</span>
     </div>
   </aside>
@@ -82,7 +100,7 @@
     <!-- The seed is markup, not JS: with scripting off the list still renders
          (the cards are buttons, so nothing opens — documented gap). notes.js
          reads these notes into its model on load. -->
-    <div class="fl-card-grid notes-grid" id="grid">
+    <div class="notes-grid" id="grid">
       <button class="fl-card" type="button" data-note data-id="1" data-meta="Edited today, 9:12" data-label="Personal">
         <span class="fl-card__title">Grocery list</span>
         <span class="fl-card__text">eggs, oat milk, spinach, coffee beans, sourdough — ask Mia about the market cheese</span>
@@ -113,7 +131,7 @@
         <span class="fl-card__text">plant watering tracker with per-plant schedules and a photo log</span>
         <span class="fl-chip">Ideas</span>
       </button>
-      <button class="fl-card" type="button" data-note data-id="7" data-meta="Edited Sep 3" data-label="Work" data-archived>
+      <button class="fl-card" type="button" data-note data-id="7" data-meta="Edited Sep 3" data-label="Work" data-archived hidden>
         <span class="fl-card__title">Q3 planning</span>
         <span class="fl-card__text">Two themes: the data table and the notes rebuild. Everything else waits.</span>
         <span class="fl-chip">Work</span>
@@ -134,59 +152,31 @@
 
 <!-- Editor: the M2 full-screen dialog. Below 600px it fills the viewport;
      above it is a 560px card (the library's type swap). The promoting action
-     is Close — edits are live, there is no Save button. -->
-<dialog class="fl-dialog fl-dialog--fullscreen" id="editor" aria-labelledby="editor-title">
+     is Close — edits are live, there is no Save button. The body is a canvas,
+     not a field: the title and body are naked controls (see notes.css). -->
+<dialog class="fl-dialog fl-dialog--fullscreen notes-editor" id="editor" aria-labelledby="editor-title">
   <div class="fl-dialog__surface">
     <div class="fl-dialog__header">
       <button class="fl-icon-btn" type="button" data-fl-close aria-label="Close note">
         <span class="fl-icon" aria-hidden="true"></span>
       </button>
-      <h2 class="fl-dialog__title" id="editor-title">Edit note</h2>
+      <h2 class="fl-dialog__title notes-sr" id="editor-title">Edit note</h2>
+    </div>
+
+    <div class="fl-dialog__body">
+      <input class="notes-canvas__title" id="edit-title" aria-label="Title" placeholder="Title">
+      <textarea class="notes-canvas__body" id="edit-body" aria-label="Note" placeholder="Note"></textarea>
+    </div>
+
+    <!-- The meta line and the note's actions share the footer: Keep's phone
+         editor keeps both at the bottom. classic.html moves the more button
+         to the header instead. -->
+    <div class="fl-dialog__actions notes-editor__footer">
+      <p class="notes-editor__meta" id="edit-meta">Edited…</p>
       <button class="fl-icon-btn" type="button" popovertarget="note-menu"
               aria-haspopup="menu" aria-expanded="false" aria-label="Note actions">
         <span class="fl-icon" aria-hidden="true"></span>
       </button>
-    </div>
-
-    <div class="fl-dialog__body">
-      <div class="fl-field">
-        <label class="fl-field__label" for="edit-title">Title</label>
-        <div class="fl-field__box">
-          <input class="fl-field__input" id="edit-title" placeholder="Note title">
-        </div>
-      </div>
-
-      <fieldset class="notes-labels">
-        <legend class="fl-field__label">Label</legend>
-        <div class="fl-chip-set">
-          <label class="fl-chip">
-            <input type="radio" class="fl-chip__input" name="label" value="" checked>
-            None
-          </label>
-          <label class="fl-chip">
-            <input type="radio" class="fl-chip__input" name="label" value="Work">
-            Work
-          </label>
-          <label class="fl-chip">
-            <input type="radio" class="fl-chip__input" name="label" value="Personal">
-            Personal
-          </label>
-          <label class="fl-chip">
-            <input type="radio" class="fl-chip__input" name="label" value="Ideas">
-            Ideas
-          </label>
-        </div>
-      </fieldset>
-
-      <div class="fl-field">
-        <label class="fl-field__label" for="edit-body">Note</label>
-        <div class="fl-field__box">
-          <textarea class="fl-field__input fl-field__input--grow" id="edit-body"
-                    placeholder="Take a note…"></textarea>
-        </div>
-      </div>
-
-      <p class="notes-editor__meta" id="edit-meta">Edited…</p>
     </div>
   </div>
 
@@ -194,17 +184,40 @@
        everything outside it inert, so a sibling popover opens but cannot be
        clicked. Author code closes it on selection (M2). -->
   <div class="fl-menu" id="note-menu" popover aria-label="Note actions">
-    <button class="fl-option" role="menuitem" type="button" data-act="archive">
-      <span class="fl-icon" aria-hidden="true"></span>
-      <span id="menu-archive">Archive</span>
+    <button class="fl-option" role="menuitem" type="button" data-act="labels">
+      <span class="fl-icon" aria-hidden="true"></span> Labels…
     </button>
     <button class="fl-option" role="menuitem" type="button" data-act="duplicate">
       <span class="fl-icon" aria-hidden="true"></span> Duplicate
+    </button>
+    <button class="fl-option" role="menuitem" type="button" data-act="archive">
+      <span class="fl-icon" aria-hidden="true"></span>
+      <span id="menu-archive">Archive</span>
     </button>
     <hr>
     <button class="fl-option" role="menuitem" type="button" data-act="delete">
       <span class="fl-icon" aria-hidden="true"></span> Delete
     </button>
+  </div>
+</dialog>
+
+<!-- Label picker: the small radio-row dialog Keep opens from the note menu.
+     It is a second modal on top of the editor (the platform stacks them);
+     Cancel discards, Save writes the label back to the open note. -->
+<dialog class="fl-dialog notes-labels" id="labels-dialog" aria-labelledby="labels-title">
+  <div class="fl-dialog__surface">
+    <h2 class="fl-dialog__title" id="labels-title">Labels</h2>
+    <form class="fl-dialog__list" method="dialog" id="labels-form"
+          role="radiogroup" aria-labelledby="labels-title">
+      <label class="fl-option"><input type="radio" class="fl-radio" name="label" value=""> None</label>
+      <label class="fl-option"><input type="radio" class="fl-radio" name="label" value="Work"> Work</label>
+      <label class="fl-option"><input type="radio" class="fl-radio" name="label" value="Personal"> Personal</label>
+      <label class="fl-option"><input type="radio" class="fl-radio" name="label" value="Ideas"> Ideas</label>
+    </form>
+    <div class="fl-dialog__actions">
+      <button class="fl-btn fl-btn--text" type="button" data-fl-close>Cancel</button>
+      <button class="fl-btn fl-btn--filled" type="submit" form="labels-form" value="save">Save</button>
+    </div>
   </div>
 </dialog>
 

@@ -249,14 +249,19 @@
         native element (anchor navigates, button clicks).</li>
     <li><strong>240px floor:</strong> three cards fill a 960px reading column;
         phones get one column without a media query. Raise the floor for
-        wider cards, never below ~200px.</li>
+        wider cards, never below ~200px. The notes sample keeps Keep's two
+        columns below 600px instead, because notes are narrow at 390px.</li>
     <li><strong>Selection tint:</strong> for selectable cards combine with the
         checkbox lesson from the <a href="components/lists.html">Lists</a>
         page: <code>.fl-card:has(.fl-check:checked)</code> → tint. The
         checkbox owns the state, the card reads it.</li>
-    <li><strong>Masonry is a gap, deliberately:</strong> variable-height card
-        walls need <code>grid-template-rows: masonry</code>, which no engine
-        ships. Equal-height rows are the honest web version.</li>
+    <li><strong>Masonry:</strong> variable-height walls need
+        <code>grid-template-rows: masonry</code>, which no engine ships. Two
+        honest paths: balanced CSS columns (<code>columns: 4 240px</code>,
+        zero JS, top-down order) or ~20 lines that place each card in the
+        shortest column (row-major, what the notes sample does — its CSS
+        columns stay as the no-JS fallback). Equal-height rows remain the
+        simplest version; none of the three is a library component.</li>
   </ul>
 </section>
 
@@ -313,7 +318,9 @@
   <p>The form factor Google Keep web uses, assembled from the 0.5 components.
      Nothing here is new CSS beyond the two recipes above — and
      <a href="../samples/notes/index.html">samples/notes</a> is the whole
-     thing built for real:</p>
+     thing built for real. It ships in two chrome arrangements
+     (<a href="../samples/notes/classic.html">classic</a> beside it), sharing
+     one stylesheet and one script:</p>
   <table class="docs-table">
     <thead>
       <tr><th>Region</th><th>Mobile (&lt;905px)</th><th>Desktop (≥905px)</th><th>Component</th></tr>
@@ -327,13 +334,13 @@
       </tr>
       <tr>
         <td>Top bar</td>
-        <td colspan="2" style="text-align:center">Transparent, search pill as the anchor</td>
+        <td colspan="2" style="text-align:center">Transparent, no visible title — the search pill takes the slot; the hamburger sits inside it (Keep) or beside it (classic)</td>
         <td><a href="components/top-app-bar.html">Top app bar</a> — <code>--transparent</code> + <code>__search</code></td>
       </tr>
       <tr>
         <td>Content</td>
-        <td colspan="2" style="text-align:center">Card grid (recipe above)</td>
-        <td><code>fl-card</code> + <code>.fl-card-grid</code></td>
+        <td colspan="2" style="text-align:center">Card wall, two columns on phones (masonry placement in the sample; CSS columns without JS)</td>
+        <td><code>fl-card</code> + the grid recipe above</td>
       </tr>
       <tr>
         <td>Create</td>
@@ -344,7 +351,7 @@
         <td>Note editor</td>
         <td>Full-screen dialog (fills the viewport)</td>
         <td>560px dialog card (the M2 type swap)</td>
-        <td><a href="components/dialog.html">Dialog</a> — one <code>--fullscreen</code> DOM, CSS swaps it</td>
+        <td><a href="components/dialog.html">Dialog</a> — one <code>--fullscreen</code> DOM, CSS swaps it; the body is a borderless canvas (sample CSS, not a field)</td>
       </tr>
       <tr>
         <td>Delete</td>
@@ -353,7 +360,7 @@
       </tr>
       <tr>
         <td>Per-note menu</td>
-        <td colspan="2" style="text-align:center">⋮ dropdown in the editor header</td>
+        <td colspan="2" style="text-align:center">⋮ dropdown in the editor's meta footer (Keep) or top bar (classic)</td>
         <td><a href="components/menu.html">Menu</a> — a popover <em>inside</em> the dialog (a modal makes its siblings inert)</td>
       </tr>
       <tr>
@@ -369,11 +376,14 @@
     </tbody>
   </table>
   <p><a href="../samples/notes/index.html">samples/notes</a> is this table
-     built for real — 6 seed notes, views, labels, search, a live editor,
-     duplicate, archive and a working Undo. The reduced skeleton is still
+     built for real — 6 seed notes, views, labels, search, a borderless
+     editor, duplicate, archive and a working Undo. Its
+     <a href="../samples/notes/classic.html">classic arrangement</a> is the
+     same app with the hamburger beside the pill and the note menu in the
+     editor bar. The reduced skeleton is still
      <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a>. The app
-     logic (notes data, undo, discard-blank) is author code by contract; the
-     recipe supplies every piece of chrome.</p>
+     logic (notes data, masonry, undo, discard-blank) is author code by
+     contract; the recipe supplies every piece of chrome.</p>
   <p>It is plain HTML — no build step, no bundler, no dependency. Four tags
      are the whole page:</p>
   

@@ -1,21 +1,110 @@
 /* Notes sample — author CSS only. Everything that is chrome (bars, drawer,
-   cards, fields, chips, dialog, menu, snackbar, FAB) is Flint; this file is the
-   handful of things the library deliberately does not own: the grid rhythm,
-   the card's preview clamp, the empty state and two drawer details. */
+   cards, fields, chips, dialogs, menus, snackbar, FAB) is Flint; this file is
+   the handful of things the library deliberately does not own: the grid
+   rhythm, the card's preview clamp, the note canvas inside the editor, the
+   empty state and the drawer's own details.
 
-/* The FAB floats over the scroll area, so the list ends above it instead of
-   hiding its last row underneath (Keep does the same). */
+   Two pages share this file: index.html (Keep's chrome) and classic.html
+   (the classic arrangement). They differ only in where two controls sit —
+   the hamburger (inside or beside the search pill) and the editor's more
+   button (meta footer or top bar) — so there is no variant selector here;
+   each page's markup decides, and every rule below is shared. */
+
+/* --- Shell --------------------------------------------------------------- *
+ * The list is the app's surface: the content column is fluid so the masonry
+ * fills a wide window (Keep's web grid), and the last row clears the FAB. */
 .fl-content { padding-bottom: calc(72px + var(--fl-space-3)); }
 
-/* Card grid: the Recipes page's two-line recipe, verbatim. One column below
-   ~600px, two across the drawer shell's reading column. */
-.notes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--fl-space-2);
-  align-items: start;
+@media (min-width: 905px) {
+  .fl-content { max-width: none; margin: 0; padding: var(--fl-space-4); }
+  .fl-fab { right: var(--fl-space-4); }   /* aligns with the content edge */
+  /* Keep's web toast clears the pinned column: the drawer owns the first
+     280px, so the snackbar starts where the notes do. */
+  .notes-app .fl-snackbar { left: calc(280px + var(--fl-space-2)); }
 }
-.notes-grid .fl-card { margin-top: 0; }   /* the grid owns the gap */
+
+/* --- Top bar ------------------------------------------------------------- *
+ * No title: the search pill takes the slot the title used to hold. On phones
+ * the bar is the default bar (hamburger + pill); ≥905 the brand sits over the
+ * drawer column and the pill starts where the content column does. */
+.notes-brand {
+  display: none;
+  align-items: center;
+  gap: var(--fl-space-3);
+  flex: 0 0 264px;
+  padding-inline-start: var(--fl-space-2);   /* icon lands on the drawer rows' 24px */
+  font-size: 22px;
+  color: var(--fl-text);
+}
+.notes-brand .fl-icon { width: 24px; height: 24px; }
+
+@media (min-width: 905px) {
+  .notes-bar { gap: 0; padding-inline-end: var(--fl-space-4); }
+  .notes-brand { display: flex; }
+  .notes-bar .fl-top-bar__search { margin-inline-start: var(--fl-space-4); }
+}
+
+/* The pill's leading slot. Both pages keep the magnifier once the drawer is
+   pinned; only index.html also has the hamburger inside the pill, and only
+   below 905px (the --pin modifier hides that copy when the drawer is fixed). */
+.notes-search__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--fl-field-h);
+}
+.notes-search__glyph--pin { display: none; }
+@media (min-width: 905px) {
+  .notes-search__glyph--pin { display: inline-flex; }
+}
+
+/* index.html's hamburger is a 48px circle inside the 48px pill: the generic
+   field-icon hover square would cut the pill's cap. */
+.notes-search__menu { border-radius: 999px; }
+
+/* Focus belongs to the input, not to the pill: a focused hamburger must not
+   draw the search field's ring (the library rings on :focus-within, which the
+   pill's button also matches). */
+.notes-bar .fl-field__box:focus-within { --_border: var(--fl-border); outline: none; }
+.notes-bar .fl-field__box:has(.fl-field__input:focus) {
+  --_border: var(--fl-accent);
+  outline: 2px solid var(--_border);
+  outline-offset: -2px;
+}
+
+/* --- Grid ---------------------------------------------------------------- *
+ * Keep's masonry: a short note does not leave a hole under its row, so the
+ * cards flow into the shortest column instead of a row-aligned grid. The
+ * stylesheet carries the zero-JS fallback (balanced CSS columns); notes.js
+ * upgrades it to row-major masonry when scripting is on, which is Keep's
+ * actual order. */
+.notes-grid {
+  --notes-gap: var(--fl-space-2);
+  columns: 2;
+  column-gap: var(--notes-gap);
+}
+@media (min-width: 600px) {
+  .notes-grid {
+    --notes-gap: var(--fl-space-3);
+    columns: 4 240px;   /* 240px minimum, at most four columns */
+  }
+}
+.notes-grid .fl-card {
+  break-inside: avoid;
+  margin: 0 0 var(--notes-gap);   /* the container owns the gap */
+}
+
+/* JS masonry: cards leave the flow and are placed by notes.js. */
+.notes-grid.is-masonry {
+  columns: auto;
+  position: relative;
+}
+.notes-grid.is-masonry .fl-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
 
 /* A note card is a preview: the body clamps, the title does not. The tag chip
    trails the preview like Keep's. */
@@ -28,8 +117,9 @@
 }
 .notes-grid .fl-chip { margin-top: var(--fl-space-2); }
 
-/* Empty / no-match state. M2 has no spec for it: Google's apps center a small
-   icon, a title and one line of help. */
+/* --- Empty / no-match state ---------------------------------------------- *
+ * M2 has no spec for it: Google's apps center a small icon, a title and one
+ * line of help. */
 .notes-empty {
   display: flex;
   flex-direction: column;
@@ -54,39 +144,123 @@
   color: var(--fl-text-secondary);
 }
 
-/* ≥905px the drawer is the permanent column. Its own header (logo + app name)
-   would duplicate the bar's title, which already names the current view — so
-   the pinned drawer starts with its rows, like Keep's. On phones the bar hides
-   its title behind the hamburger, so the drawer header stays. */
+/* --- Drawer -------------------------------------------------------------- *
+ * Brand row on phones (the bar has no title to carry the app name); hidden at
+ * 905px, where the bar's brand does that job. The rows are already the
+ * library's full-bleed rounded-right shape; Archive gets its own group. */
+.notes-drawer__brand .fl-icon { width: 24px; height: 24px; }
+.notes-drawer__brand-name { color: var(--fl-text); }
+.notes-drawer__brand .fl-icon-btn { margin-inline-start: auto; }
+
 @media (min-width: 905px) {
-  .fl-drawer__header { display: none; }
+  .notes-drawer__brand { display: none; }
 }
 
-/* Drawer details: a section caption inside the drawer (the library's label is
-   sized for content), and the footer's one-line note. */
-.fl-drawer__section {
-  margin: 0;
-  padding: var(--fl-space-1) var(--fl-space-3) var(--fl-space-2);
+.notes-drawer .fl-section-label {
+  margin: var(--fl-space-3) 0 var(--fl-space-1);
+  padding: 0 var(--fl-space-4);
+}
+.notes-drawer .fl-divider { margin-block: var(--fl-space-2); }
+
+.notes-drawer__footer {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--fl-space-2);
+}
+.notes-drawer__switch {
+  font-size: var(--fl-fs-caption);
+  color: var(--fl-accent);
 }
 .notes-drawer__note {
   font-size: var(--fl-fs-caption);
   color: var(--fl-text-secondary);
 }
 
-/* Label picker: a fieldset groups the radios natively, so no ARIA radiogroup
-   is needed — the legend names the group. */
-.notes-labels {
-  margin: var(--fl-space-4) 0 0;
+/* --- Editor canvas ------------------------------------------------------- *
+ * A note is not a field: the title and body are naked controls on the dialog
+ * surface (Keep's compose canvas). No box, no label, no ring — the caret is
+ * the focus indicator, exactly as in the reference. The dialog keeps the
+ * chrome (header, hairline, meta footer); the canvas owns only type. */
+.notes-editor .fl-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fl-space-2);
+  color: var(--fl-text);
+}
+
+.notes-canvas__title,
+.notes-canvas__body {
+  width: 100%;
+  margin: 0;
   padding: 0;
   border: 0;
-  min-width: 0;   /* fieldsets refuse to shrink below their content */
+  background: none;
+  font: inherit;
+  color: var(--fl-text);
+  caret-color: var(--fl-accent);
 }
-.notes-labels .fl-field__label { padding: 0; }   /* legend needs no extra inset */
-.notes-labels .fl-chip-set { margin-top: var(--fl-space-2); }
+.notes-canvas__title { flex: none; font-size: 22px; line-height: 28px; font-weight: 400; }
+.notes-canvas__body {
+  flex: 1 1 auto;
+  min-height: 120px;
+  font-size: var(--fl-fs-body);
+  line-height: 24px;
+  resize: none;
+}
+.notes-canvas__title:focus,
+.notes-canvas__body:focus { outline: none; }
 
-/* The editor's meta line ("Edited today, 9:12"). */
+.notes-canvas__title::placeholder,
+.notes-canvas__body::placeholder {
+  color: var(--fl-text-secondary);
+  opacity: 1;
+}
+
+/* M2's type swap gives the phone a full-bleed surface and the desktop a
+   card. A note reads better on a stable canvas, so the card takes a height
+   instead of hugging three lines; the body still scrolls when it outgrows. */
+@media (min-width: 600px) {
+  dialog.fl-dialog--fullscreen.notes-editor .fl-dialog__surface {
+    height: min(88dvh, 560px);
+  }
+}
+
+/* The header is an app bar, not a form: the back control stays left at every
+   width (the library's simple-dialog rule swaps it to the trailing edge). */
+dialog.fl-dialog--fullscreen.notes-editor .fl-dialog__header > [data-fl-close] { order: 0; }
+.notes-editor__more { margin-inline-start: auto; }
+
+/* Meta footer: one caption, one hairline, and (on index.html) the more
+   button. classic.html puts that button in the top bar instead. */
+.notes-editor__footer {
+  align-items: center;
+  border-top: 1px solid var(--fl-divider);
+  padding-block: var(--fl-space-2) var(--fl-space-3);
+}
 .notes-editor__meta {
-  margin: var(--fl-space-4) 0 0;
+  margin: 0 auto 0 0;
   font-size: var(--fl-fs-caption);
   color: var(--fl-text-secondary);
+}
+@media (min-width: 600px) {
+  .notes-editor__footer { padding-bottom: var(--fl-space-4); }
+}
+
+/* --- Labels picker ------------------------------------------------------- *
+ * Four rows and a decision: narrower than the 560px reading card. */
+dialog.notes-labels { width: min(92vw, 320px); }
+
+/* --- Utilities ----------------------------------------------------------- *
+ * The note's current view is still announced (the bar's h1 moved off-screen,
+ * it did not disappear): the drawer's selected row names the view visually. */
+.notes-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

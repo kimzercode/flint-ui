@@ -3,6 +3,10 @@
    supplies the components, the platform supplies the dialog/popover focus
    behaviour; nothing here re-implements either.
 
+   One script serves both pages (index.html, classic.html): the pages differ in
+   where the hamburger and the editor's more button sit, never in behaviour, so
+   nothing here looks for a layout.
+
    Deliberately out of scope (see README): persistence, reminders, pinning,
    colours, images, checklists, sharing, multiple labels per note, Trash. */
 (function () {
@@ -24,9 +28,15 @@
   var emptyText = $("empty-text");
   var menu = $("note-menu");
   var menuArchive = $("menu-archive");
+  var labelsDialog = $("labels-dialog");
+  var labelsForm = $("labels-form");
   var snack = $("snack");
   var snackMsg = $("snack-msg");
   var snackAction = $("snack-action");
+
+  /* The one element that opens the note menu — in the footer on index.html,
+     in the top bar on classic.html. */
+  var moreButton = document.querySelector('[popovertarget="note-menu"]');
 
   /* The three labels are a fixed set — no label CRUD in a sample. They exist to
      exercise the chip component and view filtering, nothing more. */
@@ -35,12 +45,11 @@
                 personal: "Personal", ideas: "Ideas" };
 
   /* --- Model ------------------------------------------------------------- *
-     The seed is the markup, not a second copy of it: the six notes above are
+     The seed is the markup, not a second copy of it: the notes above are
      converted to objects on load, then the grid is re-rendered from the model.
      Editing the HTML seed is the only place to change the sample data. */
   var nextId = 1;
   var notes = [].map.call(grid.querySelectorAll("[data-note]"), function (el) {
-    var tag = el.querySelector(".fl-chip");
     var note = {
       id: parseInt(el.getAttribute("data-id"), 10) || nextId,
       title: el.querySelector(".fl-card__title").textContent.trim(),
@@ -106,6 +115,56 @@
     return el;
   }
 
+  /* --- Masonry ----------------------------------------------------------- *
+     Keep's grid packs cards into the shortest column, row-major. CSS cannot
+     say that (columns flow top-down, grid aligns rows), so the sample places
+     the cards itself; the stylesheet's balanced columns are the no-JS
+     fallback. The gap comes from CSS, so both layouts stay in step. */
+  var MASONRY_MIN = 240;
+  var masonryFrame = 0;
+
+  function layoutGrid() {
+    var cards = [].slice.call(grid.querySelectorAll("[data-note]"));
+    grid.classList.add("is-masonry");
+
+    if (!cards.length || !grid.clientWidth) {
+      grid.style.height = "0px";
+      return;
+    }
+
+    var gap = parseFloat(getComputedStyle(grid).getPropertyValue("--notes-gap")) || 0;
+    var width = grid.clientWidth;
+    var columns = window.matchMedia("(min-width: 600px)").matches
+      ? Math.max(1, Math.min(4, Math.floor((width + gap) / (MASONRY_MIN + gap))))
+      : 2;
+    var columnWidth = (width - (columns - 1) * gap) / columns;
+
+    cards.forEach(function (card) { card.style.width = columnWidth + "px"; });
+
+    var heights = [];
+    for (var i = 0; i < columns; i++) heights.push(0);
+
+    cards.forEach(function (card) {
+      var shortest = heights.indexOf(Math.min.apply(null, heights));
+      card.style.transform = "translate(" +
+        Math.round(shortest * (columnWidth + gap)) + "px," +
+        Math.round(heights[shortest]) + "px)";
+      heights[shortest] += card.offsetHeight + gap;
+    });
+
+    grid.style.height = Math.round(Math.max.apply(null, heights) - gap) + "px";
+  }
+
+  function layoutSoon() {
+    if (masonryFrame) return;
+    masonryFrame = requestAnimationFrame(function () {
+      masonryFrame = 0;
+      layoutGrid();
+    });
+  }
+
+  window.addEventListener("resize", layoutSoon);
+
   function render() {
     var shown = notes.filter(inView);
 
@@ -118,7 +177,7 @@
     if (nothing) {
       if (notes.length === 0) {
         emptyTitle.textContent = "No notes yet";
-        emptyText.textContent = "Notes you create appear here. Press the button below to start one.";
+        emptyText.textContent = "Notes you create appear here. Press the button in the corner to start one.";
       } else if (query) {
         emptyTitle.textContent = "No matching notes";
         emptyText.textContent = "Try a different word, or clear the search.";
@@ -136,6 +195,7 @@
 
     viewTitle.textContent = VIEWS[view];
     fab.hidden = view === "archive";   /* you cannot create an archived note */
+    layoutGrid();
   }
 
   /* --- Views & search ----------------------------------------------------- */
@@ -157,12 +217,6 @@
   });
 
   /* --- Editor ------------------------------------------------------------- */
-  function setLabelChips(label) {
-    [].forEach.call(editor.querySelectorAll('input[name="label"]'), function (radio) {
-      radio.checked = radio.value === (label || "");
-    });
-  }
-
   function openEditor(note, isNew, invoker) {
     current = note;
     isNewBlank = !!isNew;
@@ -171,7 +225,6 @@
     metaLine.textContent = note.meta;
     editorTitle.textContent = isNew ? "New note" : "Edit note";
     menuArchive.textContent = note.archived ? "Unarchive" : "Archive";
-    setLabelChips(note.label);
     flint.dialog.open(editor, invoker);
     (isNew ? titleInput : bodyInput).focus();
   }
@@ -192,11 +245,7 @@
     }
   });
 
-  editor.addEventListener("change", function (e) {
-    if (current && e.target.name === "label") current.label = e.target.value;
-  });
-
-  /* Any close path — the close control, Escape, a scrim click — lands here.
+  /* Any close path — the back control, Escape, a scrim click — lands here.
      A brand-new note nobody typed into is discarded, not left as "Untitled". */
   editor.addEventListener("close", function () {
     var note = current;
@@ -234,6 +283,30 @@
     openEditor(note, true, fab);
   });
 
+  /* --- Labels picker ------------------------------------------------------ *
+     A second modal over the editor: opening it must not close the note, and
+     Save writes the chosen label back to the note that is already open. */
+  var labelRadios = [].slice.call(labelsForm.querySelectorAll('input[name="label"]'));
+
+  function openLabels() {
+    if (!current) return;
+    labelRadios.forEach(function (radio) {
+      radio.checked = radio.value === (current.label || "");
+    });
+    flint.dialog.open(labelsDialog, moreButton);
+  }
+
+  labelsDialog.addEventListener("close", function () {
+    var save = labelsDialog.returnValue === "save";
+    labelsDialog.returnValue = "";   /* the next open decides again */
+    if (!save || !current) return;
+    var picked = labelsForm.querySelector('input[name="label"]:checked');
+    current.label = picked ? picked.value : "";
+    current.meta = "Edited just now";
+    metaLine.textContent = current.meta;
+    log("label:" + (current.label ? current.label.toLowerCase() : "none"));
+  });
+
   /* --- Snackbar ----------------------------------------------------------- */
   function showSnack(message, label, run, actionLog) {
     pending = { run: run, log: actionLog };
@@ -257,7 +330,8 @@
     menu.hidePopover();          /* menus dismiss on selection (M2) */
     if (!current) return;
     var act = item.getAttribute("data-act");
-    if (act === "archive") archiveCurrent();
+    if (act === "labels") openLabels();
+    else if (act === "archive") archiveCurrent();
     else if (act === "duplicate") duplicateCurrent();
     else if (act === "delete") deleteCurrent();
   });

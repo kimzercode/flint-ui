@@ -1,34 +1,46 @@
 # Notes — the 0.5 acceptance sample
 
 A small note-taking app built **entirely on Flint** — no hand-rolled chrome, no
-icons of its own, no build step. It is the rebuild of `prototype/test-mdl2.html`
-and the gate for 0.5.0: if a component could not carry its part, it showed up
-here.
+icons of its own, no build step. It is the rebuild of
+`prototype/test-mdl2.html` and the gate for 0.5.0: if a component could not
+carry its part, it showed up here.
 
-Open `samples/notes/index.html` directly (it uses relative paths: `../../css`
-and `../../js`), or visit `/samples/notes/` on the docs site.
+**Two chrome arrangements, one app.** Both pages share `notes.css` and
+`notes.js`; they differ only in where two controls sit.
+
+| Page | Hamburger | Note actions (⋮) |
+|---|---|---|
+| `index.html` — Keep's arrangement | inside the search pill | in the editor's meta footer |
+| `classic.html` — classic arrangement | beside the pill, its own button | in the editor's top bar |
+
+Open either file directly (they use relative paths: `../../css` and `../../js`),
+or visit `/samples/notes/` and `/samples/notes/classic.html` on the docs site.
+The drawer footer links the two.
 
 ```
 samples/notes/
-  index.html   markup, the six-note seed, every component
-  notes.css    author CSS: grid rhythm, preview clamp, empty state (≈60 lines)
-  notes.js     app logic: model, views, editor, menu, undo (≈250 lines)
-  README.md    this file
+  index.html     Keep's chrome + the seed notes (the data lives here)
+  classic.html   the same app with the classic chrome
+  notes.css      author CSS: bar alignment, masonry fallback, canvas, empty state
+  notes.js       app logic: model, views, masonry, editor, labels, menu, undo
+  README.md      this file
 ```
 
 ## What each surface is made of
 
 | Surface | Component |
 |---|---|
-| App shell | `.fl-shell-drawer` — off-canvas drawer on phones, the permanent 280px column from 905px |
-| Top bar | `.fl-top-bar--transparent` + `.fl-top-bar__title` + the search pill (`fl-field` with a rounded box) |
-| Drawer | `.fl-drawer`, `.fl-drawer__header`, `.fl-nav`, `.fl-nav-item`, `.fl-section-label`, `.fl-divider`, `.fl-drawer__footer` |
-| Note grid | `.fl-card-grid` recipe: `.fl-card` as a real `<button>`, `.fl-card__title`, `.fl-card__text`, a `.fl-chip` tag |
-| New note | `.fl-fab` (`--fl-fab-inset` handles the tab-less app) |
-| Editor | `fl-dialog--fullscreen` + `.fl-dialog__header` (close · title · ⋮), `.fl-dialog__body` |
-| Fields | `.fl-field` + `.fl-field__label` + `.fl-field__box` + `.fl-field__input`; the body is a `--grow` textarea |
-| Label picker | `.fl-chip-set` with choice chips (native radios in a `fieldset`) |
-| Editor ⋮ menu | `.fl-menu[popover]` + `.fl-option` (anchored by `flint.js`) |
+| App shell | `.fl-shell-drawer` — off-canvas drawer below 905px, the permanent 280px column above |
+| Top bar | `.fl-top-bar--transparent` with **no visible title**: the search pill takes the title's slot. Brand at ≥905, aligned over the drawer column |
+| Search pill | `fl-field` with a rounded box; `index.html` also puts a real `<button>` in its leading slot |
+| Drawer | `.fl-drawer`, `.fl-drawer__header` (phones), `.fl-nav`, `.fl-nav-item`, `.fl-section-label`, `.fl-divider`, `.fl-drawer__footer` |
+| Note grid | `.fl-card` as a real `<button>`, `__title`, `__text`, a `.fl-chip` tag — packed into columns by `notes.js`, with balanced CSS columns as the no-JS fallback |
+| Create | `.fl-fab` at both widths (no compose bar) |
+| Editor | `fl-dialog--fullscreen` — full-bleed below 600px, a 560px card above. Header: back · screen-reader title · (⋮ on `classic.html`) |
+| Canvas | two naked controls (`notes-canvas__title` / `__body`), authored by the sample — not a field |
+| Meta footer | `.fl-dialog__actions` on a hairline: "Edited …" and, on `index.html`, the ⋮ button |
+| Label picker | a second `fl-dialog` with `.fl-option` radio rows, opened from ⋮ → Labels… |
+| Editor ⋮ menu | `.fl-menu[popover]` + `.fl-option`, a **child of the dialog** (a modal makes its siblings inert) |
 | Feedback | `.fl-snackbar` + `flint.snackbar.show/hide`, one action (Undo / Open) |
 | Empty state | composition (M2 has no empty-state component) |
 
@@ -39,37 +51,50 @@ light-dismiss and top-layer stacking come from `<dialog>` and `popover`.
 ## App logic (this is author code, by contract)
 
 - **State:** an in-memory array. Reload resets it. `?state=empty` starts with no
-  notes; `?state=snack` opens the snackbar preview.
-- **Seed = markup:** the notes in `index.html` are the seed; `notes.js` reads
-  them into the model on load, so the sample data lives in one place.
+  notes; `?state=snack` opens the snackbar preview. Both pages accept both.
+- **Seed = markup:** the notes in `index.html`/`classic.html` are the seed;
+  `notes.js` reads them into the model on load, so the sample data lives in one
+  place. The archived seed card carries `hidden`, so it does not show up in the
+  list with scripting off.
 - **Views:** Notes (unarchived), Archive (archived) and the three fixed labels
-  (Work / Personal / Ideas). The bar title names the current view.
+  (Work / Personal / Ideas). The drawer's selected row names the current view;
+  the bar has no visible title.
 - **Search** filters the current view live (title + body).
+- **Masonry:** cards are placed into the shortest column, row-major (Keep's
+  order). 2 columns below 600px, then 240px-minimum columns up to four. The
+  placement is ~20 lines in `notes.js`; without it the stylesheet's balanced
+  CSS columns still render the grid.
 - **Editor:** live two-way binding — there is no Save button, closing saves.
   A brand-new note nobody typed into is discarded, not left as "Untitled".
-- **Labels:** one per note, chosen with the chip radios. Creating a note while a
+- **Labels:** one per note, chosen in the picker dialog. Creating a note while a
   label view is active pre-assigns that label.
-- **⋮ menu:** Archive / Unarchive, Duplicate (inserts the copy right after the
-  original) and Delete. All three close the editor.
+- **⋮ menu:** Labels…, Duplicate (inserts the copy right after the original),
+  Archive/Unarchive and Delete. Everything but Labels closes the editor.
 - **Undo is real:** the snackbar's Undo re-inserts a deleted note at its old
   index or reverses an archive; after a duplicate, the action becomes **Open**
   and jumps to the copy. Same one-action sheet, no second structure.
 
 ## No JavaScript
 
-The seeded grid renders (it is markup), the shell renders, and the page is
-readable. Nothing opens the editor and the search does not filter: the app
-layer is `notes.js`. That is the honest no-JS state of a client-side sample —
-documented, not hidden.
+The seeded grid renders (it is markup, in balanced CSS columns), the shell
+renders, and the page is readable. Nothing opens the editor and the search does
+not filter: the app layer is `notes.js`. That is the honest no-JS state of a
+client-side sample — documented, not hidden.
 
 ## Accessibility
 
 - The editor is a native `<dialog>` opened with `showModal()`: focus trap,
   Escape, inert background and focus return are the platform's.
-- Every icon-only control has a label; the close control is labelled "Close
-  note", the ⋮ trigger "Note actions".
-- Labels are a native `fieldset`/`legend` + radios, so the group is named
-  without ARIA.
+- The bar's `<h1>` is visually hidden, not removed — heading navigation still
+  announces the current view, exactly as the drawer row does visually.
+- Every icon-only control has a label: "Open navigation", "Close navigation",
+  "Close note", "Note actions".
+- The editor canvas has no visible labels, so both controls carry `aria-label`
+  ("Title", "Note") and a placeholder. The caret is the focus indicator, as in
+  Keep (recorded deviation).
+- The label picker is a `form role="radiogroup"` whose rows are `<label>`s, so
+  the group is named and the whole row is the target; Save closes with
+  `method="dialog"`.
 - Opening an existing note focuses the body (the thing you most often change);
   a new note focuses the title. Closing returns focus to that note's card, or to
   the first card when the note left the view (archive, delete).
@@ -78,23 +103,29 @@ documented, not hidden.
 
 ## Deliberate deviations (recorded in `docs-site/NOTES.md`)
 
-1. The bar keeps a **view title** on phones — Keep hides it; three views share
-   one layout here, and the title is the orientation.
-2. **One card column below 600px**, not Keep's two: the documented 240px grid
-   floor gives ~20-character lines at 390px.
-3. The editor uses **outlined fields**, not Keep's borderless canvas. The
-   field's chrome is a library contract; a borderless variant is a 0.6
-   candidate, not a gate-time override.
-4. **FAB instead of the compose bar** — the compose bar's four actions (pen,
-   image, mic, checklist) are not in the library, and faking them would lie.
-5. **One label per note**, assigned inline. Keep allows several and opens a
-   separate picker.
-6. The editor header is **close · title · ⋮** (M2 full-screen anatomy) rather
-   than Keep's pin/reminder/archive icon row.
-7. **Archive is real; Trash is not.** Delete is undo-only, which keeps the
+1. **No view title in the bar.** Keep hides it too; here the drawer's selected
+   row names the view and the bar's `h1` is screen-reader-only.
+2. **The editor is a canvas, not a form.** The title and body are naked
+   controls composed by the sample; `.fl-field` still owns every field's chrome
+   and a borderless editor is not a field variant. The caret is the only focus
+   indicator (Keep's behaviour).
+3. **FAB instead of the compose bar**, at every width. The bar's four actions
+   (pen, image, mic, checklist) do not exist in the library; faking them would
+   lie.
+4. **Masonry is placed by the sample.** CSS columns balance but flow
+   top-down; a row-aligned grid leaves holes. The no-JS fallback is CSS
+   columns.
+5. **Two columns on phones**, Keep's grid, instead of the recipe's 240px floor.
+6. **No hamburger on desktop.** The drawer is pinned, so a toggle would be a
+   dead control; Keep's web bar has one because its drawer collapses.
+7. **One label per note**, chosen in a small dialog instead of Keep's inline
+   chip row.
+8. **Archive is real; Trash is not.** Delete is undo-only, which keeps the
    snackbar honest.
-8. Duplicating **closes the editor** so the snackbar (which cannot render above
+9. **Duplicating closes the editor** so the snackbar (which cannot render above
    a modal dialog) is visible. Keep keeps the editor open.
+10. **Two pages, not a switcher.** The chrome delta is markup placement, so
+    each page is plain HTML with no variant logic in CSS or JS.
 
 ## Out of scope (and why)
 

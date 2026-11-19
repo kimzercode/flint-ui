@@ -1120,6 +1120,10 @@ body.fl-drawer-open .fl-scrim { opacity: 1; pointer-events: auto; }
     transform: none;
     transition: none;
     visibility: visible;   /* pinned, never off-canvas */
+    /* The mobile drawer stacks above the scrim (z 40). Pinned, it is an
+       in-flow grid item — and a grid item's z-index still applies, which put
+       the column above the snackbar and menus. Back to the normal flow. */
+    z-index: auto;
   }
   .fl-scrim { display: none; }
 }
