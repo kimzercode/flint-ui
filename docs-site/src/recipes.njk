@@ -120,9 +120,9 @@ lead: Compositions of existing components — no new CSS in the library, just th
   <h2 id="r-keep">Keep-style app shell</h2>
   <p>The form factor Google Keep web uses, assembled from the 0.5 components.
      Nothing here is new CSS beyond the two recipes above — and
-     <a href="../samples/notes/index.html">samples/notes</a> is the whole
+     <a href="{{ assetRoot }}samples/notes/index.html">samples/notes</a> is the whole
      thing built for real. It ships in two chrome arrangements
-     (<a href="../samples/notes/classic.html">classic</a> beside it), sharing
+     (<a href="{{ assetRoot }}samples/notes/classic.html">classic</a> beside it), sharing
      one stylesheet and one script:</p>
   <table class="docs-table">
     <thead>
@@ -178,13 +178,13 @@ lead: Compositions of existing components — no new CSS in the library, just th
       </tr>
     </tbody>
   </table>
-  <p><a href="../samples/notes/index.html">samples/notes</a> is this table
+  <p><a href="{{ assetRoot }}samples/notes/index.html">samples/notes</a> is this table
      built for real — 6 seed notes, views, labels, search, a borderless
      editor, duplicate, archive and a working Undo. Its
-     <a href="../samples/notes/classic.html">classic arrangement</a> is the
+     <a href="{{ assetRoot }}samples/notes/classic.html">classic arrangement</a> is the
      same app with the hamburger beside the pill and the note menu in the
      editor bar. The reduced skeleton is still
-     <a href="../demos/recipe-keep.html">demos/recipe-keep.html</a>. The app
+     <a href="{{ assetRoot }}demos/recipe-keep.html">demos/recipe-keep.html</a>. The app
      logic (notes data, masonry, undo, discard-blank) is author code by
      contract; the recipe supplies every piece of chrome.</p>
   <p>It is plain HTML — no build step, no bundler, no dependency. Four tags
