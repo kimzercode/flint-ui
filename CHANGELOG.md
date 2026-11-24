@@ -4,13 +4,26 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
-## [0.5.1] — 2026-11-19
+## [0.5.1] — 2026-11-24
 
-A **sample layout pass**, plus one library fix it uncovered. No component API
-changed; the notes sample is the only thing rebuilt.
+A **sample layout pass** and the fixes it uncovered. No component API changed;
+the notes sample is the only thing rebuilt.
 
 ### Fixed
 
+- **Modal surfaces jumped during the close animation.** `fl-dialog`,
+  `fl-dialog--fullscreen`, `fl-sheet` and `fl-sidesheet` took their placement
+  from `[open]` rules. The exit transition keeps the element rendered after
+  `[open]` is removed, so the surface fell back to the UA's static position —
+  the 560px desktop card jumped to the top-left corner while fading out.
+  Placement now lives on the base selectors; the open state carries only
+  transform/opacity.
+- **Leading icon in the search pill.** The documented pattern is a
+  `.fl-field__icon` slot with the glyph inside. The notes sample instead gave a
+  bare `.fl-icon` the slot's 48px flex basis, stretching the placeholder into a
+  48×22 bar. The two notes pages, the top-bar demo, the Keep recipe and the
+  top-app-bar snippet now use the slot — a 22×22 glyph centred in 48px, with
+  the input starting at the slot's edge.
 - **Pinned drawer stacked above overlays.** At ≥905px the drawer is an in-flow
   grid item, but it kept the off-canvas `z-index: 40` — and a grid item's
   z-index still applies. The snackbar (and any menu positioned over the drawer)

@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.5.0 · no dependencies · no shadows · 1px borders instead
+   v0.5.1 · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -1396,18 +1396,19 @@ dialog.fl-sidesheet[open] {
 /* Dialog: centered card; 92vw reads as near-full-bleed on phones and settles
    at the reading width on larger screens. Long content scrolls inside the
    surface, not the page. Fixed-centering is explicit — UA centering for
-   :modal varies across engines. */
+   :modal varies across engines, and the placement belongs to the base
+   selector: the exit transition keeps the element rendered (display/overlay
+   allow-discrete) after [open] is gone, so an [open]-only position made the
+   card fall back to the UA's static position — it jumped to the top-left
+   corner while fading out. */
 dialog.fl-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   width: min(92vw, 560px);
   height: fit-content;
   max-width: none;
   max-height: none;
-}
-
-dialog.fl-dialog[open] {
-  position: fixed;
-  inset: 0;
-  margin: auto;
 }
 
 /* The one scroll region per surface — __body, __list or __grid — shrinks
@@ -1524,11 +1525,10 @@ dialog.fl-dialog[open] {
 dialog.fl-dialog--fullscreen {
   width: 100%;
   height: 100%;
+  margin: 0;   /* full-bleed below 600; the card's margin returns in the media query */
   transform: translateY(16px);
 }
 dialog.fl-dialog--fullscreen[open] {
-  inset: 0;
-  margin: 0;
   transform: none;
 }
 @starting-style {
@@ -1561,11 +1561,10 @@ dialog.fl-dialog--fullscreen .fl-dialog__actions {
   dialog.fl-dialog--fullscreen {
     width: min(92vw, 560px);
     height: fit-content;
+    margin: auto;
     transform: scale(0.96);
   }
   dialog.fl-dialog--fullscreen[open] {
-    inset: 0;
-    margin: auto;
     transform: none;
   }
   @starting-style {
@@ -1614,10 +1613,6 @@ dialog.fl-dialog--fullscreen .fl-dialog__actions {
    gesture — the docs list the dismissal paths). Desktop gets a 560px sheet
    instead of a full-bleed tray. */
 dialog.fl-sheet {
-  transform: translateY(16px);
-}
-
-dialog.fl-sheet[open] {
   position: fixed;
   inset: 0;
   margin: auto auto 0;   /* bottom-docked, horizontally centered */
@@ -1625,11 +1620,15 @@ dialog.fl-sheet[open] {
   max-height: none;
   width: 100%;
   max-width: none;
+  transform: translateY(16px);
+}
+
+dialog.fl-sheet[open] {
   transform: none;
 }
 
 @media (min-width: 600px) {
-  dialog.fl-sheet[open] { width: min(92vw, 560px); }
+  dialog.fl-sheet { width: min(92vw, 560px); }
 }
 
 @starting-style {
@@ -1662,7 +1661,7 @@ dialog.fl-sheet[open] {
 /* Full-screen sheet (--full): for content that needs the whole screen —
    M2's 100% case. A close action is REQUIRED in this state; the docs check
    for it. */
-dialog.fl-sheet--full[open] {
+dialog.fl-sheet--full {
   height: 100vh;   /* fallback for engines without dvh */
   height: 100dvh;
 }
@@ -2190,11 +2189,9 @@ dialog.fl-sheet--full[open] {
 }
 
 /* Modal side sheet: right-anchored, full height on desktop; slides in from
-   the anchor edge (a transform swap, no new animation budget). */
+   the anchor edge (a transform swap, no new animation budget). Placement is
+   on the base selector for the same exit-transition reason as the dialog. */
 dialog.fl-sidesheet {
-  transform: translateX(16px);
-}
-dialog.fl-sidesheet[open] {
   position: fixed;
   inset: 0 0 0 auto;
   margin: 0;
@@ -2202,6 +2199,7 @@ dialog.fl-sidesheet[open] {
   width: min(var(--fl-sidesheet-w), 100vw);
   max-width: none;
   max-height: none;
+  transform: translateX(16px);
 }
 @starting-style {
   dialog.fl-sidesheet[open] { transform: translateX(16px); }
@@ -2210,7 +2208,7 @@ dialog.fl-sidesheet[open] {
 /* M2 modal specs (mobile): vertically inset 48dp top / 16dp bottom,
    still flush to the anchor edge. */
 @media (max-width: 599px) {
-  dialog.fl-sidesheet[open] {
+  dialog.fl-sidesheet {
     inset: 48px 0 16px auto;
     height: auto;
     width: min(var(--fl-sidesheet-w), calc(100vw - 48px));

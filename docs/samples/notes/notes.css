@@ -44,15 +44,11 @@
   .notes-bar .fl-top-bar__search { margin-inline-start: var(--fl-space-4); }
 }
 
-/* The pill's leading slot. Both pages keep the magnifier once the drawer is
-   pinned; only index.html also has the hamburger inside the pill, and only
-   below 905px (the --pin modifier hides that copy when the drawer is fixed). */
-.notes-search__glyph {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 var(--fl-field-h);
-}
+/* The pill's leading slot is the library's field-icon slot (.fl-field__icon:
+   48px wide, glyph centred) — the sample only decides when it shows. Both
+   pages keep the magnifier once the drawer is pinned; only index.html also
+   has the hamburger inside the pill, and only below 905px (the --pin
+   modifier hides that copy when the drawer is fixed). */
 .notes-search__glyph--pin { display: none; }
 @media (min-width: 905px) {
   .notes-search__glyph--pin { display: inline-flex; }
