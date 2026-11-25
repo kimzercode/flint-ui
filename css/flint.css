@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.5.3 · no dependencies · no shadows · 1px borders instead
+   v0.6.0 · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -68,6 +68,9 @@
   --fl-table-row-h: 52px;      /* M2 data table body row */
   --fl-option-h: 48px;         /* option row height — M2 dialogs; sheets set 56px */
   --fl-sheet-max-h: 50dvh;     /* modal sheet initial cap — M2: 50% of screen */
+  /* The select chevron, as a mask so it follows --fl-icon. Swap the url to
+     retheme the glyph (one owner: the control draws it). */
+  --fl-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
 
   /* Layers */
   --fl-z-fab: 10;
@@ -794,14 +797,20 @@ button.fl-card {
   .fl-field__box:hover { --_border: var(--fl-text); }
 }
 
-.fl-field__box:focus-within {
+/* Focus — and the select's activated state. The open list lives in the top
+   layer (a sibling of the box), so focus leaves the box while it is open;
+   :popover-open keeps the accent instead. :where() keeps the specificity
+   equal to :focus-within, so the error rule below still wins. */
+.fl-field__box:focus-within,
+.fl-field:where(:has(.fl-menu:popover-open)) .fl-field__box {
   --_border: var(--fl-accent);
   outline: 2px solid var(--_border);   /* real outline — survives forced-colors */
   outline-offset: -2px;
 }
 
 /* Filled focus: no full ring — the M2 2dp bottom indicator instead */
-.fl-field--filled .fl-field__box:focus-within {
+.fl-field--filled .fl-field__box:focus-within,
+.fl-field--filled:where(:has(.fl-menu:popover-open)) .fl-field__box {
   outline: none;
   box-shadow: inset 0 -2px 0 0 var(--_border);
 }
@@ -2118,6 +2127,12 @@ dialog.fl-sheet--full {
 
 .fl-menu .fl-option { width: auto; }   /* popover width: fit-content basis */
 
+/* Fullwidth surface: the panel takes its invoker's width and sits attached
+   beneath it (MDC's menu-surface--fullwidth). flint.js sets the width from
+   the anchor and caps the height to the space on the chosen side. Used by
+   the select; free for any menu that should match its trigger. */
+.fl-menu.fl-menu--fullwidth { min-width: 0; max-width: none; }
+
 .fl-menu .fl-option[role="menuitemradio"],
 .fl-menu .fl-option[role="menuitemcheckbox"] {
   position: relative;
@@ -2135,8 +2150,94 @@ dialog.fl-sheet--full {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
+/* Disabled rows in every menu: dimmed and inert (M2: show an unavailable
+   action as disabled, never remove it). The arrow cycle already skips them. */
+.fl-menu .fl-option:disabled {
+  color: var(--fl-disabled);
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .fl-menu .fl-option:disabled:hover { background: none; }
+}
+
 /* --------------------------------------------------------------------------
-   18. Side sheet — supplementary surface anchored to the trailing edge
+   18. Select — the exposed dropdown: a field-shaped anchor + the menu above.
+   M2 files the select under Menus, and so does Flint: the panel, the 48px
+   rows and the state language are §17 untouched. Only the anchor, the value
+   line and the value binding are new.
+
+     .fl-field            owns the chrome (border, fill, height, all states)
+     .fl-select__anchor   naked control: the value text + the chevron
+     input[type=hidden]   the form value (see the docs' required recipe)
+     .fl-menu             the same popover, role="listbox", fullwidth
+
+   The panel is a sibling of the box but renders in the top layer, so the
+   field's activated look is keyed to :popover-open in §7, not focus-within.
+   -------------------------------------------------------------------------- */
+.fl-select__anchor {
+  display: flex;
+  align-items: center;
+  gap: var(--fl-space-2);
+  flex: 1 1 auto;
+  width: 0;                    /* same shrink contract as .fl-field__input */
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px 0 var(--fl-space-3);
+  font: inherit;
+  color: var(--fl-text);
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+.fl-select__anchor:focus { outline: none; }   /* the box draws the ring */
+.fl-select__anchor:disabled { cursor: not-allowed; }
+
+/* The value line: one text node, truncated like any control. */
+.fl-select__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Chevron: a mask, so it follows --fl-icon and swaps with the token. Right
+   inset is 12px, matching the native select's drawn arrow. It flips in the
+   activated state (M2 exposed dropdown, state 2) from the platform's own
+   :popover-open — no JS state to keep in sync. */
+.fl-select__anchor::after {
+  --_chevron: 0deg;
+  content: "";
+  flex: 0 0 auto;
+  inline-size: 20px;
+  block-size: 20px;
+  background: var(--fl-icon);
+  -webkit-mask: var(--fl-select-chevron) center / contain no-repeat;
+  mask: var(--fl-select-chevron) center / contain no-repeat;
+  rotate: var(--_chevron);
+  transition: rotate var(--fl-dur) var(--fl-ease);
+}
+.fl-field:has(.fl-menu:popover-open) .fl-select__anchor::after {
+  --_chevron: 180deg;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-select__anchor::after { transition: none; }
+}
+
+/* Fullwidth rows run edge to edge: the panel has a fixed width now, so the
+   fit-content row basis would leave a ragged tint. */
+.fl-menu--fullwidth .fl-option { width: 100%; }
+
+/* The current row: a persistent tint, not the menuitemradio check glyph.
+   --fl-divider is the same grey as the filled field's fill. */
+.fl-menu[role="listbox"] .fl-option[aria-selected="true"] {
+  background: var(--fl-divider);
+}
+
+/* --------------------------------------------------------------------------
+   19. Side sheet — supplementary surface anchored to the trailing edge
    (M2 sheets: side). Two variants, one structure:
      • Standard — a plain <aside>, non-modal: no scrim, no <dialog>, no JS;
        the page stays interactive. Desktop/tablet only (M2: on mobile the
@@ -2247,7 +2348,7 @@ dialog.fl-sidesheet {
 }
 
 /* --------------------------------------------------------------------------
-   19. Avatar — a circle of initials, or an <img class="fl-avatar">. M2 has no
+   20. Avatar — a circle of initials, or an <img class="fl-avatar">. M2 has no
        avatar component; this is the shared entity thumbnail (24/32/40px) the
        lists, chips and top bars use. Text is author content: put initials in
        the element, or use an image (object-fit crops it).
@@ -2281,7 +2382,7 @@ dialog.fl-sidesheet {
 }
 
 /* --------------------------------------------------------------------------
-   20. Chips — compact pills for filters, single choices, actions and tags.
+   21. Chips — compact pills for filters, single choices, actions and tags.
        The element is the contract: <label> + native input is a stateful chip
        (the input owns the state, the chip reads it with :has(:checked)), a
        <button> is an action, a <span> is a tag with a remove button.
@@ -2466,7 +2567,7 @@ dialog.fl-sidesheet {
 }
 
 /* --------------------------------------------------------------------------
-   21. Tabs — in-page tabs. Not the bottom navigation: that keeps
+   22. Tabs — in-page tabs. Not the bottom navigation: that keeps
        .fl-tab-bar/.fl-tab because those are app destinations, while these are
        views inside one page. Zero JS — the bar is a radio group and panels
        are keyed by order: the k-th tab shows the k-th panel (the one place
@@ -2634,7 +2735,7 @@ dialog.fl-sidesheet {
 }
 
 /* --------------------------------------------------------------------------
-   22. Data table — records, not cards. M2's own spec is the flat one: 0dp
+   23. Data table — records, not cards. M2's own spec is the flat one: 0dp
        elevation, a 1px outline, 4px radius, 1px row dividers, no vertical
        lines and no header fill. 56px header / 52px rows / 16px cell padding
        (16 + 16 = the spec's 32dp gutter). One structure: the table scrolls

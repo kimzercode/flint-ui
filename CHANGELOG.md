@@ -4,6 +4,64 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.6.0] — 2026-11-25
+
+The select became M2's **exposed dropdown**: the menu, anchored to a field.
+The native `<select>` stays fully styled and stays the documented choice for
+no-JS, `multiple` and grouped options.
+
+### Added
+
+- **Exposed dropdown select (`.fl-select`).** One structure: the `fl-field`
+  box owns the chrome, a real `<button class="fl-select__anchor" role="combobox">` fills it
+  (the label names it; the visible text is the combobox's value), a hidden
+  input carries the form value, and the existing `.fl-menu[role="listbox"]`
+  renders the options.
+  Opening attaches the panel to the field at its width, flushes it beneath
+  the box, flips it above when the viewport runs out and caps it to the
+  roomier side with its own scrollbar.
+- **`fl-menu--fullwidth`** — a menu surface that takes its invoker's width.
+  It is a general modifier; the select is its first user.
+- **Select behaviour in `flint.js`:** listbox mode focuses the selected row
+  on open; ArrowUp/ArrowDown/Home/End move; letters type-ahead (including
+  from the closed anchor, which opens on a match); choosing updates
+  `aria-selected`, the anchor text and the hidden value, closes the panel,
+  returns focus and emits `input` then `change`; form reset repaints the
+  value. Rows are `.fl-option` buttons, matching action menus.
+- **`--fl-select-chevron`** — the chevron glyph as a `url()` mask, so it
+  follows `--fl-icon` and swaps with one token. It rotates 180° while open
+  and skips the transition under reduced motion.
+
+### Changed
+
+- **The field's activated state is keyed to the platform.** The open panel
+  lives in the top layer, so `:focus-within` cannot hold the accent while a
+  row is focused. `.fl-field:has(.fl-menu:popover-open)` now applies the
+  same accent border/ring as focus (filled: the 2dp bottom indicator).
+- **The side sheet's Format filter** (demo and docs snippet) uses the
+  exposed dropdown; its panel lives inside the `<dialog>`, per the existing
+  top-layer-inside-a-modal rule.
+- **Section numbering** in `css/flint.css`: the select is §18 (under Menus),
+  with the following sections shifted by one.
+
+### Fixed
+
+- **Disabled menu rows looked active.** `.fl-option:disabled` now dims with
+  `--fl-disabled`, drops the hover state and shows `not-allowed`. The arrow
+  cycle and the type-ahead already skipped them; every menu inherits the fix.
+
+### Docs
+
+- The Select page was rewritten around the exposed dropdown: usage, anatomy,
+  behaviour, accessibility, known gaps (JS to choose, author-checked
+  `required`, the Popover floor, no `optgroup`, no editable dropdown, the
+  static-label deviation, the in-page list on touch), the required recipe,
+  and the native alternative.
+- `demos/select.html` covers outlined, helper, error, filled, disabled and a
+  20-row scrolling list with a disabled row, plus the native select.
+- The Menu page cross-links the select as the same panel with a field
+  anchor; `NOTES.md` records the decisions and gaps.
+
 ## [0.5.3] — 2026-11-25
 
 The notes sample keeps its FAB on Archive, so the snackbar sits at one height

@@ -93,7 +93,7 @@ const real = [
     name: "Select",
     slug: "select",
     status: "ready",
-    summary: "The styled native <select> in the field family — chevron drawn in CSS.",
+    summary: "The Material exposed dropdown — a field anchor over the menu's 48px option list, with the value in a hidden input.",
   },
   {
     name: "Selection controls",

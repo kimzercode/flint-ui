@@ -11,26 +11,40 @@
 <main style="max-width:640px; margin:0 auto; padding:32px 20px;">
 
   <p class="fl-section-label">Outlined (default)</p>
-  <div class="fl-field">
-    <label class="fl-field__label" for="sel-type">Workspace type</label>
+  <div class="fl-field fl-select">
+    <label class="fl-field__label" id="type-label" for="type-anchor">Workspace type</label>
     <div class="fl-field__box">
-      <select class="fl-field__input" id="sel-type">
-        <option>Starter</option>
-        <option selected>Team</option>
-        <option>Business</option>
-      </select>
+      <input type="hidden" name="type" value="team">
+      <button class="fl-select__anchor" type="button" role="combobox" id="type-anchor"
+              popovertarget="type-menu" aria-controls="type-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-labelledby="type-label">
+        <span class="fl-select__value" id="type-value">Team</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="type-menu" popover role="listbox"
+         aria-labelledby="type-label">
+      <button class="fl-option" role="option" type="button" value="starter" aria-selected="false">Starter</button>
+      <button class="fl-option" role="option" type="button" value="team" aria-selected="true">Team</button>
+      <button class="fl-option" role="option" type="button" value="business" aria-selected="false">Business</button>
     </div>
   </div>
 
   <p class="fl-section-label">With helper text</p>
-  <div class="fl-field">
-    <label class="fl-field__label" for="sel-region">Region</label>
+  <div class="fl-field fl-select">
+    <label class="fl-field__label" id="region-label" for="region-anchor">Region</label>
     <div class="fl-field__box">
-      <select class="fl-field__input" id="sel-region">
-        <option selected>Europe (Frankfurt)</option>
-        <option>North America (Iowa)</option>
-        <option>Asia (Singapore)</option>
-      </select>
+      <input type="hidden" name="region" value="eu">
+      <button class="fl-select__anchor" type="button" role="combobox" id="region-anchor"
+              popovertarget="region-menu" aria-controls="region-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-labelledby="region-label">
+        <span class="fl-select__value" id="region-value">Europe (Frankfurt)</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="region-menu" popover role="listbox"
+         aria-labelledby="region-label">
+      <button class="fl-option" role="option" type="button" value="eu" aria-selected="true">Europe (Frankfurt)</button>
+      <button class="fl-option" role="option" type="button" value="us" aria-selected="false">North America (Iowa)</button>
+      <button class="fl-option" role="option" type="button" value="ap" aria-selected="false">Asia (Singapore)</button>
     </div>
     <div class="fl-field__footer">
       <span class="fl-field__help">Choose the region closest to your users</span>
@@ -38,14 +52,22 @@
   </div>
 
   <p class="fl-section-label">Error</p>
-  <div class="fl-field fl-field--error">
-    <label class="fl-field__label" for="sel-country">Billing country</label>
+  <div class="fl-field fl-select fl-field--error">
+    <label class="fl-field__label" id="country-label" for="country-anchor">Billing country</label>
     <div class="fl-field__box">
-      <select class="fl-field__input" id="sel-country" aria-invalid="true">
-        <option selected>Select a country</option>
-        <option>Germany</option>
-        <option>United States</option>
-      </select>
+      <input type="hidden" name="country" value="">
+      <button class="fl-select__anchor" type="button" role="combobox" id="country-anchor"
+              popovertarget="country-menu" aria-controls="country-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-required="true" aria-invalid="true"
+              aria-labelledby="country-label">
+        <span class="fl-select__value" id="country-value">Select a country</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="country-menu" popover role="listbox"
+         aria-labelledby="country-label">
+      <button class="fl-option" role="option" type="button" value="de" aria-selected="false">Germany</button>
+      <button class="fl-option" role="option" type="button" value="us" aria-selected="false">United States</button>
+      <button class="fl-option" role="option" type="button" value="br" aria-selected="false">Brazil</button>
     </div>
     <div class="fl-field__footer">
       <span class="fl-field__help">Pick the country on the payment card</span>
@@ -53,28 +75,98 @@
   </div>
 
   <p class="fl-section-label">Filled variant</p>
-  <div class="fl-field fl-field--filled">
-    <label class="fl-field__label" for="sel-sort">Sort by</label>
+  <div class="fl-field fl-select fl-field--filled">
+    <label class="fl-field__label" id="sort-label" for="sort-anchor">Sort by</label>
     <div class="fl-field__box">
-      <select class="fl-field__input" id="sel-sort">
-        <option selected>Most recent</option>
-        <option>Alphabetical</option>
-        <option>Unread first</option>
-      </select>
+      <input type="hidden" name="sort" value="recent">
+      <button class="fl-select__anchor" type="button" role="combobox" id="sort-anchor"
+              popovertarget="sort-menu" aria-controls="sort-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-labelledby="sort-label">
+        <span class="fl-select__value" id="sort-value">Most recent</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="sort-menu" popover role="listbox"
+         aria-labelledby="sort-label">
+      <button class="fl-option" role="option" type="button" value="recent" aria-selected="true">Most recent</button>
+      <button class="fl-option" role="option" type="button" value="alpha" aria-selected="false">Alphabetical</button>
+      <button class="fl-option" role="option" type="button" value="unread" aria-selected="false">Unread first</button>
     </div>
   </div>
 
   <p class="fl-section-label">Disabled</p>
-  <div class="fl-field">
-    <label class="fl-field__label" for="sel-plan">Plan</label>
+  <div class="fl-field fl-select">
+    <label class="fl-field__label" id="plan-label" for="plan-anchor">Plan</label>
     <div class="fl-field__box">
-      <select class="fl-field__input" id="sel-plan" disabled>
-        <option>Free — managed by your administrator</option>
+      <input type="hidden" name="plan" value="free" disabled>
+      <button class="fl-select__anchor" type="button" role="combobox" id="plan-anchor"
+              popovertarget="plan-menu" aria-controls="plan-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-labelledby="plan-label" disabled>
+        <span class="fl-select__value" id="plan-value">Free — managed by your administrator</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="plan-menu" popover role="listbox"
+         aria-labelledby="plan-label">
+      <button class="fl-option" role="option" type="button" value="free" aria-selected="true">Free — managed by your administrator</button>
+      <button class="fl-option" role="option" type="button" value="team" aria-selected="false">Team</button>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Long list — scroll and type-ahead</p>
+  <div class="fl-field fl-select">
+    <label class="fl-field__label" id="state-label" for="state-anchor">State</label>
+    <div class="fl-field__box">
+      <input type="hidden" name="state" value="ca">
+      <button class="fl-select__anchor" type="button" role="combobox" id="state-anchor"
+              popovertarget="state-menu" aria-controls="state-menu" aria-haspopup="listbox" aria-expanded="false"
+              aria-labelledby="state-label">
+        <span class="fl-select__value" id="state-value">California</span>
+      </button>
+    </div>
+    <div class="fl-menu fl-menu--fullwidth" id="state-menu" popover role="listbox"
+         aria-labelledby="state-label">
+      <button class="fl-option" role="option" type="button" value="al" aria-selected="false">Alabama</button>
+      <button class="fl-option" role="option" type="button" value="ak" aria-selected="false">Alaska</button>
+      <button class="fl-option" role="option" type="button" value="az" aria-selected="false">Arizona</button>
+      <button class="fl-option" role="option" type="button" value="ar" aria-selected="false">Arkansas</button>
+      <button class="fl-option" role="option" type="button" value="ca" aria-selected="true">California</button>
+      <button class="fl-option" role="option" type="button" value="co" aria-selected="false">Colorado</button>
+      <button class="fl-option" role="option" type="button" value="ct" aria-selected="false">Connecticut</button>
+      <button class="fl-option" role="option" type="button" value="de" aria-selected="false">Delaware</button>
+      <button class="fl-option" role="option" type="button" value="fl" aria-selected="false">Florida</button>
+      <button class="fl-option" role="option" type="button" value="ga" aria-selected="false">Georgia</button>
+      <button class="fl-option" role="option" type="button" value="hi" aria-selected="false" disabled>Hawaii — not available</button>
+      <button class="fl-option" role="option" type="button" value="id" aria-selected="false">Idaho</button>
+      <button class="fl-option" role="option" type="button" value="il" aria-selected="false">Illinois</button>
+      <button class="fl-option" role="option" type="button" value="in" aria-selected="false">Indiana</button>
+      <button class="fl-option" role="option" type="button" value="ia" aria-selected="false">Iowa</button>
+      <button class="fl-option" role="option" type="button" value="ks" aria-selected="false">Kansas</button>
+      <button class="fl-option" role="option" type="button" value="ky" aria-selected="false">Kentucky</button>
+      <button class="fl-option" role="option" type="button" value="la" aria-selected="false">Louisiana</button>
+      <button class="fl-option" role="option" type="button" value="me" aria-selected="false">Maine</button>
+      <button class="fl-option" role="option" type="button" value="md" aria-selected="false">Maryland</button>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help">The list caps to the viewport and scrolls; type a letter to jump</span>
+    </div>
+  </div>
+
+  <p class="fl-section-label">Native select (no-JS alternative)</p>
+  <div class="fl-field">
+    <label class="fl-field__label" for="native-type">Workspace type</label>
+    <div class="fl-field__box">
+      <select class="fl-field__input" id="native-type">
+        <option>Starter</option>
+        <option selected>Team</option>
+        <option>Business</option>
       </select>
+    </div>
+    <div class="fl-field__footer">
+      <span class="fl-field__help">Same box; the platform draws the list and handles the form value</span>
     </div>
   </div>
 
 </main>
 
+<script src="../js/flint.js" defer></script>
 </body>
 </html>

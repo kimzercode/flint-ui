@@ -271,9 +271,22 @@ toc:
       </ul>
       <div class="fl-sidesheet__group">
         <p class="fl-section-label">Format</p>
-        <div class="fl-field">
+        <div class="fl-field fl-select">
+          <label class="fl-field__label" id="f-format-label" for="f-format">File format</label>
           <div class="fl-field__box">
-            <select class="fl-field__input" aria-label="File format">…</select>
+            <input type="hidden" name="format" value="all">
+            <button class="fl-select__anchor" type="button" role="combobox" id="f-format"
+                    popovertarget="f-format-menu" aria-controls="f-format-menu" aria-haspopup="listbox" aria-expanded="false"
+                    aria-labelledby="f-format-label">
+              <span class="fl-select__value" id="f-format-value">All</span>
+            </button>
+          </div>
+          <div class="fl-menu fl-menu--fullwidth" id="f-format-menu" popover role="listbox"
+               aria-labelledby="f-format-label">
+            <button class="fl-option" role="option" type="button" aria-selected="true">All</button>
+            <button class="fl-option" role="option" type="button" aria-selected="false">Documents</button>
+            <button class="fl-option" role="option" type="button" aria-selected="false">Spreadsheets</button>
+            <button class="fl-option" role="option" type="button" aria-selected="false">Images</button>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ title: Select
 section: components
 current: select
 depth: 1
-lead: The styled native <select> — field-family box with a drawn chevron; the popup stays platform-styled, by design.
+lead: The Material exposed dropdown — the menu anchored to a field. The current value sits above the same 48px option list, and a hidden input carries it into the form.
 toc:
   design:
     - id: usage
@@ -17,11 +17,15 @@ toc:
       title: Behavior
     - id: accessibility
       title: Accessibility
+    - id: gaps
+      title: Known gaps
   impl:
     - id: example
       title: Live example
     - id: code
       title: Code
+    - id: native
+      title: Native select
     - id: demos
       title: Fullscreen demo
     - id: theming
@@ -32,120 +36,195 @@ toc:
 {% set design %}
 <section class="docs-section">
   <h2 id="d-usage">Usage</h2>
-  <p>The select is the native <code>&lt;select&gt;</code> wearing the
-     field-family clothes: same 44px box, same label/helper/error markup,
-     with a chevron drawn in CSS instead of the platform arrow. It exists
-     because a visible radio group stops scaling past a handful of options —
-     the select is the honest fallback, not a styled imitation.</p>
+  <p>The select is Material's <strong>exposed dropdown menu</strong> — the
+     variation filed under <a href="menu.html">Menus</a>, not under text
+     fields. It is not an imitation of a dropdown: it is the same
+     <code>fl-menu</code>, the same 48px <code>fl-option</code> rows and the
+     same state language, anchored to a field box instead of an icon button.
+     The field shows the current value; a hidden input carries it into the
+     form.</p>
   <h3>Do use it when</h3>
   <ul>
     <li>One choice from <strong>more than ~5 options</strong> — regions,
         countries, sort orders, plan tiers.</li>
-    <li>The option list is <strong>long or data-driven</strong>; a native
-        select scrolls and type-aheads for free.</li>
     <li>It sits in a form next to text fields — the shared
-        <code>fl-field</code> markup keeps the rhythm identical.</li>
+        <code>fl-field</code> markup keeps the rhythm identical, and the open
+        list reads like every other menu in the product.</li>
+    <li>The chosen value must be visible above the list while choosing —
+        that is the spec's defining behaviour.</li>
   </ul>
   <h3>Don't use it when</h3>
   <ul>
     <li>2–5 options — that is a
         <a href="selection-controls.html">radio group</a>; visible options
-        beat a hidden dropdown.</li>
-    <li>You need a <strong>custom menu</strong> (icons, search, multi-line
-        options) — that is a <a href="menu.html">menu</a> anchored to a
-        trigger, not a select. Don't hand-roll it; that's how libraries grow
-        300 lines of fragile focus-management JS.</li>
-    <li>Multiple selection — <code>multiple</code> selects are not styled;
-        use a checkbox group.</li>
+        beat a hidden list.</li>
+    <li>You need <strong>search, free text or rich rows</strong> — an
+        editable dropdown is a separate M2 variation. Compose a
+        <a href="menu.html">menu</a> with a search field, or use a dialog.</li>
+    <li>Multiple selection — use a checkbox group, or the
+        <a href="#i-native">native select</a> with <code>multiple</code>.</li>
+    <li>The page must work <strong>without JavaScript</strong> — the
+        <a href="#i-native">native select</a> is the platform control for
+        exactly that case.</li>
   </ul>
   {{ callout({
     variant: "info",
-    title: "The popup is browser-controlled — on purpose",
-    text: "appearance:none only reshapes the closed control. The open dropdown (its panel, rows and highlight) is drawn by the browser/OS. That keeps type-ahead, scroll, long lists and mobile pickers correct with zero JS. Flint will not restyle the popup until the custom listbox lands with proper focus management.",
-    href: "selection-controls.html",
-    linkText: "Selection controls"
+    title: "One component, two anchors",
+    text: "A menu is this panel anchored to a button; a select is the same panel anchored to a field. Row meaning differs (action vs value), the panel does not — that is why they complement each other.",
+    href: "menu.html",
+    linkText: "Menu"
   }) }}
 </section>
 
 <section class="docs-section">
   <h2 id="d-anatomy">Anatomy</h2>
   <div class="docs-anatomy">
-    <svg viewBox="0 0 600 220" role="img" aria-label="Select anatomy diagram">
-      <rect x="1" y="1" width="598" height="218" fill="#ffffff" stroke="#dadce0"/>
+    <svg viewBox="0 0 600 250" role="img" aria-label="Select anatomy diagram: a field box with the current value and a chevron, and an open menu below it whose current row is tinted">
+      <rect x="1" y="1" width="598" height="248" fill="#ffffff" stroke="#dadce0"/>
       <!-- label -->
-      <rect x="40" y="30" width="110" height="10" rx="5" fill="#444746"/>
-      <!-- select box -->
-      <rect x="40" y="56" width="360" height="44" rx="4" fill="#ffffff" stroke="#dadce0"/>
-      <!-- selected text -->
-      <rect x="56" y="72" width="120" height="10" rx="5" fill="#1f1f1f"/>
-      <!-- chevron -->
-      <path d="M364 72 l6 6 6-6" stroke="#5f6368" stroke-width="2" fill="none"/>
-      <!-- helper -->
-      <rect x="40" y="112" width="180" height="8" rx="4" fill="#9aa0a6"/>
+      <rect x="40" y="16" width="110" height="10" rx="5" fill="#444746"/>
+      <!-- activated field box -->
+      <rect x="40" y="36" width="360" height="44" rx="4" fill="#ffffff" stroke="#1a73e8" stroke-width="2"/>
+      <!-- current value -->
+      <rect x="56" y="53" width="86" height="10" rx="5" fill="#1f1f1f"/>
+      <!-- chevron, flipped up -->
+      <path d="M364 60 l6 -6 6 6" stroke="#5f6368" stroke-width="2" fill="none"/>
+      <!-- panel -->
+      <rect x="40" y="80" width="360" height="144" rx="4" fill="#ffffff" stroke="#dadce0"/>
+      <!-- rows: current row tinted -->
+      <rect x="41" y="136" width="358" height="48" fill="#e8eaed"/>
+      <rect x="64" y="104" width="120" height="10" rx="5" fill="#444746"/>
+      <rect x="64" y="160" width="90" height="10" rx="5" fill="#1f1f1f"/>
+      <rect x="64" y="208" width="100" height="10" rx="5" fill="#444746"/>
       <!-- callouts -->
       <g font-family="system-ui, sans-serif" font-size="12" font-weight="700">
-        <g><circle cx="28" cy="78" r="11" fill="#1a73e8"/><text x="28" y="82" fill="#ffffff" text-anchor="middle">1</text></g>
-        <g><circle cx="420" cy="78" r="11" fill="#1a73e8"/><text x="420" y="82" fill="#ffffff" text-anchor="middle">2</text></g>
-        <g><circle cx="28" cy="116" r="11" fill="#1a73e8"/><text x="28" y="120" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="28" cy="58" r="11" fill="#1a73e8"/><text x="28" y="62" fill="#ffffff" text-anchor="middle">1</text></g>
+        <g><circle cx="420" cy="58" r="11" fill="#1a73e8"/><text x="420" y="62" fill="#ffffff" text-anchor="middle">2</text></g>
+        <g><circle cx="420" cy="96" r="11" fill="#1a73e8"/><text x="420" y="100" fill="#ffffff" text-anchor="middle">3</text></g>
+        <g><circle cx="28" cy="160" r="11" fill="#1a73e8"/><text x="28" y="164" fill="#ffffff" text-anchor="middle">4</text></g>
       </g>
     </svg>
     <ol>
-      <li><strong>The field box</strong> — the select sits in a
-          <code>fl-field__box</code> exactly like a text field: 44px, 1px
-          border, 4px radius, the same hover/focus/error/disabled states.
-          The control inside is borderless.</li>
-      <li><strong>Chevron</strong> — drawn via a background-image on the
-          select, 12px from the border, replacing the platform arrow that
-          <code>appearance:none</code> removes.</li>
-      <li><strong>Helper text</strong> — same
-          <code>fl-field__footer</code>/<code>fl-field__help</code> slots;
-          error and filled variants compose like any field.</li>
+      <li><strong>The field box</strong> — owns every pixel of chrome:
+          44px, 1px border, 4px radius, and the hover/focus/error/disabled
+          states shared with text fields. The open list is the field's
+          activated state.</li>
+      <li><strong>The anchor and the value</strong> — a real
+          <code>&lt;button role="combobox"&gt;</code> filling the box,
+          showing the current row's label. The label's <code>for</code>
+          points at it, so clicking the label opens the list.</li>
+      <li><strong>The panel</strong> — the same <code>fl-menu</code> as every
+          action menu: 1px border, 4px radius, 8px padding, 48px rows, no
+          shadow. <code>fl-menu--fullwidth</code> attaches it to the field
+          and gives it the field's width.</li>
+      <li><strong>The current row</strong> — a persistent
+          <code>--fl-divider</code> tint, not the <code>menuitemradio</code>
+          check glyph (that is the multi-choice idiom).</li>
     </ol>
   </div>
+  <p>The chevron is a 20px mask filled with <code>--fl-icon</code>, 12px from
+     the border, and flips in the activated state. It is not drawn into the
+     markup, so it follows the token and swaps with
+     <code>--fl-select-chevron</code>. The hidden input is not in the
+     diagram: it submits the value.</p>
 </section>
 
 <section class="docs-section">
   <h2 id="d-behavior">Behavior</h2>
   <ul>
-    <li><strong>Same markup as fields:</strong> a
-        <code>fl-field</code> with a <code>fl-field__label</code>
-        (<code>&lt;label for&gt;</code>), a <code>fl-field__box</code>
-        wrapping the select, and an optional
-        <code>fl-field__footer</code>/<code>fl-field__help</code>. The class
-        <code>fl-field__input</code> is the only select-specific class
-        needed — <code>select.fl-field__input</code> switches on the chevron
-        automatically.</li>
-    <li><strong>All field states compose:</strong> <code>fl-field--filled</code>
+    <li><strong>One structure:</strong> a <code>fl-field</code> root, a
+        <code>fl-field__box</code> holding the anchor and a hidden input, and
+        an <code>fl-menu</code> with <code>role="listbox"</code>. The panel is
+        a sibling of the box; the browser's top layer means nothing clips it.</li>
+    <li><strong>Opening:</strong> click anywhere in the box, click the label,
+        press Enter or Space, or ArrowDown/ArrowUp. The list attaches directly
+        under the field at the field's width, flips above when there is no
+        room below, and caps to the roomier side with its own scrollbar when
+        the options are long.</li>
+    <li><strong>Activated:</strong> the accent border (filled: the 2px bottom
+        indicator), the flipped chevron and the tinted current row. The state
+        is read from <code>:popover-open</code>, so it is the platform's
+        truth, not a second JS flag.</li>
+    <li><strong>Choosing:</strong> click a row or press Enter/Space on it.
+        <code>aria-selected</code> moves, the anchor text updates, the hidden
+        input takes the row's <code>value</code> (or its text), the list
+        closes, focus returns to the field, and an <code>input</code> then a
+        <code>change</code> event bubble from the hidden input. Re-choosing
+        the current row only closes.</li>
+    <li><strong>Keyboard:</strong> ↑/↓ move, Home/End jump, letters
+        type-ahead, Escape closes without choosing and returns focus, Tab
+        closes and returns focus to the field (a second Tab leaves it).
+        Disabled rows are skipped by the arrow cycle and the type-ahead.</li>
+    <li><strong>Field states compose:</strong> <code>fl-field--filled</code>
         (tint fill + bottom indicator), <code>fl-field--error</code> /
-        <code>aria-invalid="true"</code> (red border + red helper), and the
-        native <code>disabled</code> attribute (dimmed box, chevron kept).</li>
-    <li><strong>The popup is native:</strong> opening it draws a
-        browser/OS-styled list. Closed-control styling is what the CSS
-        guarantees; open-menu styling is platform behavior and differs
-        between browsers — this is documented, not hidden.</li>
-    <li><strong>Selected value renders as text</strong> — style it with the
-        default body size/weight; don't restyle per-state, the platform
-        repaints it on change.</li>
-    <li><strong>Option styling is not supported</strong> —
-        <code>&lt;option&gt;</code> elements are mostly unstyleable by
-        design; keep their content plain text.</li>
+        <code>aria-invalid="true"</code> (red border, label and helper), and
+        <code>disabled</code> on the anchor (dimmed, cannot open). Disable the
+        hidden input too if a disabled field must not submit.</li>
+    <li><strong>Form reset</strong> restores the hidden input's default
+        value and flint.js brings the painted value back with it.</li>
   </ul>
+  {{ callout({
+    variant: "info",
+    title: "Choosing needs flint.js",
+    text: "The panel opens without JavaScript (popovertarget is HTML), but rows cannot choose and the panel is not anchored, because both need script. For no-JS pages use the native select below — the same field box with the platform's list."
+  }) }}
 </section>
 
 <section class="docs-section">
   <h2 id="d-accessibility">Accessibility</h2>
   <ul>
-    <li>The <code>&lt;label for&gt;</code> names the control natively; no
-        <code>aria-label</code> needed when <code>fl-field__label</code> is
-        present.</li>
-    <li>The native select is one of the best-supported controls for
-        assistive tech — announced name, role, value, and expanded state
-        come from the platform.</li>
-    <li>Keep the first option meaningful on optional fields ("Select a
-        country" reads fine; "—" does not) and mark genuinely required
-        selects with <code>required</code> so the platform validates.</li>
-    <li>Validation errors: set <code>aria-invalid="true"</code> (which the
-        CSS keys off) and put the reason in <code>fl-field__help</code>.</li>
+    <li>The anchor is a real <code>&lt;button&gt;</code> carrying the
+        select-only combobox pattern: <code>role="combobox"</code>,
+        <code>aria-haspopup="listbox"</code>, <code>aria-controls</code>
+        pointing at the panel, and <code>aria-expanded</code> (synced by
+        flint.js). Keeping the button element means label clicks, Enter/Space
+        and the platform's activation all still work.</li>
+    <li>Name the anchor with the <em>label only</em>:
+        <code>aria-labelledby="label-id"</code> announces "Workspace type"
+        and the browser exposes the visible text as the combobox's value
+        ("Team"), so the value is not repeated in the name. A
+        <code>&lt;label for&gt;</code> pointing at a button is valid and
+        makes the label open the list; keep both, or omit <code>for</code>
+        if you only want the <code>aria-labelledby</code> name.</li>
+    <li>The panel is <code>role="listbox"</code> named by the label; rows are
+        <code>&lt;button role="option"&gt;</code> with
+        <code>aria-selected</code>. Focus moves into the list, so assistive
+        tech reads the real option under the keyboard — no
+        <code>aria-activedescendant</code> bookkeeping.</li>
+    <li>Escape closes and returns focus; choosing returns focus to the field.
+        The list is not a tab stop: Tab closes it.</li>
+    <li><strong>Required is yours to enforce.</strong> A hidden input is
+        barred from constraint validation, so <code>required</code> on it
+        does nothing. Put <code>aria-required="true"</code> on the combobox
+        anchor — valid on <code>role="combobox"</code>, unlike on a plain
+        button — and run the check in the <a href="#i-code">code recipe</a>;
+        the error state is the field's own <code>aria-invalid</code> styling.</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2 id="d-gaps">Known gaps</h2>
+  <ul>
+    <li><strong>JavaScript is required to choose.</strong> The closed field
+        renders identically without it; the list opens but cannot select.
+        The <a href="#i-native">native select</a> is the no-JS path.</li>
+    <li><strong>No native constraint validation.</strong>
+        <code>required</code> is author-checked (see above). Frameworks can
+        own this in their wrapper.</li>
+    <li><strong>Popover API floor:</strong> Chrome/Edge 114, Safari 17,
+        Firefox 125 — the same floor as the menu. Older browsers keep the
+        list closed; the closed field is unchanged.</li>
+    <li><strong>No grouped options.</strong> <code>optgroup</code> has no
+        listbox equivalent here yet; use the native select when groups are
+        load-bearing.</li>
+    <li><strong>Not an editable dropdown.</strong> Free-text entry ("type a
+        value not in the list") is a separate M2 variation and not shipped.</li>
+    <li><strong>Static label.</strong> The label sits above the box, like
+        every Flint field; M2's exposed dropdown floats the label into the
+        border. This is the library's recorded field deviation.</li>
+    <li><strong>Mobile shows the in-page list</strong>, not the OS picker.
+        M2 permits the native picker on touch; Flint keeps one structure at
+        every width.</li>
   </ul>
 </section>
 {% endset %}
@@ -165,107 +244,166 @@ toc:
 
 <section class="docs-section">
   <h2 id="i-code">Code</h2>
-  <p>Two files bring the library in; the select needs no class of its own —
-     it reuses the field markup.</p>
+  <p>Two files bring the library in. The select's behaviour lives in
+     <code>flint.js</code>; without it the field renders but cannot choose.</p>
   {% set quickStart %}
 <link rel="stylesheet" href="css/flint.css">
 <script src="js/flint.js" defer></script>
 {% endset %}
+  {{ snippet(quickStart) }}
+
+  <p>The initial state is the markup: one row is <code>aria-selected</code>,
+     the anchor shows its label, and the hidden input holds its value. Keep
+     those three in agreement (a framework renders all three from one prop).</p>
   {% set markup %}
 <!-- Outlined (default) -->
-<div class="fl-field">
-  <label class="fl-field__label" for="type">Workspace type</label>
+<div class="fl-field fl-select">
+  <label class="fl-field__label" id="type-label" for="type-anchor">Workspace type</label>
   <div class="fl-field__box">
-    <select class="fl-field__input" id="type">
+    <input type="hidden" name="type" value="team">
+    <button class="fl-select__anchor" type="button" role="combobox" id="type-anchor"
+            popovertarget="type-menu" aria-controls="type-menu"
+            aria-haspopup="listbox" aria-expanded="false"
+            aria-labelledby="type-label">
+      <span class="fl-select__value" id="type-value">Team</span>
+    </button>
+  </div>
+  <div class="fl-menu fl-menu--fullwidth" id="type-menu" popover role="listbox"
+       aria-labelledby="type-label">
+    <button class="fl-option" role="option" type="button" value="starter" aria-selected="false">Starter</button>
+    <button class="fl-option" role="option" type="button" value="team" aria-selected="true">Team</button>
+    <button class="fl-option" role="option" type="button" value="business" aria-selected="false">Business</button>
+  </div>
+  <div class="fl-field__footer">
+    <span class="fl-field__help">Choose the plan for this workspace</span>
+  </div>
+</div>
+
+<!-- Filled, error and disabled use the field classes, unchanged -->
+<div class="fl-field fl-select fl-field--filled"> … </div>
+<div class="fl-field fl-select fl-field--error"> … </div>
+<div class="fl-field fl-select">
+  <div class="fl-field__box">
+    <input type="hidden" name="plan" value="free" disabled>
+    <button class="fl-select__anchor" type="button" role="combobox" disabled
+            popovertarget="plan-menu" aria-haspopup="listbox" aria-expanded="false">
+      …
+    </button>
+  </div>
+</div>
+{% endset %}
+  {{ snippet(markup) }}
+
+  <p>Listen for the value the way you would with a native select — the events
+     bubble from the hidden input, so a form-level listener catches every
+     select:</p>
+  {% set events %}
+document.querySelector("form").addEventListener("change", function (e) {
+  if (!e.target.name) return;
+  console.log(e.target.name, e.target.value);   // e.g. "type team"
+});
+{% endset %}
+  {{ snippet(events) }}
+
+  <h3>Required selects</h3>
+  <p><code>required</code> on the hidden input is ignored by the platform.
+     Mark the anchor <code>aria-required="true"</code> and check on submit;
+     the field's existing error styling does the rest:</p>
+  {% set required %}
+<form>
+  <div class="fl-field fl-select">
+    …
+    <button class="fl-select__anchor" type="button" role="combobox" aria-required="true" …>…</button>
+  </div>
+</form>
+{% endset %}
+  {{ snippet(required) }}
+  {% set requiredJs %}
+var form = document.querySelector("form");
+
+form.addEventListener("submit", function (e) {
+  var anchor = form.querySelector(".fl-select__anchor[aria-required='true']");
+  if (!anchor) return;
+  var input = anchor.closest(".fl-select").querySelector('input[type="hidden"]');
+  if (input.value) return;
+  e.preventDefault();
+  anchor.setAttribute("aria-invalid", "true");
+  anchor.focus();
+});
+
+/* Clear the error once a value is chosen (change bubbles from the input). */
+form.addEventListener("change", function (e) {
+  var field = e.target.closest(".fl-select");
+  if (field) field.querySelector(".fl-select__anchor").removeAttribute("aria-invalid");
+});
+{% endset %}
+  {{ snippet(requiredJs) }}
+</section>
+
+<section class="docs-section">
+  <h2 id="i-native">Native select</h2>
+  <p>M2's placement note allows the filled and outlined variations to open a
+     native picker instead. That control is still here, and it is the honest
+     choice when JavaScript is unavailable, when <code>multiple</code> is
+     needed, or when grouped <code>optgroup</code>s matter. It wears the same
+     box and chevron; the popup is the platform's.</p>
+  {% set native %}
+<div class="fl-field">
+  <label class="fl-field__label" for="native-type">Workspace type</label>
+  <div class="fl-field__box">
+    <select class="fl-field__input" id="native-type">
       <option>Starter</option>
       <option selected>Team</option>
       <option>Business</option>
     </select>
   </div>
 </div>
-
-<!-- With helper text -->
-<div class="fl-field">
-  <label class="fl-field__label" for="region">Region</label>
-  <div class="fl-field__box">
-    <select class="fl-field__input" id="region">
-      <option selected>Europe (Frankfurt)</option>
-      <option>North America (Iowa)</option>
-    </select>
-  </div>
-  <div class="fl-field__footer">
-    <span class="fl-field__help">Choose the region closest to your users</span>
-  </div>
-</div>
-
-<!-- Error / filled / disabled compose like any field -->
-<div class="fl-field fl-field--error">
-  <label class="fl-field__label" for="country">Billing country</label>
-  <div class="fl-field__box">
-    <select class="fl-field__input" id="country" aria-invalid="true">
-      <option selected>Select a country</option>
-    </select>
-  </div>
-</div>
-
-<div class="fl-field fl-field--filled">
-  <label class="fl-field__label" for="sort">Sort by</label>
-  <div class="fl-field__box">
-    <select class="fl-field__input" id="sort">
-      <option selected>Most recent</option>
-    </select>
-  </div>
-</div>
-
-<div class="fl-field">
-  <label class="fl-field__label" for="plan">Plan</label>
-  <div class="fl-field__box">
-    <select class="fl-field__input" id="plan" disabled>
-      <option>Free — managed by your administrator</option>
-    </select>
-  </div>
-</div>
 {% endset %}
-  {{ snippet(quickStart) }}
-  {{ snippet(markup) }}
+  {{ snippet(native) }}
+  <p>The same closed-control styling, native value submission and native
+     validation. Its open list is drawn by the browser/OS and cannot be
+     themed — that is the trade, and the reason the exposed dropdown is the
+     default. The data table's compact page-size control stays native because
+     it is a footer control, not a field.</p>
 </section>
 
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
   <p>The embedded example above is the actual demo page, unchanged — open
-     <a href="../demos/select.html">demos/select.html</a>. Text fields and
-     selection controls live in
-     <a href="../demos/fields.html">demos/fields.html</a> and
+     <a href="../demos/select.html">demos/select.html</a>. It covers the
+     outlined/filled/error/disabled states, a 20-row list with a disabled
+     option, and the native alternative beside it. Fields and selection
+     controls live in <a href="../demos/fields.html">demos/fields.html</a> and
      <a href="../demos/selection.html">demos/selection.html</a>.</p>
 </section>
 
 <section class="docs-section">
   <h2 id="i-theming">Theming</h2>
   <p>Everything is a CSS custom property on <code>:root</code> — override inline
-     or in your own stylesheet, no rebuild:</p>
+     or in your own stylesheet, no rebuild. The select reuses the field and
+     menu tokens; only the chevron is new:</p>
   <table class="docs-table">
     <thead>
       <tr><th>Token</th><th>Affects</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>--fl-border</code></td><td>Closed-control border; filled fill is <code>--fl-divider</code></td></tr>
-      <tr><td><code>--fl-accent</code></td><td>Focus border/ring and the filled indicator</td></tr>
-      <tr><td><code>--fl-error</code></td><td>Error border, ring and helper text</td></tr>
-      <tr><td><code>--fl-disabled</code></td><td>Disabled text color</td></tr>
-      <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
+      <tr><td><code>--fl-border</code></td><td>Field border; the open panel's border (filled fill is <code>--fl-divider</code>)</td></tr>
+      <tr><td><code>--fl-accent</code></td><td>Focus/activated border and ring, the filled indicator</td></tr>
+      <tr><td><code>--fl-error</code></td><td>Error border, ring, label and helper</td></tr>
+      <tr><td><code>--fl-disabled</code></td><td>Disabled value text and disabled rows</td></tr>
+      <tr><td><code>--fl-divider</code></td><td>Filled fill and the current row's tint</td></tr>
+      <tr><td><code>--fl-hover</code></td><td>Row hover</td></tr>
+      <tr><td><code>--fl-icon</code></td><td>Chevron fill</td></tr>
+      <tr><td><code>--fl-select-chevron</code></td><td>The chevron glyph (a <code>url()</code> mask)</td></tr>
+      <tr><td><code>--fl-radius</code></td><td>Field and panel corners</td></tr>
+      <tr><td><code>--fl-option-h</code></td><td>Option row height (48px)</td></tr>
+      <tr><td><code>--fl-surface</code></td><td>Panel background</td></tr>
     </tbody>
   </table>
-  <p>Note: the chevron glyph is a fixed-color image (it does not follow a
-     token). If you retheme <code>--fl-icon</code>, swap the chevron by
-     overriding <code>.fl-field select.fl-field__input</code>'s
-     background-image with your own SVG.</p>
   {% set themeExample %}
 :root {
-  --fl-divider: #f1f3f4;   /* filled select fill follows */
-}
-/* custom chevron */
-.fl-field select.fl-field__input {
-  background-image: url("data:image/svg+xml,...your chevron...");
+  --fl-select-chevron: url("data:image/svg+xml,...your chevron...");
+  --fl-divider: #f1f3f4;   /* current row + filled fill follow */
 }
 {% endset %}
   {{ snippet(themeExample) }}

@@ -66,15 +66,22 @@
 
       <div class="fl-sidesheet__group">
         <p class="fl-section-label" style="margin-top:var(--fl-space-4)">Format</p>
-        <div class="fl-field">
-          <label class="fl-field__label" for="ss-format">File format</label>
+        <div class="fl-field fl-select">
+          <label class="fl-field__label" id="ss-format-label" for="ss-format-anchor">File format</label>
           <div class="fl-field__box">
-            <select class="fl-field__input" id="ss-format">
-              <option selected>All</option>
-              <option>Documents</option>
-              <option>Spreadsheets</option>
-              <option>Images</option>
-            </select>
+            <input type="hidden" name="format" value="all">
+            <button class="fl-select__anchor" type="button" role="combobox" id="ss-format-anchor"
+                    popovertarget="ss-format-menu" aria-controls="ss-format-menu" aria-haspopup="listbox" aria-expanded="false"
+                    aria-labelledby="ss-format-label">
+              <span class="fl-select__value" id="ss-format-value">All</span>
+            </button>
+          </div>
+          <div class="fl-menu fl-menu--fullwidth" id="ss-format-menu" popover role="listbox"
+               aria-labelledby="ss-format-label">
+            <button class="fl-option" role="option" type="button" value="all" aria-selected="true">All</button>
+            <button class="fl-option" role="option" type="button" value="doc" aria-selected="false">Documents</button>
+            <button class="fl-option" role="option" type="button" value="sheet" aria-selected="false">Spreadsheets</button>
+            <button class="fl-option" role="option" type="button" value="img" aria-selected="false">Images</button>
           </div>
         </div>
       </div>

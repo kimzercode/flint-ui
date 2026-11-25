@@ -6,8 +6,8 @@
   <script>document.documentElement.classList.replace("docs-no-js", "docs-js");</script>
   <title>Side sheet — Flint UI</title>
   <!-- ?v= busts file:// browser caches; bump with library versions -->
-  <link rel="stylesheet" href="../css/flint.css?v=0.5.3">
-  <link rel="stylesheet" href="../css/docs.css?v=0.5.3">
+  <link rel="stylesheet" href="../css/flint.css?v=0.6.0">
+  <link rel="stylesheet" href="../css/docs.css?v=0.6.0">
 </head>
 <body class="docs">
 
@@ -482,9 +482,22 @@
       &lt;/ul&gt;
       &lt;div class=&quot;fl-sidesheet__group&quot;&gt;
         &lt;p class=&quot;fl-section-label&quot;&gt;Format&lt;/p&gt;
-        &lt;div class=&quot;fl-field&quot;&gt;
+        &lt;div class=&quot;fl-field fl-select&quot;&gt;
+          &lt;label class=&quot;fl-field__label&quot; id=&quot;f-format-label&quot; for=&quot;f-format&quot;&gt;File format&lt;/label&gt;
           &lt;div class=&quot;fl-field__box&quot;&gt;
-            &lt;select class=&quot;fl-field__input&quot; aria-label=&quot;File format&quot;&gt;…&lt;/select&gt;
+            &lt;input type=&quot;hidden&quot; name=&quot;format&quot; value=&quot;all&quot;&gt;
+            &lt;button class=&quot;fl-select__anchor&quot; type=&quot;button&quot; role=&quot;combobox&quot; id=&quot;f-format&quot;
+                    popovertarget=&quot;f-format-menu&quot; aria-controls=&quot;f-format-menu&quot; aria-haspopup=&quot;listbox&quot; aria-expanded=&quot;false&quot;
+                    aria-labelledby=&quot;f-format-label&quot;&gt;
+              &lt;span class=&quot;fl-select__value&quot; id=&quot;f-format-value&quot;&gt;All&lt;/span&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;fl-menu fl-menu--fullwidth&quot; id=&quot;f-format-menu&quot; popover role=&quot;listbox&quot;
+               aria-labelledby=&quot;f-format-label&quot;&gt;
+            &lt;button class=&quot;fl-option&quot; role=&quot;option&quot; type=&quot;button&quot; aria-selected=&quot;true&quot;&gt;All&lt;/button&gt;
+            &lt;button class=&quot;fl-option&quot; role=&quot;option&quot; type=&quot;button&quot; aria-selected=&quot;false&quot;&gt;Documents&lt;/button&gt;
+            &lt;button class=&quot;fl-option&quot; role=&quot;option&quot; type=&quot;button&quot; aria-selected=&quot;false&quot;&gt;Spreadsheets&lt;/button&gt;
+            &lt;button class=&quot;fl-option&quot; role=&quot;option&quot; type=&quot;button&quot; aria-selected=&quot;false&quot;&gt;Images&lt;/button&gt;
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -602,7 +615,7 @@
     </main>
 
     <footer class="docs-footer">
-      <p class="docs-footer__brand">Flint UI v0.5.3</p>
+      <p class="docs-footer__brand">Flint UI v0.6.0</p>
       <nav class="docs-footer__links" aria-label="Footer">
         <a href="../get-started.html">Get started</a>
         <a href="../recipes.html">Recipes</a>
@@ -614,8 +627,8 @@
   </div>
 </div>
 
-<script src="../js/flint.js?v=0.5.3" defer></script>
-<script src="../js/docs-ui.js?v=0.5.3" defer></script>
+<script src="../js/flint.js?v=0.6.0" defer></script>
+<script src="../js/docs-ui.js?v=0.6.0" defer></script>
 
 </body>
 </html>

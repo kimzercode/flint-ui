@@ -1,5 +1,5 @@
 /*!
- * Flint UI — flint.js v0.5.3
+ * Flint UI — flint.js v0.6.0
  * The entire JS surface: nav selected-state, drawer toggling, and the dialog
  * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
  * snackbar (one at a time, 4s auto-dismiss), the password field toggle,
@@ -137,21 +137,44 @@
    * cannot: anchoring the panel to its trigger with viewport flips (CSS
    * cannot measure the trigger), aria-expanded sync, focus-in on open and
    * the WAI-ARIA arrow-key pattern. Menu items are .fl-option buttons, so
-   * Enter/Space are native and disabled rows are skipped. */
-  var MENU_ITEMS = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
+   * Enter/Space are native and disabled rows are skipped.
+   *
+   * role="listbox" turns the same panel into the select's option list: focus
+   * starts on the selected row, letters type-ahead, and choosing writes the
+   * value (see chooseOption). Action menus are untouched. */
+  var MENU_ITEMS = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="option"]';
 
   function menuInvoker(menu) {
     return document.querySelector('[popovertarget="' + menu.id + '"]');
   }
 
+  function menuItems(menu) {
+    return Array.prototype.filter.call(
+      menu.querySelectorAll(MENU_ITEMS),
+      function (el) { return !el.disabled; });
+  }
+
   function positionMenu(menu) {
     var btn = menuInvoker(menu);
     if (!btn) return;
-    var r = btn.getBoundingClientRect();
-    var w = menu.offsetWidth;
-    var h = menu.offsetHeight;
+    var full = menu.classList.contains("fl-menu--fullwidth");
+    /* A fullwidth panel belongs to the field, not to the naked control
+       inside it: the box owns the outer rectangle (and its 1px border). */
+    var ref = full ? (btn.closest(".fl-field__box") || btn) : btn;
+    var r = ref.getBoundingClientRect();
     var vw = document.documentElement.clientWidth;
     var vh = document.documentElement.clientHeight;
+    if (full) menu.style.width = Math.round(r.width) + "px";   /* attach to the field */
+    var w = menu.offsetWidth;
+    var h = menu.offsetHeight;
+    if (full) {
+      /* A fullwidth panel hugs its field: fit the roomier side and scroll
+         inside it. Without this a long option list would run off-screen. */
+      var below = vh - r.bottom - 8;
+      var above = r.top - 8;
+      menu.style.maxHeight = Math.max(120, below >= above ? below : above) + "px";
+      h = menu.offsetHeight;
+    }
     var left = r.left;
     var top = r.bottom;
     if (left + w > vw - 8) left = r.right - w;   /* flip: align right edges */
@@ -163,15 +186,105 @@
     menu.style.top = Math.round(top) + "px";
   }
 
+  /* Type-ahead (listbox only — an action menu has no value to match).
+     A repeated single letter cycles; a longer buffer matches from the start. */
+  var typeBuffer = "";
+  var typeTimer = 0;
+  function typeAhead(menu, key) {
+    clearTimeout(typeTimer);
+    typeBuffer += key.toLowerCase();
+    typeTimer = setTimeout(function () { typeBuffer = ""; }, 600);
+    var items = menuItems(menu);
+    if (!items.length) return;
+    var start = items.indexOf(document.activeElement);
+    if (typeBuffer.length === 1) start++;
+    for (var n = 0; n < items.length; n++) {
+      var i = (start + n + items.length) % items.length;
+      if (items[i].textContent.trim().toLowerCase().indexOf(typeBuffer) === 0) {
+        items[i].focus();
+        return;
+      }
+    }
+  }
+
+  function isTypeKey(e) {
+    return e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey;
+  }
+
+  /* A hidden input's .value setter writes its value attribute (the browser's
+     "default" value mode for type=hidden), so form.reset() cannot restore the
+     markup's original. Remember the painted default before the first change;
+     the reset handler below replays it. Keyed by the select root, so dynamic
+     replacements do not share state. */
+  var selectDefaults = new WeakMap();
+
+  function rememberSelect(root) {
+    if (selectDefaults.has(root)) return;
+    var input = root.querySelector('input[type="hidden"]');
+    var label = root.querySelector(".fl-select__value");
+    selectDefaults.set(root, {
+      value: input ? input.getAttribute("value") || "" : "",
+      text: label ? label.textContent : ""
+    });
+  }
+
+  function initSelectDefaults() {
+    var selects = document.querySelectorAll(".fl-select");
+    for (var i = 0; i < selects.length; i++) rememberSelect(selects[i]);
+  }
+
+  /* One owner for a select's value: the trigger text, the row state and the
+     hidden input always move together. */
+  function setSelectValue(root, option) {
+    rememberSelect(root);            /* capture the default before overwriting */
+    var label = root.querySelector(".fl-select__value");
+    var input = root.querySelector('input[type="hidden"]');
+    var rows = root.querySelectorAll('[role="option"]');
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].setAttribute("aria-selected", rows[i] === option ? "true" : "false");
+    }
+    if (label) label.textContent = option ? option.textContent.trim() : "";
+    if (input) input.value = option ? (option.value || option.textContent.trim()) : "";
+  }
+
+  function chooseOption(option) {
+    var menu = option.closest(".fl-menu");
+    var btn = menuInvoker(menu);
+    var root = btn && btn.closest(".fl-select");
+    var changed = option.getAttribute("aria-selected") !== "true";
+    if (root) setSelectValue(root, option);
+    menu.hidePopover();
+    if (btn) btn.focus();          /* the platform usually restores it too */
+    /* Like a native select: input then change, both bubbling from the value
+       carrier. Re-choosing the current row only closes. */
+    if (changed && root) {
+      var input = root.querySelector('input[type="hidden"]');
+      if (input) {
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+  }
+
   document.addEventListener("toggle", function (e) {   /* toggle doesn't bubble */
     var menu = e.target;
     if (!menu.classList || !menu.classList.contains("fl-menu")) return;
     var btn = menuInvoker(menu);
     if (e.newState === "open") {
+      typeBuffer = "";               /* a new list starts a new type-ahead */
+      clearTimeout(typeTimer);
       positionMenu(menu);
       if (btn) btn.setAttribute("aria-expanded", "true");
-      var first = menu.querySelector(MENU_ITEMS + ":not(:disabled)");
+      var selected = menu.getAttribute("role") === "listbox"
+        ? menu.querySelector('[role="option"][aria-selected="true"]:not(:disabled)')
+        : null;
+      var first = selected || menu.querySelector(MENU_ITEMS + ":not(:disabled)");
       if (first) first.focus();
+      if (menu.__flintType) {   /* typed on the closed anchor: jump to a match */
+        var typed = menu.__flintType;
+        menu.__flintType = "";
+        typeAhead(menu, typed);
+      }
     } else if (btn) {
       btn.setAttribute("aria-expanded", "false");
       /* Focus return to the invoker is the platform's job on Esc and
@@ -189,11 +302,15 @@
       return;
     }
     var dir = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-    if (!dir && e.key !== "Home" && e.key !== "End") return;
+    if (!dir && e.key !== "Home" && e.key !== "End") {
+      if (menu.getAttribute("role") === "listbox" && isTypeKey(e)) {
+        e.preventDefault();
+        typeAhead(menu, e.key);
+      }
+      return;
+    }
     e.preventDefault();
-    var items = Array.prototype.filter.call(
-      menu.querySelectorAll(MENU_ITEMS),
-      function (el) { return !el.disabled; });
+    var items = menuItems(menu);
     if (!items.length) return;
     var i = items.indexOf(document.activeElement);
     var next = e.key === "Home" ? 0
@@ -201,6 +318,64 @@
              : (i + dir + items.length) % items.length;
     items[next].focus();
   });
+
+  /* Closed select: ArrowDown/ArrowUp opens the list, and typing a letter
+     opens it on the first match (native select behaviour). Space and Enter
+     stay the button's own click. */
+  document.addEventListener("keydown", function (e) {
+    var anchor = e.target.closest && e.target.closest(".fl-select__anchor");
+    if (!anchor) return;
+    var type = isTypeKey(e);
+    if (!type && e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    var menu = document.getElementById(anchor.getAttribute("popovertarget"));
+    if (!menu || menu.matches(":popover-open")) return;
+    e.preventDefault();
+    menu.__flintType = type ? e.key : "";
+    menu.showPopover();
+  });
+
+  /* A form reset restores the hidden input's value attribute — but choosing
+     already overwrote that attribute (hidden inputs reflect .value into it).
+     Replay the remembered default instead: value, selected row and painted
+     text, once the platform has finished resetting. */
+  document.addEventListener("reset", function (e) {
+    var form = e.target;
+    if (!form || !form.querySelectorAll) return;
+    setTimeout(function () {
+      var selects = form.querySelectorAll(".fl-select");
+      for (var i = 0; i < selects.length; i++) {
+        var root = selects[i];
+        var input = root.querySelector('input[type="hidden"]');
+        if (!input) continue;
+        if (!selectDefaults.has(root)) rememberSelect(root);
+        var def = selectDefaults.get(root);
+        var match = null;
+        var rows = root.querySelectorAll('[role="option"]');
+        for (var j = 0; j < rows.length; j++) {
+          if ((rows[j].value || rows[j].textContent.trim()) === def.value) match = rows[j];
+        }
+        if (match) {
+          setSelectValue(root, match);
+        } else {
+          /* The default was "nothing chosen" (a placeholder value): clear the
+             rows and restore the original painted text. */
+          var label = root.querySelector(".fl-select__value");
+          for (var k = 0; k < rows.length; k++) rows[k].setAttribute("aria-selected", "false");
+          if (label) label.textContent = def.text;
+          input.value = def.value;
+        }
+      }
+    }, 0);
+  });
+
+  /* Capture defaults as soon as the document is parsed (a script in <head>
+     may run before the fields exist). Dynamic selects are captured on their
+     first interaction by setSelectValue. */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSelectDefaults);
+  } else {
+    initSelectDefaults();
+  }
 
   /* An open menu follows its trigger (scroll, resize) — M2: menus stay
      next to the element that generates them. Capture: scroll rarely
@@ -215,6 +390,14 @@
 
   /* --- Wiring ------------------------------------------------------------- */
   document.addEventListener("click", function (e) {
+    /* Choosing a row in a listbox (the select). Delegated, so selects added
+       later — a framework render — work without a rescan. */
+    var option = e.target.closest('.fl-menu[role="listbox"] [role="option"]');
+    if (option && !option.disabled) {
+      chooseOption(option);
+      return;
+    }
+
     if (e.target.closest("[data-fl-drawer-open]")) {
       setDrawer(true);
       return;
