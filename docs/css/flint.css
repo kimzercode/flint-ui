@@ -1,6 +1,6 @@
 /* ==========================================================================
    Flint UI — flat Google-flavored app shells
-   v0.5.1 · no dependencies · no shadows · 1px borders instead
+   v0.5.2 · no dependencies · no shadows · 1px borders instead
    Customize by overriding the tokens below (inline or in your own CSS).
    ========================================================================== */
 
@@ -59,6 +59,7 @@
   --fl-topbar-h: 64px;         /* 56px under 600px */
   --fl-tabbar-h: 56px;         /* M2 bottom-nav height, every breakpoint */
   --fl-content-max: 960px;     /* desktop reading column */
+  --fl-fab-size: 56px;         /* M2 FAB diameter — one owner: the snackbar clearance derives from it */
   --fl-field-h: 44px;          /* text field height (M2 56dp is documented dev) */
   --fl-sidesheet-w: 320px;     /* side sheet width (M2 desktop standard: 320dp) */
   --fl-chip-h: 32px;           /* M2 chip height; the 48px target comes from the set's spacing */
@@ -412,8 +413,8 @@ a { color: var(--fl-accent); text-decoration: none; }
   right: var(--fl-space-3);
   bottom: var(--fl-fab-inset);
   z-index: var(--fl-z-fab);
-  width: 56px;
-  height: 56px;
+  width: var(--fl-fab-size);
+  height: var(--fl-fab-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -421,8 +422,7 @@ a { color: var(--fl-accent); text-decoration: none; }
   background: var(--fl-surface);
   border: 1px solid var(--fl-border);
   color: var(--fl-accent);
-  transition: background-color var(--fl-dur) var(--fl-ease),
-              transform var(--fl-dur) var(--fl-ease);
+  transition: background-color var(--fl-dur) var(--fl-ease);
 }
 
 /* A shell with a bottom tab bar lifts the FAB clear of it. The selector targets
@@ -435,11 +435,10 @@ a { color: var(--fl-accent); text-decoration: none; }
   --fl-fab-inset: calc(var(--fl-tabbar-h) + var(--fl-space-3) + env(safe-area-inset-bottom, 0px));
 }
 
-/* A visible snackbar takes the bottom edge for its 4 seconds; the FAB steps up
-   by the snackbar's footprint instead of being covered by it (z-order puts the
-   snackbar on top). One rule, no measurement, and it reverses when the class
-   goes away. */
-body:has(.fl-snackbar.is-visible) .fl-fab { transform: translateY(-56px); }
+/* The FAB is never animated out of a snackbar's way (M2: don't animate
+   other components along with the snackbar). The sheet moves instead — see
+   the snackbar block, where it clears the FAB's footprint on phones and is
+   width-capped clear of the FAB's column on wider layouts. */
 
 @media (hover: hover) {
   .fl-fab:hover { background: var(--fl-hover); }
@@ -1779,12 +1778,14 @@ dialog.fl-sheet--full {
    -------------------------------------------------------------------------- */
 
 .fl-snackbar {
-  /* The gutter from the viewport edge, safe-area included. One token for both
-     the horizontal and the bottom edge so the mobile sheet stays square to the
-     screen; override it to sit flush or to clear a persistent bar. */
+  /* Two concerns, two tokens: one side gutter for both horizontal edges (so
+     the phone sheet stays square to the screen) and the bottom line. The
+     bottom defaults to the side value; a shell with a persistent bar raises
+     only the bottom, never the sides. Both include the safe area. */
   --fl-snackbar-inset: calc(var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
+  --fl-snackbar-bottom: var(--fl-snackbar-inset);
   position: fixed;
-  inset: auto var(--fl-snackbar-inset) var(--fl-snackbar-inset);
+  inset: auto var(--fl-snackbar-inset) var(--fl-snackbar-bottom);
   display: flex;
   align-items: center;
   justify-content: space-between;   /* the action sits at the trailing edge (M2) */
@@ -1812,8 +1813,32 @@ dialog.fl-sheet--full {
    Keep it consistent — M2 forbids mixing alignments. */
 @media (min-width: 600px) {
   .fl-snackbar {
-    inset: auto auto var(--fl-snackbar-inset) var(--fl-snackbar-inset);
+    inset: auto auto var(--fl-snackbar-bottom) var(--fl-snackbar-inset);
     max-width: 560px;
+  }
+  /* A visible FAB owns the bottom-right corner. The wide sheet stays docked
+     beside it (lifting it would float it over an empty edge), so it is
+     capped to stop short of the FAB's column: its right inset, the FAB
+     diameter and an 8px gap. The cap only bites below ~648px, where the
+     FAB's right inset is still --fl-space-3; above that the 560px reading
+     width wins and the FAB is far to the right. */
+  body:has(.fl-fab:not([hidden])) .fl-snackbar {
+    max-width: min(560px,
+      calc(100% - var(--fl-snackbar-inset) - var(--fl-fab-size)
+            - var(--fl-space-3) - var(--fl-space-2)));
+  }
+}
+
+/* Phones: the sheet spans the width, so it shares the FAB's corner. M2 puts
+   the snackbar above the FAB and forbids animating other components with it,
+   so the sheet — and only the sheet — steps over the FAB's footprint. The
+   clearance is relative to the sheet's bottom line: --fl-space-3 is the FAB's
+   base inset (8px more than the sheet's default), which leaves the FAB's top
+   + 8px. It composes with a tab-bar bottom override because both edges then
+   carry the same bar height. A hidden FAB takes its clearance with it. */
+@media (max-width: 599px) {
+  body:has(.fl-fab:not([hidden])) .fl-snackbar {
+    bottom: calc(var(--fl-snackbar-bottom) + var(--fl-fab-size) + var(--fl-space-3));
   }
 }
 
@@ -1837,12 +1862,17 @@ dialog.fl-sheet--full {
 .fl-snackbar__action:active { background: rgb(255 255 255 / 0.12); }
 
 /* Persistent bottom navigation raises the sheet line, not the snackbar —
-   apps with a tab bar lift the snackbar above it with the same token:
+   apps with a tab bar lift only the bottom with the second token:
 
-     .fl-snackbar { --fl-snackbar-inset: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px)); }
+     .fl-snackbar { --fl-snackbar-bottom: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px)); }
 
-   The FAB already clears a tab bar on its own (--fl-fab-inset) and steps up
-   while a snackbar is visible, so the two never stack. */
+   The FAB clears a tab bar on its own (--fl-fab-inset). With the bar height
+   in both lines, the sheet's FAB clearance above still lands 8px over the
+   lifted FAB — nothing is measured and the FAB never moves. */
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-snackbar { transition: none; }
+}
 
 /* --------------------------------------------------------------------------
    15. Progress — linear (<progress>) and circular (conic-gradient ring)

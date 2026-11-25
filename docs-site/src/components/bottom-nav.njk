@@ -127,10 +127,11 @@ toc:
         (<code>:has()</code>, no JS), and a tab-less app gets the 16px default
         with the safe-area inset already added. Override the token rather than
         recomputing <code>bottom</code>.</li>
-    <li><strong>FAB vs snackbar:</strong> while a snackbar is visible the FAB
-        steps up 56px instead of being covered by it (the snackbar is above it
-        in the z-order). CSS-only, and it reverses the moment
-        <code>is-visible</code> goes away.</li>
+    <li><strong>FAB vs snackbar:</strong> the snackbar never moves the FAB.
+        On phones the sheet rises above the FAB and the FAB stays docked; on
+        wide layouts the left-anchored sheet is capped short of the FAB's
+        column, so the two sit side by side on the bottom edge. The z-order
+        still puts the snackbar on top if they ever meet.</li>
     <li><strong>Tabs can be links or buttons</strong> — anchors still navigate; the selection state is reflected either way.</li>
   </ul>
 </section>
@@ -244,6 +245,7 @@ toc:
       <tr><td><code>--fl-content-max</code></td><td>Max content column width on desktop</td></tr>
       <tr><td><code>--fl-tabbar-h</code></td><td>Tab bar height (56px at every breakpoint); also what raises the FAB</td></tr>
       <tr><td><code>--fl-fab-inset</code></td><td>Distance from the FAB to the bottom edge, safe-area included (16px default; tab bar height + 16px inside a shell with a tab bar)</td></tr>
+      <tr><td><code>--fl-fab-size</code></td><td>FAB diameter (56px, M2) — also the clearance the snackbar derives on phones</td></tr>
     </tbody>
   </table>
   {% set themeExample %}

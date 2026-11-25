@@ -14,6 +14,14 @@
     gap: var(--fl-space-2);
   }
   .fl-card-grid .fl-card { margin-top: 0; }  /* kill the stacked-card margin */
+
+  /* The tab bar owns the bottom edge: the sheet docks above it with the
+     bottom token, no measurement (the side gutters stay at 8px). The FAB's
+     own tab-bar lift is the library's — on phones the stack becomes
+     bar → 16px → FAB → 8px → sheet. */
+  .fl-snackbar {
+    --fl-snackbar-bottom: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
+  }
 </style>
 </head>
 <body class="fl-reset">
@@ -94,12 +102,13 @@
     </button>
   </nav>
 
-</div>
+  <!-- Flat FAB: bordered, never shadowed (library contract). Inside the
+       shell so its tab-bar lift (:has on the shell) reaches it. -->
+  <button class="fl-fab" type="button" data-fl-open="note-editor" aria-label="Take a note">
+    <span class="fl-icon" aria-hidden="true"></span>
+  </button>
 
-<!-- Flat FAB: bordered, never shadowed (library contract) -->
-<button class="fl-fab" type="button" data-fl-open="note-editor" aria-label="Take a note">
-  <span class="fl-icon" aria-hidden="true"></span>
-</button>
+</div>
 
 <!-- Note editor: centered dialog — Keep web's editing surface -->
 <dialog class="fl-dialog" id="note-editor" aria-labelledby="note-editor-t">

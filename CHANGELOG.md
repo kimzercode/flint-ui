@@ -4,6 +4,37 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.5.2] — 2026-11-25
+
+The snackbar stopped moving the FAB. The guidance, the demo and the Keep
+recipe are updated to match.
+
+### Fixed
+
+- **The snackbar lifted the FAB.** `body:has(.fl-snackbar.is-visible) .fl-fab`
+  translated the FAB up 56px while a snackbar was visible — M2's explicit
+  "don't animate other components along with snackbar animations, such as the
+  floating action button". The rule is gone and the FAB no longer transitions
+  `transform`. The sheet does the moving instead: on phones it rises over the
+  FAB's footprint (its gutter + the FAB's 56px diameter + the FAB's 16px
+  inset, landing 8px above the FAB's top); on wider layouts it stays docked
+  and is capped short of the FAB's column, so the two sit side by side. A
+  `[hidden]` FAB removes the clearance. `--fl-fab-size` now owns the 56px
+  diameter, and the clearance derives from it.
+- **The Keep recipe's FAB overlapped its tab bar** (the FAB sat outside the
+  shell, so the shell's tab-bar lift never reached it) and its snackbar
+  covered the tab bar (the documented inset recipe was not applied). The FAB
+  moved inside `.fl-shell-rail` and the demo sets the recipe; the phone stack
+  is now bar → 16px → FAB → 8px → sheet.
+- **Raising the sheet over a tab bar also narrowed its sides.** One token
+  drove both the bottom line and the side gutters, so the documented recipe
+  (tab bar + 8px) inset the phone sheet 64px from each side. The bottom line
+  is now its own token, `--fl-snackbar-bottom`, defaulting to
+  `--fl-snackbar-inset`; the recipe raises only the bottom. Existing overrides
+  of the gutter token still move both edges.
+- **`prefers-reduced-motion` did not reach the snackbar.** The component page
+  claimed it disabled the animation; no rule existed. Added.
+
 ## [0.5.1] — 2026-11-24
 
 A **sample layout pass** and the fixes it uncovered. No component API changed;

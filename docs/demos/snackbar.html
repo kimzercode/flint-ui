@@ -9,7 +9,7 @@
 </head>
 <body class="fl-reset">
 
-<main style="max-width:640px; margin:0 auto; padding:32px 20px;">
+<main style="max-width:640px; margin:0 auto; padding:32px 20px 120px;">
 
   <p class="fl-section-label">Plain message</p>
   <button class="fl-btn fl-btn--outline" data-fl-open="snack-saved">Save conversation</button>
@@ -24,7 +24,22 @@
   <p class="fl-section-label">Dismiss action — wired but discouraged (M2: it disappears on its own)</p>
   <button class="fl-btn fl-btn--outline" data-fl-open="snack-warn">Warn about storage</button>
 
+  <p class="fl-section-label">Above a FAB — the FAB never moves</p>
+  <button class="fl-btn fl-btn--outline" data-fl-open="snack-compose">Show the snackbar</button>
+  <p style="font-size:var(--fl-fs-caption); color:var(--fl-text-secondary); margin-top:8px;">
+    Phones: the sheet rises over the FAB's footprint. Wide layouts: it docks
+    beside the FAB's column. In both, only the snackbar moves — M2 forbids
+    animating other components along with it.
+  </p>
+
 </main>
+
+<!-- The FAB is fixed to the bottom-right; the sheet clears it, never the
+     other way round. Click it (or the button above) to see the sheet step
+     over the FAB on phones. -->
+<button class="fl-fab" type="button" data-fl-open="snack-compose" aria-label="Compose">
+  <span class="fl-icon" aria-hidden="true"></span>
+</button>
 
 <!-- Plain message: role="status" announces it politely when shown; it
      disappears on its own — no dismiss action needed (M2 cautions against
@@ -61,6 +76,11 @@
 
 <div class="fl-snackbar" id="snack-restored" role="status">
   Photo restored
+</div>
+
+<!-- The FAB case: same sheet, no FAB animation. -->
+<div class="fl-snackbar" id="snack-compose" role="status">
+  Draft started
 </div>
 
 <script>

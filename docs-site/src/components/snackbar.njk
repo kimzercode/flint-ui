@@ -121,21 +121,32 @@ toc:
     <li><strong>Non-modal:</strong> the page stays fully interactive — no
         focus trap, no scroll lock, no inert background. The snackbar never
         takes focus.</li>
-    <li><strong>Placement:</strong> docked to the bottom edge, one gutter
-        token (<code>--fl-snackbar-inset</code>, 8px plus the safe-area inset),
-        above FABs (z-layer <code>--fl-z-snackbar</code>). In wide layouts it
-        is left-anchored and capped at 560px — pick one alignment and keep it
+    <li><strong>Placement:</strong> docked to the bottom edge, with a single
+        side gutter (<code>--fl-snackbar-inset</code>, 8px plus the safe-area
+        inset) and a bottom line (<code>--fl-snackbar-bottom</code>, which
+        defaults to the gutter), above FABs in the z-order
+        (<code>--fl-z-snackbar</code>). On phones the sheet is full-width and
+        clears a visible FAB (next bullet); in wide layouts it is
+        left-anchored and capped at 560px — pick one alignment and keep it
         consistent everywhere (M2 forbids mixing).</li>
-    <li><strong>FABs are not covered:</strong> <code>flint.css</code> lifts a
-        <code>.fl-fab</code> by 56px while a snackbar is visible
-        (<code>body:has(.fl-snackbar.is-visible) .fl-fab</code>) — the two
-        never stack and no measurement is involved. Author CSS that docks
-        something else at the bottom edge should do the same.</li>
+    <li><strong>Above FABs, never moving them:</strong> a visible
+        <code>.fl-fab</code> owns the bottom-right corner. On phones the
+        sheet — and only the sheet — rises over the FAB's footprint: its
+        bottom line plus the FAB diameter and the FAB's 16px base inset,
+        which lands 8px above the FAB's top. In wide layouts it stays docked
+        beside the FAB, capped short of the FAB's column (the FAB's inset,
+        diameter and an 8px gap). The FAB keeps
+        <code>bottom: var(--fl-fab-inset)</code> throughout — no transform,
+        no transition, no measurement — because M2 forbids animating other
+        components along with the snackbar. Hiding the FAB
+        (<code>[hidden]</code>) removes the clearance with it.</li>
     <li><strong>Above persistent navigation:</strong> over a bottom-nav
-        shell, raise the token with one line — see the recipe below. It should
-        never cover tab bars.</li>
+        shell, raise <code>--fl-snackbar-bottom</code> with one line — see
+        the recipe below. It should never cover tab bars, and the side
+        gutters stay put.</li>
     <li><strong>Animation:</strong> rises 8px and fades in, fades out on
-        leave — CSS only, <code>prefers-reduced-motion</code> disables it.</li>
+        leave — CSS only, and the sheet alone moves;
+        <code>prefers-reduced-motion</code> turns it off.</li>
     <li><strong>No-JS fallback (honest):</strong> the element is hidden
         (<code>opacity: 0; pointer-events: none</code>); with JS off the page
         renders and works, the snackbar just never shows. Toggle
@@ -144,7 +155,7 @@ toc:
   <p>Recipe — snackbar above a persistent bottom nav:</p>
   {% set tabbarRecipe %}
 .fl-snackbar {
-  --fl-snackbar-inset: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
+  --fl-snackbar-bottom: calc(var(--fl-tabbar-h) + var(--fl-space-2) + env(safe-area-inset-bottom, 0px));
 }
 {% endset %}
   {{ snippet(tabbarRecipe) }}
@@ -228,8 +239,9 @@ flint.snackbar.hide(document.getElementById("snack-sent"));
 <section class="docs-section">
   <h2 id="i-demos">Fullscreen demo</h2>
   <p><a href="../demos/snackbar.html">demos/snackbar.html</a> covers the
-     plain message, the Undo action and the replacement behavior (fire two
-     triggers quickly — the first leaves).</p>
+     plain message, the Undo action, the replacement behavior (fire two
+     triggers quickly — the first leaves) and the FAB case (the sheet clears
+     a docked FAB, which never moves).</p>
 </section>
 
 <section class="docs-section">
@@ -245,7 +257,8 @@ flint.snackbar.hide(document.getElementById("snack-sent"));
       <tr><td><code>--fl-surface</code></td><td>The label color on the container</td></tr>
       <tr><td><code>--fl-accent-inverse</code></td><td>The action text (readable on dark)</td></tr>
       <tr><td><code>--fl-radius</code></td><td>Corner radius (4px)</td></tr>
-      <tr><td><code>--fl-snackbar-inset</code></td><td>Gutter to the bottom and (on phones) side edges, safe-area included; default 8px + inset</td></tr>
+      <tr><td><code>--fl-snackbar-inset</code></td><td>Side gutter for both horizontal edges, safe-area included; default 8px + inset. On phones it also decides the sheet's width</td></tr>
+      <tr><td><code>--fl-snackbar-bottom</code></td><td>Distance to the bottom edge; defaults to the side gutter. Raise this one over a tab bar — the sides stay put. The FAB clearance is derived from <code>--fl-fab-size</code> and the FAB's inset — don't add the FAB height yourself</td></tr>
       <tr><td><code>--fl-z-snackbar</code></td><td>Layer order (above FABs, below modal surfaces)</td></tr>
       <tr><td><code>--fl-dur</code> / <code>--fl-ease</code></td><td>Show/hide animation timing</td></tr>
     </tbody>
