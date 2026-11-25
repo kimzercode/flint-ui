@@ -35,7 +35,7 @@ samples/notes/
 | Search pill | `fl-field` with a rounded box; `index.html` also puts a real `<button>` in its leading slot |
 | Drawer | `.fl-drawer`, `.fl-drawer__header` (phones), `.fl-nav`, `.fl-nav-item`, `.fl-section-label`, `.fl-divider`, `.fl-drawer__footer` |
 | Note grid | `.fl-card` as a real `<button>`, `__title`, `__text`, a `.fl-chip` tag — packed into columns by `notes.js`, with balanced CSS columns as the no-JS fallback |
-| Create | `.fl-fab` at both widths (no compose bar) |
+| Create | `.fl-fab` at both widths (no compose bar), in every view — Archive included |
 | Editor | `fl-dialog--fullscreen` — full-bleed below 600px, a 560px card above. Header: back · screen-reader title · (⋮ on `classic.html`) |
 | Canvas | two naked controls (`notes-canvas__title` / `__body`), authored by the sample — not a field |
 | Meta footer | `.fl-dialog__actions` on a hairline: "Edited …" and, on `index.html`, the ⋮ button |
@@ -67,7 +67,8 @@ light-dismiss and top-layer stacking come from `<dialog>` and `popover`.
 - **Editor:** live two-way binding — there is no Save button, closing saves.
   A brand-new note nobody typed into is discarded, not left as "Untitled".
 - **Labels:** one per note, chosen in the picker dialog. Creating a note while a
-  label view is active pre-assigns that label.
+  label view is active pre-assigns that label. A note is never born archived,
+  so composing from Archive files the note in Notes and takes the view there.
 - **⋮ menu:** Labels…, Duplicate (inserts the copy right after the original),
   Archive/Unarchive and Delete. Everything but Labels closes the editor.
 - **Undo is real:** the snackbar's Undo re-inserts a deleted note at its old
@@ -97,7 +98,8 @@ client-side sample — documented, not hidden.
   `method="dialog"`.
 - Opening an existing note focuses the body (the thing you most often change);
   a new note focuses the title. Closing returns focus to that note's card, or to
-  the first card when the note left the view (archive, delete).
+  the first card when the note left the view (archive, delete), or to the FAB
+  when the view is empty.
 - The snackbar is a `role="status"` region, so Undo is announced politely
   without stealing focus.
 
@@ -124,7 +126,11 @@ client-side sample — documented, not hidden.
    snackbar honest.
 9. **Duplicating closes the editor** so the snackbar (which cannot render above
    a modal dialog) is visible. Keep keeps the editor open.
-10. **Two pages, not a switcher.** The chrome delta is markup placement, so
+10. **The FAB stays on Archive.** Keep keeps it there too, and one visible FAB
+    in every view means the snackbar's clearance never changes height — an
+    Unarchive sheet sits exactly where an Archive sheet did. A note is never
+    born archived, so composing from Archive takes you to Notes.
+11. **Two pages, not a switcher.** The chrome delta is markup placement, so
     each page is plain HTML with no variant logic in CSS or JS.
 
 ## Out of scope (and why)

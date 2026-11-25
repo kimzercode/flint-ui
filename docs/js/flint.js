@@ -1,5 +1,5 @@
 /*!
- * Flint UI — flint.js v0.5.2
+ * Flint UI — flint.js v0.5.3
  * The entire JS surface: nav selected-state, drawer toggling, and the dialog
  * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
  * snackbar (one at a time, 4s auto-dismiss), the password field toggle,

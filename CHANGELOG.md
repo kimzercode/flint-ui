@@ -4,6 +4,24 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.5.3] — 2026-11-25
+
+The notes sample keeps its FAB on Archive, so the snackbar sits at one height
+in every view. Sample-only: no library CSS or JS changed; the version strings
+are cache-busting for the rebuilt docs.
+
+### Changed
+
+- **Notes sample — the FAB is present in Archive.** It used to be hidden there
+  (`fab.hidden = view === "archive"`), so an Unarchive snackbar dropped to the
+  bottom edge while an Archive one sat above the FAB — two heights for one
+  sheet, and a jump the moment the view changed. Keep keeps its compose FAB on
+  Archive, and a visible FAB in every view means the clearance never moves. A
+  note is never born archived, so composing from Archive files the note in
+  Notes and takes the view there; a blank note discarded on close leaves the
+  view alone. Focus return is unchanged (the note's card, else the first card,
+  else the FAB when the view is empty).
+
 ## [0.5.2] — 2026-11-25
 
 The snackbar stopped moving the FAB. The guidance, the demo and the Keep

@@ -194,19 +194,25 @@
     }
 
     viewTitle.textContent = VIEWS[view];
-    fab.hidden = view === "archive";   /* you cannot create an archived note */
     layoutGrid();
   }
 
   /* --- Views & search ----------------------------------------------------- */
+  /* One owner for the current view: the title, the drawer's aria-current and
+     the grid all read it. Keep keeps the FAB on Archive too, so the snackbar
+     sits at one height in every view (see the snackbar's FAB clearance). */
+  function setView(name) {
+    view = name;
+    [].forEach.call(document.querySelectorAll("[data-view]"), function (el) {
+      if (el.getAttribute("data-view") === view) el.setAttribute("aria-current", "page");
+      else el.removeAttribute("aria-current");
+    });
+  }
+
   $("nav").addEventListener("click", function (e) {
     var row = e.target.closest("[data-view]");
     if (!row) return;
-    view = row.getAttribute("data-view");
-    [].forEach.call(document.querySelectorAll("[data-view]"), function (el) {
-      if (el === row) el.setAttribute("aria-current", "page");
-      else el.removeAttribute("aria-current");
-    });
+    setView(row.getAttribute("data-view"));
     flint.drawer(false);   /* mobile: navigation closes the drawer (Keep) */
     render();
   });
@@ -249,12 +255,21 @@
      A brand-new note nobody typed into is discarded, not left as "Untitled". */
   editor.addEventListener("close", function () {
     var note = current;
-    if (isNewBlank && !titleInput.value.trim() && !bodyInput.value.trim()) {
+    var wasNew = isNewBlank;
+    var discarded = wasNew && !titleInput.value.trim() && !bodyInput.value.trim();
+    if (discarded) {
       notes = notes.filter(function (n) { return n !== note; });
       log("discard-blank");
     }
     current = null;
     isNewBlank = false;
+
+    /* A note is never born archived, so one composed from Archive belongs to
+       Notes; take the view with it rather than dropping the author back into
+       a list the new note is not in. A discarded blank changes nothing, and
+       archiving the note from its own menu keeps the view. */
+    if (!discarded && wasNew && view === "archive" && !note.archived) setView("notes");
+
     render();
 
     /* The render replaced the card that had focus; put focus back on it, or on
@@ -262,11 +277,14 @@
     var again = note && notes.indexOf(note) !== -1 && inView(note);
     var target = again ? grid.querySelector('[data-id="' + note.id + '"]')
                        : grid.querySelector("[data-note]");
-    if (!target) target = fab.hidden ? searchInput : fab;
+    if (!target) target = fab;
     if (target) target.focus();
   });
 
-  /* --- FAB ---------------------------------------------------------------- */
+  /* --- FAB ---------------------------------------------------------------- *
+     Present in every view, Archive included (Keep's placement, and it keeps
+     the snackbar's clearance at one height). A note is never born archived,
+     so one composed from Archive is handed to Notes when the editor closes. */
   fab.addEventListener("click", function () {
     log("new-note");
     flint.snackbar.hide(snack);
@@ -363,11 +381,7 @@
     log("duplicate:note-" + note.id);
     closeEditor();
     showSnack("Note duplicated", "Open", function () {
-      view = copy.archived ? "archive" : "notes";
-      [].forEach.call(document.querySelectorAll("[data-view]"), function (el) {
-        if (el.getAttribute("data-view") === view) el.setAttribute("aria-current", "page");
-        else el.removeAttribute("aria-current");
-      });
+      setView(copy.archived ? "archive" : "notes");
       render();
       openEditor(copy, false, null);
     }, "open-duplicate");
