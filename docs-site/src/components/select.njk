@@ -116,7 +116,9 @@ toc:
       <li><strong>The panel</strong> — the same <code>fl-menu</code> as every
           action menu: 1px border, 4px radius, 8px padding, 48px rows, no
           shadow. <code>fl-menu--fullwidth</code> attaches it to the field
-          and gives it the field's width.</li>
+          and gives it the field's width. Its touching border is transparent,
+          so the field's border is the only seam — M2 gets that separation
+          from elevation; Flint is flat and shares one line.</li>
       <li><strong>The current row</strong> — a persistent
           <code>--fl-divider</code> tint, not the <code>menuitemradio</code>
           check glyph (that is the multi-choice idiom).</li>
@@ -140,7 +142,11 @@ toc:
         press Enter or Space, or ArrowDown/ArrowUp. The list attaches directly
         under the field at the field's width, flips above when there is no
         room below, and caps to the roomier side with its own scrollbar when
-        the options are long.</li>
+        the options are long. The shared edge is a single 1px line: the
+        panel's touching border is transparent and the field's border — accent
+        when open, red on error, the indicator when filled — is the seam.
+        There is no shadow to lift the panel; the shared line is the flat
+        translation of M2's elevation.</li>
     <li><strong>Activated:</strong> the accent border (filled: the 2px bottom
         indicator), the flipped chevron and the tinted current row. The state
         is read from <code>:popover-open</code>, so it is the platform's

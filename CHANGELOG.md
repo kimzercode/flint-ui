@@ -4,6 +4,25 @@ All notable changes to Flint UI are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com); versioning follows
 [SemVer](https://semver.org) — during 0.x the API may still change.
 
+## [0.6.1] — 2026-11-27
+
+The exposed dropdown's double seam is gone. Material separates the panel with
+elevation and a borderless surface; Flint is flat and borders every surface,
+so the field's 1px border and the panel's touching 1px border stacked into a
+2px line.
+
+### Fixed
+
+- **The select's panel and field shared a double border.** The panel's
+  touching border is now transparent — top when it opens below, bottom when it
+  flips above — and the field's border is the only seam: accent when open,
+  error-red on error, the filled indicator for filled fields. Transparent
+  rather than removed, so the panel's box height, height cap and flip math are
+  unchanged. `flint.js` adds a placement class for the flipped case; action
+  menus keep their full border. No shadow, no gap, no geometry change.
+- Docs: the Select page's anatomy and behavior now state the single-seam rule,
+  and `NOTES.md` records the flat translation of M2's elevation.
+
 ## [0.6.0] — 2026-11-25
 
 The select became M2's **exposed dropdown**: the menu, anchored to a field.

@@ -1,5 +1,5 @@
 /*!
- * Flint UI — flint.js v0.6.0
+ * Flint UI — flint.js v0.6.1
  * The entire JS surface: nav selected-state, drawer toggling, and the dialog
  * / sheet wiring (triggers, focus return, non-dismissible opt-out), the
  * snackbar (one at a time, 4s auto-dismiss), the password field toggle,
@@ -177,10 +177,17 @@
     }
     var left = r.left;
     var top = r.bottom;
+    var abovePanel = false;
     if (left + w > vw - 8) left = r.right - w;   /* flip: align right edges */
     if (left < 8) left = 8;
-    if (top + h > vh - 8) top = r.top - h;       /* flip: open upwards */
+    if (top + h > vh - 8) {                       /* flip: open upwards */
+      top = r.top - h;
+      abovePanel = true;
+    }
     if (top < 8) top = 8;
+    /* The fullwidth panel shares its touching edge with the field: CSS makes
+       that one border transparent, so the field's border is the only seam. */
+    if (full) menu.classList.toggle("fl-menu--above", abovePanel);
     menu.style.margin = "0";
     menu.style.left = Math.round(left) + "px";
     menu.style.top = Math.round(top) + "px";
